@@ -7,16 +7,72 @@ class CalcioLiveTeamNextCard extends LitElement {
       _config: {},
       showPopup: { type: Boolean },
       activeMatch: { type: Object },
+      _eventSubscription: { type: Object },
+      _hasRecentEvent: { type: Boolean },
     };
   }
 
   setConfig(config) {
-      if (!config.entity) {
-        throw new Error("Devi definire un'entità");
-      }
+    if (!config.entity) {
+      throw new Error("Devi definire un'entità");
+    }
     this._config = config;
     this.showPopup = false;
     this.activeMatch = null;
+    this._hasRecentEvent = false;
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+    this._subscribeToEvents();
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    if (this._eventSubscription) {
+      this._eventSubscription.unsubscribe();
+    }
+  }
+
+  _subscribeToEvents() {
+    if (!this.hass || !this.hass.connection) {
+      return;
+    }
+    this._eventSubscription = this.hass.connection.subscribeEvents(
+      this._handleCalcioLiveEvent.bind(this),
+      ['calcio_live_goal', 'calcio_live_yellow_card', 'calcio_live_red_card']
+    );
+  }
+
+  _handleCalcioLiveEvent(event) {
+    const eventType = event.event_type;
+    const eventData = event.data;
+    this._showEventToast(eventType, eventData);
+    this._hasRecentEvent = true;
+    this.requestUpdate();
+    setTimeout(() => {
+      this._hasRecentEvent = false;
+      this.requestUpdate();
+    }, 5000);
+  }
+
+  _showEventToast(eventType, eventData) {
+    let message = '';
+    if (eventType === 'calcio_live_goal') {
+      message = `🔥 GOAL! ${eventData.player} - ${eventData.home_team} ${eventData.home_score} - ${eventData.away_score} ${eventData.away_team}`;
+    } else if (eventType === 'calcio_live_yellow_card') {
+      message = `🟨 Cartellino Giallo: ${eventData.player}${eventData.minute ? ` (${eventData.minute}')` : ''}`;
+    } else if (eventType === 'calcio_live_red_card') {
+      message = `🟥 Cartellino Rosso: ${eventData.player}${eventData.minute ? ` (${eventData.minute}')` : ''}`;
+    }
+    if (message && this.hass) {
+      this.hass.callService('persistent_notification', 'create', {
+        message: message,
+        title: 'CalcioLive',
+      }).catch(() => {
+        console.log('CalcioLive Event:', message);
+      });
+    }
   }
 
   getCardSize() {
@@ -216,7 +272,7 @@ class CalcioLiveTeamNextCard extends LitElement {
 
 
     return html`
-      <ha-card>
+      <ha-card class="${this._hasRecentEvent ? 'event-highlight' : ''}">
         <div class="background-logos">
           <div class="background-logo home-logo">
             <img src="${match.home_logo}" alt="Logo squadra di casa" />
@@ -443,6 +499,14 @@ class CalcioLiveTeamNextCard extends LitElement {
         }
         .close-button:hover {
           background: var(--primary-color-dark);
+        }
+        @keyframes pulse-highlight {
+          0% { box-shadow: 0 0 0 0 rgba(255, 152, 0, 0.7); }
+          50% { box-shadow: 0 0 0 10px rgba(255, 152, 0, 0); }
+          100% { box-shadow: 0 0 0 0 rgba(255, 152, 0, 0); }
+        }
+        ha-card.event-highlight {
+          animation: pulse-highlight 0.6s ease-out;
         }
       `;
   }

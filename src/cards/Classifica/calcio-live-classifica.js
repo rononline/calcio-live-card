@@ -8,6 +8,7 @@ class CalcioLiveStandingsCard extends LitElement {
       maxTeamsVisible: { type: Number },
       hideHeader: { type: Boolean },
       selectedGroup: { type: String },
+      _eventSubscription: { type: Object },
     };
   }
 
@@ -19,6 +20,55 @@ class CalcioLiveStandingsCard extends LitElement {
     this.maxTeamsVisible = config.max_teams_visible ? config.max_teams_visible : 10;
     this.hideHeader = config.hide_header || false;
     this.selectedGroup = config.selected_group || '';
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+    this._subscribeToEvents();
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    if (this._eventSubscription) {
+      this._eventSubscription.unsubscribe();
+    }
+  }
+
+  _subscribeToEvents() {
+    if (!this.hass || !this.hass.connection) {
+      return;
+    }
+    this._eventSubscription = this.hass.connection.subscribeEvents(
+      this._handleCalcioLiveEvent.bind(this),
+      ['calcio_live_goal', 'calcio_live_yellow_card', 'calcio_live_red_card', 'calcio_live_match_finished']
+    );
+  }
+
+  _handleCalcioLiveEvent(event) {
+    const eventType = event.event_type;
+    const eventData = event.data;
+    this._showEventToast(eventType, eventData);
+  }
+
+  _showEventToast(eventType, eventData) {
+    let message = '';
+    if (eventType === 'calcio_live_goal') {
+      message = `🔥 GOAL! ${eventData.player} - ${eventData.home_team} ${eventData.home_score} - ${eventData.away_score} ${eventData.away_team}`;
+    } else if (eventType === 'calcio_live_yellow_card') {
+      message = `🟨 Cartellino Giallo: ${eventData.player}${eventData.minute ? ` (${eventData.minute}')` : ''}`;
+    } else if (eventType === 'calcio_live_red_card') {
+      message = `🟥 Cartellino Rosso: ${eventData.player}${eventData.minute ? ` (${eventData.minute}')` : ''}`;
+    } else if (eventType === 'calcio_live_match_finished') {
+      message = `✅ Partita Terminata! ${eventData.home_team} ${eventData.home_score} - ${eventData.away_score} ${eventData.away_team}`;
+    }
+    if (message && this.hass) {
+      this.hass.callService('persistent_notification', 'create', {
+        message: message,
+        title: 'CalcioLive',
+      }).catch(() => {
+        console.log('CalcioLive Event:', message);
+      });
+    }
   }
 
   getCardSize() {

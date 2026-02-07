@@ -7,22 +7,82 @@ class CalcioLiveTodayMatchesCard extends LitElement {
       _config: {},
       showPopup: { type: Boolean },
       activeMatch: { type: Object },
+      _eventSubscription: { type: Object },
+      _recentEventMatches: { type: Object },
     };
   }
 
-  setConfig(config) {
-      if (!config.entity) {
-        throw new Error("Devi definire un'entità");
-      }
+  constructor() {
+    super();
+    this._recentEventMatches = new Map();
+  }
 
-      this._config = config;
-      this.maxEventsVisible = config.max_events_visible ? config.max_events_visible : 5;
-      this.maxEventsTotal = config.max_events_total ? config.max_events_total : 50;
-      this.showFinishedMatches = config.show_finished_matches !== undefined ? config.show_finished_matches : true;
-      this.hideHeader = config.hide_header !== undefined ? config.hide_header : false;
-      this.hidePastDays = config.hide_past_days !== undefined ? config.hide_past_days : 0;
-      this.activeMatch = null;
-      this.showPopup = false;
+  setConfig(config) {
+    if (!config.entity) {
+      throw new Error("Devi definire un'entità");
+    }
+    this._config = config;
+    this.maxEventsVisible = config.max_events_visible ? config.max_events_visible : 5;
+    this.maxEventsTotal = config.max_events_total ? config.max_events_total : 50;
+    this.showFinishedMatches = config.show_finished_matches !== undefined ? config.show_finished_matches : true;
+    this.hideHeader = config.hide_header !== undefined ? config.hide_header : false;
+    this.hidePastDays = config.hide_past_days !== undefined ? config.hide_past_days : 0;
+    this.activeMatch = null;
+    this.showPopup = false;
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+    this._subscribeToEvents();
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    if (this._eventSubscription) {
+      this._eventSubscription.unsubscribe();
+    }
+  }
+
+  _subscribeToEvents() {
+    if (!this.hass || !this.hass.connection) {
+      return;
+    }
+    this._eventSubscription = this.hass.connection.subscribeEvents(
+      this._handleCalcioLiveEvent.bind(this),
+      ['calcio_live_goal', 'calcio_live_yellow_card', 'calcio_live_red_card']
+    );
+  }
+
+  _handleCalcioLiveEvent(event) {
+    const eventType = event.event_type;
+    const eventData = event.data;
+    const matchKey = `${eventData.home_team}_${eventData.away_team}`;
+    this._showEventToast(eventType, eventData);
+    this._recentEventMatches.set(matchKey, true);
+    this.requestUpdate();
+    setTimeout(() => {
+      this._recentEventMatches.delete(matchKey);
+      this.requestUpdate();
+    }, 5000);
+  }
+
+  _showEventToast(eventType, eventData) {
+    let message = '';
+    if (eventType === 'calcio_live_goal') {
+      message = `🔥 GOAL! ${eventData.player} - ${eventData.home_team} ${eventData.home_score} - ${eventData.away_score} ${eventData.away_team}`;
+    } else if (eventType === 'calcio_live_yellow_card') {
+      message = `🟨 Cartellino Giallo: ${eventData.player}${eventData.minute ? ` (${eventData.minute}')` : ''}`;
+    } else if (eventType === 'calcio_live_red_card') {
+      message = `🟥 Cartellino Rosso: ${eventData.player}${eventData.minute ? ` (${eventData.minute}')` : ''}`;
+    }
+    if (message && this.hass) {
+      this.hass.callService('persistent_notification', 'create', {
+        message: message,
+        title: 'CalcioLive',
+      }).catch(() => {
+        console.log('CalcioLive Event:', message);
+      });
+    }
   }
   
 
@@ -247,7 +307,7 @@ class CalcioLiveTodayMatchesCard extends LitElement {
           ` : ''}
           <div class="scroll-content" style="max-height: ${scrollHeight}px; overflow-y: auto;">
             ${limitedMatches.map((match, index) => html`
-              <div class="match-wrapper">
+              <div class="match-wrapper ${this._recentEventMatches.has(`${match.home_team}_${match.away_team}`) ? 'event-highlight' : ''}">
                 <div class="match-header">
                   <div class="match-competition">
                     ${match.venue} | <span class="match-date">${match.date}</span>
@@ -459,6 +519,14 @@ class CalcioLiveTodayMatchesCard extends LitElement {
         }
         .close-button:hover {
           background: var(--primary-color-dark);
+        }
+        @keyframes pulse-highlight {
+          0% { box-shadow: 0 0 0 0 rgba(255, 152, 0, 0.7); }
+          50% { box-shadow: 0 0 0 10px rgba(255, 152, 0, 0); }
+          100% { box-shadow: 0 0 0 0 rgba(255, 152, 0, 0); }
+        }
+        .match-wrapper.event-highlight {
+          animation: pulse-highlight 0.6s ease-out;
         }
       `;
   }
