@@ -9,6 +9,7 @@ class CalcioLiveStandingsCard extends LitElement {
       hideHeader: { type: Boolean },
       selectedGroup: { type: String },
       _eventSubscription: { type: Object },
+      _eventSubscriptions: { type: Array },
     };
   }
 
@@ -29,8 +30,11 @@ class CalcioLiveStandingsCard extends LitElement {
 
   disconnectedCallback() {
     super.disconnectedCallback();
-    if (this._eventSubscription) {
-      this._eventSubscription.unsubscribe();
+    if (this._eventSubscriptions && Array.isArray(this._eventSubscriptions)) {
+      this._eventSubscriptions.forEach(sub => {
+        if (sub) sub.unsubscribe();
+      });
+      this._eventSubscriptions = [];
     }
   }
 
@@ -38,9 +42,30 @@ class CalcioLiveStandingsCard extends LitElement {
     if (!this.hass || !this.hass.connection) {
       return;
     }
-    this._eventSubscription = this.hass.connection.subscribeEvents(
-      this._handleCalcioLiveEvent.bind(this),
-      ['calcio_live_goal', 'calcio_live_yellow_card', 'calcio_live_red_card', 'calcio_live_match_finished']
+    this._eventSubscriptions = [];
+    this._eventSubscriptions.push(
+      this.hass.connection.subscribeEvents(
+        this._handleCalcioLiveEvent.bind(this),
+        'calcio_live_goal'
+      )
+    );
+    this._eventSubscriptions.push(
+      this.hass.connection.subscribeEvents(
+        this._handleCalcioLiveEvent.bind(this),
+        'calcio_live_yellow_card'
+      )
+    );
+    this._eventSubscriptions.push(
+      this.hass.connection.subscribeEvents(
+        this._handleCalcioLiveEvent.bind(this),
+        'calcio_live_red_card'
+      )
+    );
+    this._eventSubscriptions.push(
+      this.hass.connection.subscribeEvents(
+        this._handleCalcioLiveEvent.bind(this),
+        'calcio_live_match_finished'
+      )
     );
   }
 
