@@ -10,6 +10,8 @@ class CalcioLiveTodayMatchesCard extends LitElement {
       _eventSubscription: { type: Object },
       _eventSubscriptions: { type: Array },
       _recentEventMatches: { type: Object },
+      _toastMessage: { type: String },
+      _toastVisible: { type: Boolean },
     };
   }
 
@@ -17,6 +19,9 @@ class CalcioLiveTodayMatchesCard extends LitElement {
     super();
     this._recentEventMatches = new Map();
     this._eventSubscriptions = [];
+    this._toastMessage = '';
+    this._toastVisible = false;
+    this._toastTimer = null;
   }
 
   setConfig(config) {
@@ -29,6 +34,7 @@ class CalcioLiveTodayMatchesCard extends LitElement {
     this.showFinishedMatches = config.show_finished_matches !== undefined ? config.show_finished_matches : true;
     this.hideHeader = config.hide_header !== undefined ? config.hide_header : false;
     this.hidePastDays = config.hide_past_days !== undefined ? config.hide_past_days : 0;
+    this.showEventToasts = config.show_event_toasts === true;
     this.activeMatch = null;
     this.showPopup = false;
   }
@@ -76,6 +82,9 @@ class CalcioLiveTodayMatchesCard extends LitElement {
   _handleCalcioLiveEvent(event) {
     const eventType = event.event_type;
     const eventData = event.data;
+    if (!this._eventBelongsToThisCard(eventData)) {
+      return;
+    }
     const matchKey = `${eventData.home_team}_${eventData.away_team}`;
     this._showEventToast(eventType, eventData);
     this._recentEventMatches.set(matchKey, true);
@@ -86,7 +95,16 @@ class CalcioLiveTodayMatchesCard extends LitElement {
     }, 5000);
   }
 
+  _eventBelongsToThisCard(eventData) {
+    if (!this.hass || !this._config) return false;
+    const stateObj = this.hass.states[this._config.entity];
+    if (!stateObj) return false;
+    const matches = stateObj.attributes.matches || [];
+    return matches.some(m => m.home_team === eventData.home_team && m.away_team === eventData.away_team);
+  }
+
   _showEventToast(eventType, eventData) {
+    if (!this.showEventToasts) return;
     let message = '';
     if (eventType === 'calcio_live_goal') {
       message = `🔥 GOAL! ${eventData.player} - ${eventData.home_team} ${eventData.home_score} - ${eventData.away_score} ${eventData.away_team}`;
@@ -95,14 +113,15 @@ class CalcioLiveTodayMatchesCard extends LitElement {
     } else if (eventType === 'calcio_live_red_card') {
       message = `🟥 Cartellino Rosso: ${eventData.player}${eventData.minute ? ` (${eventData.minute}')` : ''}`;
     }
-    if (message && this.hass) {
-      this.hass.callService('persistent_notification', 'create', {
-        message: message,
-        title: 'CalcioLive',
-      }).catch(() => {
-        console.log('CalcioLive Event:', message);
-      });
-    }
+    if (!message) return;
+    this._toastMessage = message;
+    this._toastVisible = true;
+    if (this._toastTimer) clearTimeout(this._toastTimer);
+    this._toastTimer = setTimeout(() => {
+      this._toastVisible = false;
+      this.requestUpdate();
+    }, 4000);
+    this.requestUpdate();
   }
   
 
@@ -122,6 +141,7 @@ class CalcioLiveTodayMatchesCard extends LitElement {
       hide_past_days: 0,
       show_finished_matches: true,
       hide_header: false,
+      show_event_toasts: false,
     };
   }
   
@@ -264,6 +284,9 @@ class CalcioLiveTodayMatchesCard extends LitElement {
 
       return html`
         <ha-card>
+          ${this.showEventToasts && this._toastVisible ? html`
+            <div class="event-toast">${this._toastMessage}</div>
+          ` : ''}
           ${!this.hideHeader ? html`
           <div class="header">
             ${leagueInfo && leagueInfo.logo_href ? html`
@@ -409,6 +432,31 @@ class CalcioLiveTodayMatchesCard extends LitElement {
           padding: 16px;
           box-sizing: border-box;
           width: 100%;
+          position: relative;
+        }
+        .event-toast {
+          position: absolute;
+          top: 8px;
+          left: 50%;
+          transform: translateX(-50%);
+          background: rgba(31, 92, 255, 0.95);
+          color: white;
+          padding: 8px 16px;
+          border-radius: 8px;
+          font-size: 13px;
+          font-weight: bold;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+          z-index: 10;
+          animation: toast-fade 4s ease-in-out forwards;
+          pointer-events: none;
+          max-width: 90%;
+          text-align: center;
+        }
+        @keyframes toast-fade {
+          0% { opacity: 0; transform: translate(-50%, -10px); }
+          10% { opacity: 1; transform: translate(-50%, 0); }
+          90% { opacity: 1; transform: translate(-50%, 0); }
+          100% { opacity: 0; transform: translate(-50%, -10px); }
         }
         .header {
           display: flex;

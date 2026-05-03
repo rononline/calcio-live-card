@@ -10,6 +10,8 @@ class CalcioLiveTeamNextCard extends LitElement {
       _eventSubscription: { type: Object },
       _eventSubscriptions: { type: Array },
       _hasRecentEvent: { type: Boolean },
+      _toastMessage: { type: String },
+      _toastVisible: { type: Boolean },
     };
   }
 
@@ -21,6 +23,10 @@ class CalcioLiveTeamNextCard extends LitElement {
     this.showPopup = false;
     this.activeMatch = null;
     this._hasRecentEvent = false;
+    this.showEventToasts = config.show_event_toasts === true;
+    this._toastMessage = '';
+    this._toastVisible = false;
+    this._toastTimer = null;
   }
 
   connectedCallback() {
@@ -66,6 +72,9 @@ class CalcioLiveTeamNextCard extends LitElement {
   _handleCalcioLiveEvent(event) {
     const eventType = event.event_type;
     const eventData = event.data;
+    if (!this._eventBelongsToThisCard(eventData)) {
+      return;
+    }
     this._showEventToast(eventType, eventData);
     this._hasRecentEvent = true;
     this.requestUpdate();
@@ -75,7 +84,18 @@ class CalcioLiveTeamNextCard extends LitElement {
     }, 5000);
   }
 
+  _eventBelongsToThisCard(eventData) {
+    if (!this.hass || !this._config) return false;
+    const stateObj = this.hass.states[this._config.entity];
+    if (!stateObj) return false;
+    const matches = stateObj.attributes.matches || [];
+    if (matches.length === 0) return false;
+    const m = matches[0];
+    return m.home_team === eventData.home_team && m.away_team === eventData.away_team;
+  }
+
   _showEventToast(eventType, eventData) {
+    if (!this.showEventToasts) return;
     let message = '';
     if (eventType === 'calcio_live_goal') {
       message = `🔥 GOAL! ${eventData.player} - ${eventData.home_team} ${eventData.home_score} - ${eventData.away_score} ${eventData.away_team}`;
@@ -84,14 +104,15 @@ class CalcioLiveTeamNextCard extends LitElement {
     } else if (eventType === 'calcio_live_red_card') {
       message = `🟥 Cartellino Rosso: ${eventData.player}${eventData.minute ? ` (${eventData.minute}')` : ''}`;
     }
-    if (message && this.hass) {
-      this.hass.callService('persistent_notification', 'create', {
-        message: message,
-        title: 'CalcioLive',
-      }).catch(() => {
-        console.log('CalcioLive Event:', message);
-      });
-    }
+    if (!message) return;
+    this._toastMessage = message;
+    this._toastVisible = true;
+    if (this._toastTimer) clearTimeout(this._toastTimer);
+    this._toastTimer = setTimeout(() => {
+      this._toastVisible = false;
+      this.requestUpdate();
+    }, 4000);
+    this.requestUpdate();
   }
 
   getCardSize() {
@@ -105,6 +126,7 @@ class CalcioLiveTeamNextCard extends LitElement {
   static getStubConfig() {
     return {
       entity: "sensor.calcio_live",
+      show_event_toasts: false,
     };
   }
 
@@ -247,6 +269,9 @@ class CalcioLiveTeamNextCard extends LitElement {
 
     return html`
       <ha-card class="${this._hasRecentEvent ? 'event-highlight' : ''}">
+        ${this.showEventToasts && this._toastVisible ? html`
+          <div class="event-toast">${this._toastMessage}</div>
+        ` : ''}
         <div class="background-logos">
           <div class="background-logo home-logo">
             <img src="${match.home_logo}" alt="Logo squadra di casa" />
@@ -569,6 +594,30 @@ class CalcioLiveTeamNextCard extends LitElement {
         }
         ha-card.event-highlight {
           animation: pulse-highlight 0.6s ease-out;
+        }
+        .event-toast {
+          position: absolute;
+          top: 8px;
+          left: 50%;
+          transform: translateX(-50%);
+          background: rgba(31, 92, 255, 0.95);
+          color: white;
+          padding: 8px 16px;
+          border-radius: 8px;
+          font-size: 13px;
+          font-weight: bold;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+          z-index: 10;
+          animation: toast-fade 4s ease-in-out forwards;
+          pointer-events: none;
+          max-width: 90%;
+          text-align: center;
+        }
+        @keyframes toast-fade {
+          0% { opacity: 0; transform: translate(-50%, -10px); }
+          10% { opacity: 1; transform: translate(-50%, 0); }
+          90% { opacity: 1; transform: translate(-50%, 0); }
+          100% { opacity: 0; transform: translate(-50%, -10px); }
         }
       `;
   }

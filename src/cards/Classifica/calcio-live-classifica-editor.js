@@ -136,7 +136,7 @@ class CalcioLiveClassificaCardEditor extends LitElement {
               label="Entity"
               .configValue=${'entity'}
               .value=${this._entity}
-              @change=${(e) => this._EntityChanged(e, 'entity')}
+              @selected=${this._EntityChanged}
               @closed=${(ev) => ev.stopPropagation()}
               >
               ${this.entities.map((entity) => {
@@ -151,7 +151,7 @@ class CalcioLiveClassificaCardEditor extends LitElement {
             label="Select Group"
             .value=${this._config.selected_group || ''}
             .configValue=${'selected_group'}
-            @change=${this._groupChanged}
+            @selected=${this._groupChanged}
             @closed=${(ev) => ev.stopPropagation()} 
           >
             ${this.groups.length
@@ -171,6 +171,15 @@ class CalcioLiveClassificaCardEditor extends LitElement {
           >
           </ha-switch>
           <label>Hide Header</label>
+        </div>
+        <div class="option">
+          <ha-switch
+            .checked=${this._config.show_event_toasts === true}
+            @change=${this._valueChanged}
+            .configValue=${'show_event_toasts'}
+          >
+          </ha-switch>
+          <label>Show Event Toasts (in-card)</label>
         </div>
         <div class="option">
           <ha-textfield

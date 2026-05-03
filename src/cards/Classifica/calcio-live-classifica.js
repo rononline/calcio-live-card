@@ -10,6 +10,8 @@ class CalcioLiveStandingsCard extends LitElement {
       selectedGroup: { type: String },
       _eventSubscription: { type: Object },
       _eventSubscriptions: { type: Array },
+      _toastMessage: { type: String },
+      _toastVisible: { type: Boolean },
     };
   }
 
@@ -21,6 +23,10 @@ class CalcioLiveStandingsCard extends LitElement {
     this.maxTeamsVisible = config.max_teams_visible ? config.max_teams_visible : 10;
     this.hideHeader = config.hide_header || false;
     this.selectedGroup = config.selected_group || '';
+    this.showEventToasts = config.show_event_toasts === true;
+    this._toastMessage = '';
+    this._toastVisible = false;
+    this._toastTimer = null;
   }
 
   connectedCallback() {
@@ -72,10 +78,23 @@ class CalcioLiveStandingsCard extends LitElement {
   _handleCalcioLiveEvent(event) {
     const eventType = event.event_type;
     const eventData = event.data;
+    if (!this._eventBelongsToThisCard(eventData)) {
+      return;
+    }
     this._showEventToast(eventType, eventData);
   }
 
+  _eventBelongsToThisCard(eventData) {
+    if (!this.hass || !this._config) return false;
+    const entityId = this._config.entity || '';
+    const eventCode = eventData.competition_code;
+    if (!eventCode) return false;
+    const normalized = eventCode.replace(/\./g, '_').toLowerCase();
+    return entityId.toLowerCase().includes(normalized);
+  }
+
   _showEventToast(eventType, eventData) {
+    if (!this.showEventToasts) return;
     let message = '';
     if (eventType === 'calcio_live_goal') {
       message = `🔥 GOAL! ${eventData.player} - ${eventData.home_team} ${eventData.home_score} - ${eventData.away_score} ${eventData.away_team}`;
@@ -86,14 +105,15 @@ class CalcioLiveStandingsCard extends LitElement {
     } else if (eventType === 'calcio_live_match_finished') {
       message = `✅ Partita Terminata! ${eventData.home_team} ${eventData.home_score} - ${eventData.away_score} ${eventData.away_team}`;
     }
-    if (message && this.hass) {
-      this.hass.callService('persistent_notification', 'create', {
-        message: message,
-        title: 'CalcioLive',
-      }).catch(() => {
-        console.log('CalcioLive Event:', message);
-      });
-    }
+    if (!message) return;
+    this._toastMessage = message;
+    this._toastVisible = true;
+    if (this._toastTimer) clearTimeout(this._toastTimer);
+    this._toastTimer = setTimeout(() => {
+      this._toastVisible = false;
+      this.requestUpdate();
+    }, 4000);
+    this.requestUpdate();
   }
 
   getCardSize() {
@@ -110,6 +130,7 @@ class CalcioLiveStandingsCard extends LitElement {
       max_teams_visible: 10,
       hide_header: false,
       selected_group: '',
+      show_event_toasts: false,
     };
   }
   
@@ -165,6 +186,9 @@ class CalcioLiveStandingsCard extends LitElement {
 
     return html`
       <ha-card>
+        ${this.showEventToasts && this._toastVisible ? html`
+          <div class="event-toast">${this._toastMessage}</div>
+        ` : ''}
         ${this.hideHeader
           ? html``
           : html`
@@ -227,6 +251,31 @@ class CalcioLiveStandingsCard extends LitElement {
         padding: 16px;
         box-sizing: border-box;
         width: 100%;
+        position: relative;
+      }
+      .event-toast {
+        position: absolute;
+        top: 8px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(31, 92, 255, 0.95);
+        color: white;
+        padding: 8px 16px;
+        border-radius: 8px;
+        font-size: 13px;
+        font-weight: bold;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        z-index: 10;
+        animation: toast-fade 4s ease-in-out forwards;
+        pointer-events: none;
+        max-width: 90%;
+        text-align: center;
+      }
+      @keyframes toast-fade {
+        0% { opacity: 0; transform: translate(-50%, -10px); }
+        10% { opacity: 1; transform: translate(-50%, 0); }
+        90% { opacity: 1; transform: translate(-50%, 0); }
+        100% { opacity: 0; transform: translate(-50%, -10px); }
       }
       .card-header {
         margin-bottom: 2px;
