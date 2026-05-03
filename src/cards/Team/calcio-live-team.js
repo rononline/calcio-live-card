@@ -232,11 +232,12 @@ class CalcioLiveTeamNextCard extends LitElement {
   _renderTopScorer(scorer) {
     if (!scorer || !scorer.name) return '';
     const name = scorer.short_name || scorer.name;
+    const label = this._t('team.top_scorer');
     return html`
-      <div class="top-scorer" title="Capocannoniere">
-        <span class="ts-icon">⚽</span>
+      <div class="top-scorer" title="${label}: ${scorer.name} (${scorer.value})">
+        <span class="ts-label">${label}</span>
         <span class="ts-name">${name}</span>
-        <span class="ts-val">${scorer.value}</span>
+        <span class="ts-val">${scorer.value}<span class="ts-unit">★</span></span>
       </div>
     `;
   }
@@ -790,27 +791,45 @@ class CalcioLiveTeamNextCard extends LitElement {
       .top-scorer {
         display: inline-flex;
         align-items: center;
-        gap: 5px;
-        padding: 3px 9px;
+        gap: 6px;
+        padding: 3px 8px 3px 4px;
         background: var(--cl-card-2);
         border: 1px solid var(--cl-glass-border);
         border-radius: 999px;
         font-size: 10px;
         font-weight: 700;
         color: var(--secondary-text-color);
-        max-width: 130px;
+        max-width: 140px;
       }
-      .top-scorer .ts-icon { font-size: 11px; }
+      .top-scorer .ts-label {
+        font-size: 8px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        background: rgba(251,191,36,0.18);
+        color: var(--cl-gold);
+        padding: 2px 5px;
+        border-radius: 4px;
+        line-height: 1;
+      }
       .top-scorer .ts-name {
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
         color: var(--primary-text-color);
+        font-size: 10px;
       }
       .top-scorer .ts-val {
+        display: inline-flex;
+        align-items: baseline;
+        gap: 1px;
         color: var(--cl-gold);
         font-weight: 800;
         font-variant-numeric: tabular-nums;
+      }
+      .top-scorer .ts-unit {
+        font-size: 9px;
+        opacity: 0.85;
       }
       .form-pill {
         width: 14px; height: 14px;

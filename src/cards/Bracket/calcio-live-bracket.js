@@ -1,4 +1,4 @@
-import { LitElement, html, css } from "lit-element";
+import { LitElement, html, svg, css } from "lit-element";
 import { t, resolveLang } from "../../i18n.js";
 
 class CalcioLiveBracketCard extends LitElement {
@@ -180,35 +180,47 @@ class CalcioLiveBracketCard extends LitElement {
   }
 
   _renderArrows(outputCount, direction) {
-    // SVG bracket: per ogni tie del round successivo disegna una staffa che
-    // collega due tie del round precedente (sopra/sotto) e termina con una freccia.
-    // outputCount = numero di tie del round successivo (= count/2 del precedente).
+    // Bracket connectors: per ogni tie del round successivo disegna una staffa che
+    // collega due tie del round precedente. SVG con coordinate %.
     if (outputCount <= 0) return '';
     const inputCount = outputCount * 2;
-    const lines = [];
+    const parts = [];
+    const isLeft = direction === 'left';
+    const markerId = `arrow-${direction}`;
+
     for (let j = 0; j < outputCount; j++) {
       const yTop = ((2 * j + 0.5) / inputCount) * 100;
       const yBot = ((2 * j + 1.5) / inputCount) * 100;
       const yMid = ((j + 0.5) / outputCount) * 100;
-      if (direction === 'left') {
-        // staffa che apre a destra (verso il round successivo a destra)
-        lines.push(`<line x1="0" y1="${yTop}%" x2="50%" y2="${yTop}%" />`);
-        lines.push(`<line x1="0" y1="${yBot}%" x2="50%" y2="${yBot}%" />`);
-        lines.push(`<line x1="50%" y1="${yTop}%" x2="50%" y2="${yBot}%" />`);
-        lines.push(`<line x1="50%" y1="${yMid}%" x2="92%" y2="${yMid}%" />`);
-        lines.push(`<polygon class="arrow-head" points="92%,${yMid - 2.2} 100%,${yMid} 92%,${yMid + 2.2}" />`);
+      if (isLeft) {
+        // 2 linee orizzontali (dai due tie sorgente verso destra)
+        parts.push(svg`<line x1="0" y1="${yTop}%" x2="50%" y2="${yTop}%" stroke-linecap="round" />`);
+        parts.push(svg`<line x1="0" y1="${yBot}%" x2="50%" y2="${yBot}%" stroke-linecap="round" />`);
+        // verticale
+        parts.push(svg`<line x1="50%" y1="${yTop}%" x2="50%" y2="${yBot}%" />`);
+        // orizzontale finale verso destra (con marker freccia)
+        parts.push(svg`<line x1="50%" y1="${yMid}%" x2="100%" y2="${yMid}%" marker-end="url(#${markerId})" />`);
       } else {
-        // staffa che apre a sinistra (verso il trofeo a sinistra)
-        lines.push(`<line x1="100%" y1="${yTop}%" x2="50%" y2="${yTop}%" />`);
-        lines.push(`<line x1="100%" y1="${yBot}%" x2="50%" y2="${yBot}%" />`);
-        lines.push(`<line x1="50%" y1="${yTop}%" x2="50%" y2="${yBot}%" />`);
-        lines.push(`<line x1="50%" y1="${yMid}%" x2="8%" y2="${yMid}%" />`);
-        lines.push(`<polygon class="arrow-head" points="8%,${yMid - 2.2} 0,${yMid} 8%,${yMid + 2.2}" />`);
+        parts.push(svg`<line x1="100%" y1="${yTop}%" x2="50%" y2="${yTop}%" stroke-linecap="round" />`);
+        parts.push(svg`<line x1="100%" y1="${yBot}%" x2="50%" y2="${yBot}%" stroke-linecap="round" />`);
+        parts.push(svg`<line x1="50%" y1="${yTop}%" x2="50%" y2="${yBot}%" />`);
+        parts.push(svg`<line x1="50%" y1="${yMid}%" x2="0" y2="${yMid}%" marker-end="url(#${markerId})" />`);
       }
     }
-    // Uso unsafeHTML via innerHTML per inserire SVG (lit-html non sanifica i namespace SVG da template literal)
-    const svg = `<svg class="connector-svg ${direction}" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">${lines.join('')}</svg>`;
-    return html`<div class="tree-arrows ${direction}" .innerHTML=${svg}></div>`;
+
+    // Marker freccia: triangolo orientato che si scala con stroke-width.
+    const marker = isLeft
+      ? svg`<marker id="${markerId}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L10,5 L0,10 z" fill="var(--cl-accent)" /></marker>`
+      : svg`<marker id="${markerId}" viewBox="0 0 10 10" refX="1" refY="5" markerWidth="6" markerHeight="6" orient="auto" markerUnits="strokeWidth"><path d="M10,0 L0,5 L10,10 z" fill="var(--cl-accent)" /></marker>`;
+
+    return html`
+      <div class="tree-arrows ${direction}">
+        <svg class="connector-svg ${direction}" preserveAspectRatio="none">
+          <defs>${marker}</defs>
+          ${parts}
+        </svg>
+      </div>
+    `;
   }
 
   _renderTree(rounds) {
