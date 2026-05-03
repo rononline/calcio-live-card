@@ -109,13 +109,22 @@ class CalcioLiveTeamNextCardEditor extends LitElement {
               label="Entity"
               .configValue=${'entity'}
               .value=${this._entity}
-              @change=${(e) => this._EntityChanged(e, 'entity')}
+              @selected=${this._EntityChanged}
               @closed=${(ev) => ev.stopPropagation()}
               >
               ${this.entities.map((entity) => {
                   return html`<ha-list-item .value=${entity}>${entity}</ha-list-item>`;
               })}
           </ha-select>
+          <div class="option">
+            <ha-switch
+              .checked=${this._config.show_event_toasts === true}
+              @change=${this._valueChanged}
+              .configValue=${'show_event_toasts'}
+            >
+            </ha-switch>
+            <label>Show Event Toasts (in-card)</label>
+          </div>
         </div>
       `;
     }

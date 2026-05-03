@@ -44,6 +44,7 @@ Ci sono 4 tipi di card e vi riporto degli esempi, dico 4 perchè una card è la 
 | **sensor**                | Il filtro avviene in automatico, bisogna solo selezionarlo.                    |
 | **hide header**           | Nasconde la barra superiore con le intestazioni (per risparmiare spazio).      |
 | **max events visible**    | Il numero di partite visibili nella card (escluse nello scroll).               |
+| **show event toasts**     | Se attivato mostra un toast in-card per goal/cartellini della competizione (default OFF). |
 
 <img src="images/classifica.png" alt="Classifica" width="400">
 ---
@@ -58,6 +59,7 @@ Ci sono 4 tipi di card e vi riporto degli esempi, dico 4 perchè una card è la 
 | **hide header**           | Nasconde la barra superiore con le intestazioni (per risparmiare spazio).      |
 | **max events visible**    | Il numero di partite visibili nella card (escluse nello scroll).               |
 | **max events total**      | Il numero totale di partite (comprese nello scroll).                           |
+| **show event toasts**     | Se attivato mostra un toast in-card per goal/cartellini delle partite visualizzate (default OFF). |
 
 Quindi se imposto visible a 5 e total a 10, vedrò solo 5 nella card e altre 5 scrollando la card.
 
@@ -75,6 +77,7 @@ Quindi se imposto visible a 5 e total a 10, vedrò solo 5 nella card e altre 5 s
 | **max events visible**    | Il numero di partite visibili nella card (escluse nello scroll).               |
 | **max events total**      | Il numero totale di partite (comprese nello scroll).                           |
 | **hide matches older**    | Nasconde le partite più vecchie dei giorni impostati.                          |
+| **show event toasts**     | Se attivato mostra un toast in-card per goal/cartellini delle partite visualizzate (default OFF). |
 
 <img src="images/squadra-tutte.png" alt="Squadra-tutte" width="400">
 ---
@@ -85,6 +88,7 @@ Quindi se imposto visible a 5 e total a 10, vedrò solo 5 nella card e altre 5 s
 | **Impostazione**         | **Descrizione**                                                                 |
 |---------------------------|---------------------------------------------------------------------------------|
 | **sensor**                | Il filtro avviene in automatico, bisogna solo selezionarlo.                    |
+| **show event toasts**     | Se attivato mostra un toast in-card per goal/cartellini della partita (default OFF). |
 
 <img src="images/squadra.png" alt="squadra" width="400">
 ---
