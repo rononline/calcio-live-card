@@ -8,10 +8,10 @@ class CalcioLiveStandingsCard extends LitElement {
       maxTeamsVisible: { type: Number },
       hideHeader: { type: Boolean },
       selectedGroup: { type: String },
-      _eventSubscription: { type: Object },
       _eventSubscriptions: { type: Array },
       _toastMessage: { type: String },
       _toastVisible: { type: Boolean },
+      _toastVariant: { type: String },
     };
   }
 
@@ -26,6 +26,7 @@ class CalcioLiveStandingsCard extends LitElement {
     this.showEventToasts = config.show_event_toasts === true;
     this._toastMessage = '';
     this._toastVisible = false;
+    this._toastVariant = 'goal';
     this._toastTimer = null;
   }
 
@@ -37,51 +38,19 @@ class CalcioLiveStandingsCard extends LitElement {
   disconnectedCallback() {
     super.disconnectedCallback();
     if (this._eventSubscriptions && Array.isArray(this._eventSubscriptions)) {
-      this._eventSubscriptions.forEach(sub => {
-        if (sub) sub.unsubscribe();
-      });
+      this._eventSubscriptions.forEach(sub => { if (sub) sub.unsubscribe(); });
       this._eventSubscriptions = [];
     }
   }
 
   _subscribeToEvents() {
-    if (!this.hass || !this.hass.connection) {
-      return;
-    }
+    if (!this.hass || !this.hass.connection) return;
     this._eventSubscriptions = [];
-    this._eventSubscriptions.push(
-      this.hass.connection.subscribeEvents(
-        this._handleCalcioLiveEvent.bind(this),
-        'calcio_live_goal'
-      )
-    );
-    this._eventSubscriptions.push(
-      this.hass.connection.subscribeEvents(
-        this._handleCalcioLiveEvent.bind(this),
-        'calcio_live_yellow_card'
-      )
-    );
-    this._eventSubscriptions.push(
-      this.hass.connection.subscribeEvents(
-        this._handleCalcioLiveEvent.bind(this),
-        'calcio_live_red_card'
-      )
-    );
-    this._eventSubscriptions.push(
-      this.hass.connection.subscribeEvents(
-        this._handleCalcioLiveEvent.bind(this),
-        'calcio_live_match_finished'
-      )
-    );
-  }
-
-  _handleCalcioLiveEvent(event) {
-    const eventType = event.event_type;
-    const eventData = event.data;
-    if (!this._eventBelongsToThisCard(eventData)) {
-      return;
-    }
-    this._showEventToast(eventType, eventData);
+    ['calcio_live_goal', 'calcio_live_yellow_card', 'calcio_live_red_card', 'calcio_live_match_finished'].forEach(evt => {
+      this._eventSubscriptions.push(
+        this.hass.connection.subscribeEvents(this._handleCalcioLiveEvent.bind(this), evt)
+      );
+    });
   }
 
   _eventBelongsToThisCard(eventData) {
@@ -93,20 +62,33 @@ class CalcioLiveStandingsCard extends LitElement {
     return entityId.toLowerCase().includes(normalized);
   }
 
-  _showEventToast(eventType, eventData) {
+  _handleCalcioLiveEvent(event) {
+    const eventType = event.event_type;
+    const eventData = event.data;
+    if (!this._eventBelongsToThisCard(eventData)) return;
     if (!this.showEventToasts) return;
+    this._showEventToast(eventType, eventData);
+  }
+
+  _showEventToast(eventType, eventData) {
     let message = '';
+    let variant = 'goal';
     if (eventType === 'calcio_live_goal') {
-      message = `🔥 GOAL! ${eventData.player} - ${eventData.home_team} ${eventData.home_score} - ${eventData.away_score} ${eventData.away_team}`;
+      message = `<strong>GOAL!</strong> ${eventData.player} · ${eventData.home_team} ${eventData.home_score} - ${eventData.away_score} ${eventData.away_team}`;
+      variant = 'goal';
     } else if (eventType === 'calcio_live_yellow_card') {
-      message = `🟨 Cartellino Giallo: ${eventData.player}${eventData.minute ? ` (${eventData.minute}')` : ''}`;
+      message = `🟨 <strong>Cartellino Giallo</strong> · ${eventData.player}${eventData.minute ? ` (${eventData.minute}')` : ''}`;
+      variant = 'yellow';
     } else if (eventType === 'calcio_live_red_card') {
-      message = `🟥 Cartellino Rosso: ${eventData.player}${eventData.minute ? ` (${eventData.minute}')` : ''}`;
+      message = `🟥 <strong>Cartellino Rosso</strong> · ${eventData.player}${eventData.minute ? ` (${eventData.minute}')` : ''}`;
+      variant = 'red';
     } else if (eventType === 'calcio_live_match_finished') {
-      message = `✅ Partita Terminata! ${eventData.home_team} ${eventData.home_score} - ${eventData.away_score} ${eventData.away_team}`;
+      message = `<strong>Finita!</strong> ${eventData.home_team} ${eventData.home_score} - ${eventData.away_score} ${eventData.away_team}`;
+      variant = 'finished';
     }
     if (!message) return;
     this._toastMessage = message;
+    this._toastVariant = variant;
     this._toastVisible = true;
     if (this._toastTimer) clearTimeout(this._toastTimer);
     this._toastTimer = setTimeout(() => {
@@ -116,14 +98,8 @@ class CalcioLiveStandingsCard extends LitElement {
     this.requestUpdate();
   }
 
-  getCardSize() {
-    return 3;
-  }
-  
-  static getConfigElement() {
-    return document.createElement("calcio-live-classifica-editor");
-  }
-
+  getCardSize() { return 5; }
+  static getConfigElement() { return document.createElement("calcio-live-classifica-editor"); }
   static getStubConfig() {
     return {
       entity: "sensor.calcio_live",
@@ -133,113 +109,97 @@ class CalcioLiveStandingsCard extends LitElement {
       show_event_toasts: false,
     };
   }
-  
-  render() {
-    if (!this.hass || !this._config) {
-      return html``;
-    }
 
+  _zoneClass(rank, total) {
+    if (rank === 1) return 'zone-cl rank-first';
+    if (rank <= 4) return 'zone-cl';
+    if (rank <= 6) return 'zone-el';
+    if (total && rank > total - 3) return 'zone-rel';
+    return 'zone-default';
+  }
+
+  render() {
+    if (!this.hass || !this._config) return html``;
     const entityId = this._config.entity;
     const stateObj = this.hass.states[entityId];
+    if (!stateObj) return html`<ha-card class="empty">Entità sconosciuta: ${entityId}</ha-card>`;
 
-    if (!stateObj) {
-      return html`<ha-card>Entità sconosciuta: ${entityId}</ha-card>`;
-    }
-
-    const standings = stateObj.attributes.standings || [];
     const seasonName = stateObj.attributes.season || '';
-    const seasonStart = stateObj.attributes.season_start || '';
-    const seasonEnd = stateObj.attributes.season_end || '';
-    
-    // Filtra la classifica in base al gruppo selezionato, se esiste
-    const standingsGroup = stateObj.attributes.standings_groups.find(
-      (group) => group.name === this.selectedGroup
-    );
+    const standingsGroups = stateObj.attributes.standings_groups || [];
+    const standingsGroup = standingsGroups.find(g => g.name === this.selectedGroup) || standingsGroups[0];
     let filteredStandings = standingsGroup ? standingsGroup.standings : [];
+    filteredStandings = filteredStandings.filter(t => t.rank != null);
 
-    // Filtra le squadre che hanno un rank valido (non null o undefined)
-    filteredStandings = filteredStandings.filter(team => team.rank != null && team.rank !== undefined);
-
-    // Ordinamento classifica (MSL sopratutto)
     if (seasonName.includes("MLS")) {
-      filteredStandings = filteredStandings.sort((a, b) => {
-        if (b.points !== a.points) {
-          return b.points - a.points;
-        }
-        if (b.goal_difference !== a.goal_difference) {
-          return b.goal_difference - a.goal_difference;
-        }
+      filteredStandings = filteredStandings.slice().sort((a, b) => {
+        if (b.points !== a.points) return b.points - a.points;
+        if (b.goal_difference !== a.goal_difference) return b.goal_difference - a.goal_difference;
         return b.goals_for - a.goals_for;
       });
-
-      // Riassegna il rank in ordine corretto
-      filteredStandings.forEach((team, index) => {
-        team.rank = index + 1;
-      });
+      filteredStandings.forEach((t, i) => { t.rank = i + 1; });
     } else {
-      filteredStandings = filteredStandings.sort((a, b) => a.rank - b.rank);
+      filteredStandings = filteredStandings.slice().sort((a, b) => a.rank - b.rank);
     }
-    
-    
 
-    const maxVisible = Math.min(this.maxTeamsVisible, filteredStandings.length);
+    const total = filteredStandings.length;
+    const maxVisible = Math.min(this.maxTeamsVisible, total);
+    const tableHeight = maxVisible * 48 + 50;
 
     return html`
       <ha-card>
         ${this.showEventToasts && this._toastVisible ? html`
-          <div class="event-toast">${this._toastMessage}</div>
+          <div class="event-toast variant-${this._toastVariant}" .innerHTML=${this._toastMessage}></div>
         ` : ''}
-        ${this.hideHeader
-          ? html``
-          : html`
-              <div class="card-header">
-                <div class="header-row">
-                  <div class="competition-details">
-                    <div class="competition-name">${stateObj.state}</div>
-                    <div class="season-dates">${seasonName}</div>
-                  </div>
-                </div>
-                <hr class="separator" />
-              </div>
-            `}
-        <div class="card-content">
-          <div class="table-container" style="--max-teams-visible: ${maxVisible};">
-            <table>
-              <thead>
-                <tr>
-                  <th class="small-column">Pos</th>
-                  <th class="team-column">Squadra</th>
-                  <th class="small-column">Punti</th>
-                  <th class="small-column">V</th>
-                  <th class="small-column">P</th>
-                  <th class="small-column">S</th>
-                  <th class="small-column">GF</th>
-                  <th class="small-column">GS</th>
-                  <th class="small-column">+/-</th>
-                </tr>
-              </thead>
-              <tbody>
-                ${filteredStandings.map((team) => html`
-                  <tr>
-                    <td class="small-column">${team.rank ?? '-'}</td>
-                    <td class="team-column">
-                      <div class="team-name">
-                        <img class="team-crest" src="${team.team_logo}" alt="${team.team_name}" />
-                        ${team.team_name}
-                      </div>
-                    </td>
-                    <td class="points small-column">${team.points}</td>
-                    <td class="won small-column">${team.wins}</td>
-                    <td class="draw small-column">${team.draws}</td>
-                    <td class="lost small-column">${team.losses}</td>
-                    <td class="small-column">${team.goals_for}</td>
-                    <td class="small-column">${team.goals_against}</td>
-                    <td class="small-column">${team.goal_difference}</td>
-                  </tr>
-                `)}
-              </tbody>
-            </table>
+
+        ${this.hideHeader ? '' : html`
+          <div class="top-bar">
+            <h2>${stateObj.state}</h2>
+            <div class="sub">${seasonName} ${standingsGroup && standingsGroup.name ? `· ${standingsGroup.name}` : ''}</div>
           </div>
+        `}
+
+        <div class="table-wrap" style="max-height: ${tableHeight}px;">
+          <table class="standings-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th class="team-col">Squadra</th>
+                <th>P</th>
+                <th>V</th>
+                <th>N</th>
+                <th>S</th>
+                <th>+/-</th>
+                <th>Pt</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${filteredStandings.map(team => {
+                const gd = team.goal_difference;
+                const gdClass = gd > 0 ? 'gd-pos' : (gd < 0 ? 'gd-neg' : '');
+                return html`
+                  <tr class="${this._zoneClass(team.rank, total)}">
+                    <td><div class="rank-cell"><div class="rank-num">${team.rank}</div></div></td>
+                    <td class="team-cell">
+                      <img src="${team.team_logo}" alt="${team.team_name}" />
+                      <span class="tname">${team.team_name}</span>
+                    </td>
+                    <td>${team.points != null ? (team.wins + team.draws + team.losses) : '-'}</td>
+                    <td>${team.wins ?? '-'}</td>
+                    <td>${team.draws ?? '-'}</td>
+                    <td>${team.losses ?? '-'}</td>
+                    <td class="${gdClass}">${gd > 0 ? '+' : ''}${gd ?? '-'}</td>
+                    <td class="points-cell">${team.points ?? '-'}</td>
+                  </tr>
+                `;
+              })}
+            </tbody>
+          </table>
+        </div>
+
+        <div class="legend">
+          <div class="legend-item"><span class="legend-dot cl"></span>Champions</div>
+          <div class="legend-item"><span class="legend-dot el"></span>Europa</div>
+          <div class="legend-item"><span class="legend-dot rel"></span>Retrocessione</div>
         </div>
       </ha-card>
     `;
@@ -247,117 +207,241 @@ class CalcioLiveStandingsCard extends LitElement {
 
   static get styles() {
     return css`
-      ha-card {
-        padding: 16px;
-        box-sizing: border-box;
-        width: 100%;
-        position: relative;
+      :host {
+        --cl-accent: #6366f1;
+        --cl-accent-2: #ec4899;
+        --cl-live: #ef4444;
+        --cl-green: #10b981;
+        --cl-gold: #fbbf24;
+        --cl-gold-glow: rgba(251,191,36,0.4);
+        --cl-gold-text: #fde047;
+        --cl-card-2: rgba(255,255,255,0.05);
+        --cl-divider: rgba(255,255,255,0.08);
+        --cl-cl: #6366f1;
+        --cl-el: #f97316;
+        --cl-rel: #ef4444;
       }
+      ha-card {
+        position: relative;
+        overflow: hidden;
+        border-radius: 20px;
+        padding: 0;
+        box-shadow: 0 4px 24px rgba(0,0,0,0.15);
+      }
+      ha-card.empty {
+        padding: 24px;
+        text-align: center;
+        color: var(--secondary-text-color);
+      }
+
+      .top-bar {
+        position: relative;
+        padding: 20px 18px;
+        background:
+          linear-gradient(135deg, rgba(99,102,241,0.15), rgba(236,72,153,0.10) 60%, transparent);
+        border-bottom: 1px solid var(--cl-divider);
+        overflow: hidden;
+      }
+      .top-bar::before {
+        content: '⚽';
+        position: absolute;
+        right: -10px; top: -10px;
+        font-size: 90px;
+        opacity: 0.06;
+        transform: rotate(15deg);
+      }
+      .top-bar h2 {
+        margin: 0;
+        font-size: 20px;
+        font-weight: 900;
+        letter-spacing: -0.03em;
+        background: linear-gradient(135deg, var(--primary-text-color), var(--cl-accent));
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+      .top-bar .sub {
+        color: var(--secondary-text-color);
+        font-size: 12px;
+        margin-top: 4px;
+        font-weight: 500;
+      }
+
+      .table-wrap {
+        overflow-y: auto;
+      }
+      .standings-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        font-size: 13px;
+      }
+      .standings-table thead th {
+        position: sticky;
+        top: 0;
+        background: var(--cl-card-2);
+        backdrop-filter: blur(8px);
+        padding: 10px 4px;
+        text-align: center;
+        font-size: 10px;
+        font-weight: 800;
+        color: var(--secondary-text-color);
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        border-bottom: 1px solid var(--cl-divider);
+        z-index: 1;
+      }
+      .standings-table thead th:first-child { padding-left: 14px; text-align: left; }
+      .standings-table thead th:last-child { padding-right: 14px; }
+      .standings-table thead th.team-col { text-align: left; }
+
+      .standings-table tbody tr {
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .standings-table tbody tr:hover {
+        background: var(--cl-card-2);
+      }
+      .standings-table tbody td {
+        padding: 10px 4px;
+        text-align: center;
+        border-bottom: 1px solid var(--cl-divider);
+        font-variant-numeric: tabular-nums;
+        font-weight: 600;
+        color: var(--primary-text-color);
+      }
+      .standings-table tbody tr:last-child td { border-bottom: none; }
+      .standings-table tbody td:first-child { padding-left: 14px; text-align: left; }
+      .standings-table tbody td:last-child { padding-right: 14px; }
+
+      .rank-cell {
+        display: flex; align-items: center; gap: 6px;
+        font-weight: 800;
+      }
+      .rank-num {
+        width: 24px; height: 24px;
+        border-radius: 7px;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 11px;
+        font-weight: 900;
+      }
+      .zone-cl .rank-num {
+        background: linear-gradient(135deg, var(--cl-cl), #4f46e5);
+        color: white;
+        box-shadow: 0 2px 12px rgba(99,102,241,0.4);
+      }
+      .zone-cl.rank-first .rank-num {
+        background: linear-gradient(135deg, var(--cl-gold), #d97706);
+        color: #1f1410;
+        box-shadow: 0 2px 16px var(--cl-gold-glow);
+        animation: gold-shimmer 3s ease-in-out infinite;
+      }
+      @keyframes gold-shimmer {
+        0%, 100% { box-shadow: 0 2px 16px var(--cl-gold-glow); }
+        50% { box-shadow: 0 2px 24px var(--cl-gold-glow), 0 0 32px var(--cl-gold-glow); }
+      }
+      .zone-el .rank-num {
+        background: linear-gradient(135deg, var(--cl-el), #ea580c);
+        color: white;
+        box-shadow: 0 2px 12px rgba(249,115,22,0.4);
+      }
+      .zone-rel .rank-num {
+        background: linear-gradient(135deg, var(--cl-rel), #b91c1c);
+        color: white;
+        box-shadow: 0 2px 12px rgba(239,68,68,0.4);
+      }
+      .zone-default .rank-num {
+        background: var(--cl-card-2);
+        color: var(--secondary-text-color);
+      }
+
+      .team-cell {
+        display: flex; align-items: center; gap: 10px;
+        text-align: left !important;
+      }
+      .team-cell img {
+        width: 24px; height: 24px;
+        object-fit: contain;
+        flex-shrink: 0;
+      }
+      .team-cell .tname {
+        font-weight: 700;
+        font-size: 13px;
+        letter-spacing: -0.01em;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .points-cell {
+        font-weight: 900 !important;
+        font-size: 14px !important;
+      }
+      .gd-pos { color: var(--cl-green); font-weight: 800 !important; }
+      .gd-neg { color: var(--cl-live); font-weight: 800 !important; }
+
+      .legend {
+        display: flex; flex-wrap: wrap;
+        gap: 12px;
+        padding: 12px 16px;
+        border-top: 1px solid var(--cl-divider);
+        background: var(--cl-card-2);
+      }
+      .legend-item {
+        display: flex; align-items: center; gap: 6px;
+        font-size: 10px;
+        color: var(--secondary-text-color);
+        font-weight: 700;
+        letter-spacing: 0.04em;
+      }
+      .legend-dot {
+        width: 10px; height: 10px; border-radius: 3px;
+      }
+      .legend-dot.cl { background: linear-gradient(135deg, var(--cl-cl), #4f46e5); }
+      .legend-dot.el { background: linear-gradient(135deg, var(--cl-el), #ea580c); }
+      .legend-dot.rel { background: linear-gradient(135deg, var(--cl-rel), #b91c1c); }
+
+      /* Toast */
       .event-toast {
         position: absolute;
-        top: 8px;
+        top: 12px;
         left: 50%;
         transform: translateX(-50%);
-        background: rgba(31, 92, 255, 0.95);
-        color: white;
-        padding: 8px 16px;
-        border-radius: 8px;
+        background: #0b0f1a;
+        color: #ffffff;
+        padding: 10px 18px;
+        border-radius: 14px;
         font-size: 13px;
-        font-weight: bold;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-        z-index: 10;
-        animation: toast-fade 4s ease-in-out forwards;
+        font-weight: 800;
+        z-index: 100;
+        animation: toast-bounce 4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         pointer-events: none;
         max-width: 90%;
         text-align: center;
+        letter-spacing: -0.01em;
+        text-shadow: 0 1px 2px rgba(0,0,0,0.8);
       }
-      @keyframes toast-fade {
-        0% { opacity: 0; transform: translate(-50%, -10px); }
-        10% { opacity: 1; transform: translate(-50%, 0); }
-        90% { opacity: 1; transform: translate(-50%, 0); }
-        100% { opacity: 0; transform: translate(-50%, -10px); }
+      .event-toast.variant-goal {
+        box-shadow: 0 0 0 2px var(--cl-gold), 0 0 0 4px rgba(251,191,36,0.3),
+                    0 12px 40px rgba(0,0,0,0.7), 0 0 60px rgba(251,191,36,0.4);
       }
-      .card-header {
-        margin-bottom: 2px;
+      .event-toast.variant-goal strong { color: var(--cl-gold-text); }
+      .event-toast.variant-yellow {
+        box-shadow: 0 0 0 2px #f59e0b, 0 0 0 4px rgba(245,158,11,0.3), 0 12px 40px rgba(0,0,0,0.7);
       }
-      .header-row {
-        display: flex;
-        align-items: center;
-        justify-content: flex-start;
+      .event-toast.variant-yellow strong { color: #fbbf24; }
+      .event-toast.variant-red {
+        box-shadow: 0 0 0 2px var(--cl-live), 0 0 0 4px rgba(239,68,68,0.3), 0 12px 40px rgba(0,0,0,0.7);
       }
-      .competition-details {
-        display: flex;
-        flex-direction: column;
+      .event-toast.variant-red strong { color: #fca5a5; }
+      .event-toast.variant-finished {
+        box-shadow: 0 0 0 2px var(--cl-green), 0 0 0 4px rgba(16,185,129,0.3), 0 12px 40px rgba(0,0,0,0.7);
       }
-      .competition-name {
-        font-weight: bold;
-        font-size: 1.3em;
-      }
-      .season-dates {
-        color: var(--secondary-text-color);
-        font-size: 16px;
-      }
-      .table-container {
-        width: 100%;
-        overflow-y: auto;
-        max-height: calc(var(--max-teams-visible, 10) * 40px);
-      }
-      table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 2px; 
-      }
-      th, td {
-        padding: 8px;
-        text-align: left;
-        border-bottom: 1px solid var(--divider-color);
-        white-space: nowrap;
-      }
-      th {
-        background-color: var(--primary-background-color);
-        color: var(--primary-text-color);
-        text-align: center;
-      }
-      td {
-        vertical-align: middle;
-        text-align: center;
-      }
-      .team-name {
-        display: flex;
-        align-items: center;
-        justify-content: flex-start;
-      }
-      .team-crest {
-        width: 24px;
-        height: 24px;
-        margin-right: 8px;
-      }
-      .points {
-        font-weight: bold;
-        color: #4CAF50;
-      }
-      .won {
-        color: #4CAF50; 
-      }
-      .draw {
-        color: #FFC107;
-      }
-      .lost {
-        color: #F44336;
-      }
-      .separator {
-        width: 100%;
-        height: 1px;
-        background-color: #ddd;
-        border: none;
-        margin: 2px 0;
-      }
-      .team-column {
-        width: 180px;
-        text-align: left;
-      }
-      .small-column {
-        width: 40px;
+      .event-toast.variant-finished strong { color: #6ee7b7; }
+      @keyframes toast-bounce {
+        0%   { opacity: 0; transform: translate(-50%, -20px) scale(0.7); }
+        8%   { opacity: 1; transform: translate(-50%, 0) scale(1.08); }
+        14%  { transform: translate(-50%, 0) scale(1); }
+        90%  { opacity: 1; transform: translate(-50%, 0) scale(1); }
+        100% { opacity: 0; transform: translate(-50%, -10px) scale(0.95); }
       }
     `;
   }
