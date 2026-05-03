@@ -1,5 +1,5 @@
 /*! For license information please see calcio-live-card.bundle.js.LICENSE.txt */
-(()=>{"use strict";const t=globalThis,e=t.ShadowRoot&&(void 0===t.ShadyCSS||t.ShadyCSS.nativeShadow)&&"adoptedStyleSheets"in Document.prototype&&"replace"in CSSStyleSheet.prototype,a=Symbol(),s=new WeakMap;class i{constructor(t,e,s){if(this._$cssResult$=!0,s!==a)throw Error("CSSResult is not constructable. Use `unsafeCSS` or `css` instead.");this.cssText=t,this.t=e}get styleSheet(){let t=this.o;const a=this.t;if(e&&void 0===t){const e=void 0!==a&&1===a.length;e&&(t=s.get(a)),void 0===t&&((this.o=t=new CSSStyleSheet).replaceSync(this.cssText),e&&s.set(a,t))}return t}toString(){return this.cssText}}const o=(t,...e)=>{const s=1===t.length?t[0]:e.reduce(((e,a,s)=>e+(t=>{if(!0===t._$cssResult$)return t.cssText;if("number"==typeof t)return t;throw Error("Value passed to 'css' function must be a 'css' function result: "+t+". Use 'unsafeCSS' to pass non-literal values, but take care to ensure page security.")})(a)+t[s+1]),t[0]);return new i(s,t,a)},n=(a,s)=>{if(e)a.adoptedStyleSheets=s.map((t=>t instanceof CSSStyleSheet?t:t.styleSheet));else for(const e of s){const s=document.createElement("style"),i=t.litNonce;void 0!==i&&s.setAttribute("nonce",i),s.textContent=e.cssText,a.appendChild(s)}},r=e?t=>t:t=>t instanceof CSSStyleSheet?(t=>{let e="";for(const a of t.cssRules)e+=a.cssText;return(t=>new i("string"==typeof t?t:t+"",void 0,a))(e)})(t):t,{is:l,defineProperty:c,getOwnPropertyDescriptor:d,getOwnPropertyNames:h,getOwnPropertySymbols:p,getPrototypeOf:g}=Object,u=globalThis,m=u.trustedTypes,f=m?m.emptyScript:"",v=u.reactiveElementPolyfillSupport,b=(t,e)=>t,x={toAttribute(t,e){switch(e){case Boolean:t=t?f:null;break;case Object:case Array:t=null==t?t:JSON.stringify(t)}return t},fromAttribute(t,e){let a=t;switch(e){case Boolean:a=null!==t;break;case Number:a=null===t?null:Number(t);break;case Object:case Array:try{a=JSON.parse(t)}catch(t){a=null}}return a}},_=(t,e)=>!l(t,e),y={attribute:!0,type:String,converter:x,reflect:!1,hasChanged:_};Symbol.metadata??=Symbol("metadata"),u.litPropertyMetadata??=new WeakMap;class w extends HTMLElement{static addInitializer(t){this._$Ei(),(this.l??=[]).push(t)}static get observedAttributes(){return this.finalize(),this._$Eh&&[...this._$Eh.keys()]}static createProperty(t,e=y){if(e.state&&(e.attribute=!1),this._$Ei(),this.elementProperties.set(t,e),!e.noAccessor){const a=Symbol(),s=this.getPropertyDescriptor(t,a,e);void 0!==s&&c(this.prototype,t,s)}}static getPropertyDescriptor(t,e,a){const{get:s,set:i}=d(this.prototype,t)??{get(){return this[e]},set(t){this[e]=t}};return{get(){return s?.call(this)},set(e){const o=s?.call(this);i.call(this,e),this.requestUpdate(t,o,a)},configurable:!0,enumerable:!0}}static getPropertyOptions(t){return this.elementProperties.get(t)??y}static _$Ei(){if(this.hasOwnProperty(b("elementProperties")))return;const t=g(this);t.finalize(),void 0!==t.l&&(this.l=[...t.l]),this.elementProperties=new Map(t.elementProperties)}static finalize(){if(this.hasOwnProperty(b("finalized")))return;if(this.finalized=!0,this._$Ei(),this.hasOwnProperty(b("properties"))){const t=this.properties,e=[...h(t),...p(t)];for(const a of e)this.createProperty(a,t[a])}const t=this[Symbol.metadata];if(null!==t){const e=litPropertyMetadata.get(t);if(void 0!==e)for(const[t,a]of e)this.elementProperties.set(t,a)}this._$Eh=new Map;for(const[t,e]of this.elementProperties){const a=this._$Eu(t,e);void 0!==a&&this._$Eh.set(a,t)}this.elementStyles=this.finalizeStyles(this.styles)}static finalizeStyles(t){const e=[];if(Array.isArray(t)){const a=new Set(t.flat(1/0).reverse());for(const t of a)e.unshift(r(t))}else void 0!==t&&e.push(r(t));return e}static _$Eu(t,e){const a=e.attribute;return!1===a?void 0:"string"==typeof a?a:"string"==typeof t?t.toLowerCase():void 0}constructor(){super(),this._$Ep=void 0,this.isUpdatePending=!1,this.hasUpdated=!1,this._$Em=null,this._$Ev()}_$Ev(){this._$ES=new Promise((t=>this.enableUpdating=t)),this._$AL=new Map,this._$E_(),this.requestUpdate(),this.constructor.l?.forEach((t=>t(this)))}addController(t){(this._$EO??=new Set).add(t),void 0!==this.renderRoot&&this.isConnected&&t.hostConnected?.()}removeController(t){this._$EO?.delete(t)}_$E_(){const t=new Map,e=this.constructor.elementProperties;for(const a of e.keys())this.hasOwnProperty(a)&&(t.set(a,this[a]),delete this[a]);t.size>0&&(this._$Ep=t)}createRenderRoot(){const t=this.shadowRoot??this.attachShadow(this.constructor.shadowRootOptions);return n(t,this.constructor.elementStyles),t}connectedCallback(){this.renderRoot??=this.createRenderRoot(),this.enableUpdating(!0),this._$EO?.forEach((t=>t.hostConnected?.()))}enableUpdating(t){}disconnectedCallback(){this._$EO?.forEach((t=>t.hostDisconnected?.()))}attributeChangedCallback(t,e,a){this._$AK(t,a)}_$EC(t,e){const a=this.constructor.elementProperties.get(t),s=this.constructor._$Eu(t,a);if(void 0!==s&&!0===a.reflect){const i=(void 0!==a.converter?.toAttribute?a.converter:x).toAttribute(e,a.type);this._$Em=t,null==i?this.removeAttribute(s):this.setAttribute(s,i),this._$Em=null}}_$AK(t,e){const a=this.constructor,s=a._$Eh.get(t);if(void 0!==s&&this._$Em!==s){const t=a.getPropertyOptions(s),i="function"==typeof t.converter?{fromAttribute:t.converter}:void 0!==t.converter?.fromAttribute?t.converter:x;this._$Em=s,this[s]=i.fromAttribute(e,t.type),this._$Em=null}}requestUpdate(t,e,a){if(void 0!==t){if(a??=this.constructor.getPropertyOptions(t),!(a.hasChanged??_)(this[t],e))return;this.P(t,e,a)}!1===this.isUpdatePending&&(this._$ES=this._$ET())}P(t,e,a){this._$AL.has(t)||this._$AL.set(t,e),!0===a.reflect&&this._$Em!==t&&(this._$Ej??=new Set).add(t)}async _$ET(){this.isUpdatePending=!0;try{await this._$ES}catch(t){Promise.reject(t)}const t=this.scheduleUpdate();return null!=t&&await t,!this.isUpdatePending}scheduleUpdate(){return this.performUpdate()}performUpdate(){if(!this.isUpdatePending)return;if(!this.hasUpdated){if(this.renderRoot??=this.createRenderRoot(),this._$Ep){for(const[t,e]of this._$Ep)this[t]=e;this._$Ep=void 0}const t=this.constructor.elementProperties;if(t.size>0)for(const[e,a]of t)!0!==a.wrapped||this._$AL.has(e)||void 0===this[e]||this.P(e,this[e],a)}let t=!1;const e=this._$AL;try{t=this.shouldUpdate(e),t?(this.willUpdate(e),this._$EO?.forEach((t=>t.hostUpdate?.())),this.update(e)):this._$EU()}catch(e){throw t=!1,this._$EU(),e}t&&this._$AE(e)}willUpdate(t){}_$AE(t){this._$EO?.forEach((t=>t.hostUpdated?.())),this.hasUpdated||(this.hasUpdated=!0,this.firstUpdated(t)),this.updated(t)}_$EU(){this._$AL=new Map,this.isUpdatePending=!1}get updateComplete(){return this.getUpdateComplete()}getUpdateComplete(){return this._$ES}shouldUpdate(t){return!0}update(t){this._$Ej&&=this._$Ej.forEach((t=>this._$EC(t,this[t]))),this._$EU()}updated(t){}firstUpdated(t){}}w.elementStyles=[],w.shadowRootOptions={mode:"open"},w[b("elementProperties")]=new Map,w[b("finalized")]=new Map,v?.({ReactiveElement:w}),(u.reactiveElementVersions??=[]).push("2.0.4");const $=globalThis,k=$.trustedTypes,E=k?k.createPolicy("lit-html",{createHTML:t=>t}):void 0,C="$lit$",A=`lit$${Math.random().toFixed(9).slice(2)}$`,S="?"+A,z=`<${S}>`,T=document,M=()=>T.createComment(""),P=t=>null===t||"object"!=typeof t&&"function"!=typeof t,L=Array.isArray,V="[ \t\n\f\r]",N=/<(?:(!--|\/[^a-zA-Z])|(\/?[a-zA-Z][^>\s]*)|(\/?$))/g,O=/-->/g,H=/>/g,U=RegExp(`>|${V}(?:([^\\s"'>=/]+)(${V}*=${V}*(?:[^ \t\n\f\r"'\`<>=]|("|')|))|$)`,"g"),j=/'/g,D=/"/g,R=/^(?:script|style|textarea|title)$/i,B=t=>(e,...a)=>({_$litType$:t,strings:e,values:a}),I=B(1),G=(B(2),B(3),Symbol.for("lit-noChange")),F=Symbol.for("lit-nothing"),W=new WeakMap,q=T.createTreeWalker(T,129);function X(t,e){if(!L(t)||!t.hasOwnProperty("raw"))throw Error("invalid template strings array");return void 0!==E?E.createHTML(e):e}class K{constructor({strings:t,_$litType$:e},a){let s;this.parts=[];let i=0,o=0;const n=t.length-1,r=this.parts,[l,c]=((t,e)=>{const a=t.length-1,s=[];let i,o=2===e?"<svg>":3===e?"<math>":"",n=N;for(let e=0;e<a;e++){const a=t[e];let r,l,c=-1,d=0;for(;d<a.length&&(n.lastIndex=d,l=n.exec(a),null!==l);)d=n.lastIndex,n===N?"!--"===l[1]?n=O:void 0!==l[1]?n=H:void 0!==l[2]?(R.test(l[2])&&(i=RegExp("</"+l[2],"g")),n=U):void 0!==l[3]&&(n=U):n===U?">"===l[0]?(n=i??N,c=-1):void 0===l[1]?c=-2:(c=n.lastIndex-l[2].length,r=l[1],n=void 0===l[3]?U:'"'===l[3]?D:j):n===D||n===j?n=U:n===O||n===H?n=N:(n=U,i=void 0);const h=n===U&&t[e+1].startsWith("/>")?" ":"";o+=n===N?a+z:c>=0?(s.push(r),a.slice(0,c)+C+a.slice(c)+A+h):a+A+(-2===c?e:h)}return[X(t,o+(t[a]||"<?>")+(2===e?"</svg>":3===e?"</math>":"")),s]})(t,e);if(this.el=K.createElement(l,a),q.currentNode=this.el.content,2===e||3===e){const t=this.el.content.firstChild;t.replaceWith(...t.childNodes)}for(;null!==(s=q.nextNode())&&r.length<n;){if(1===s.nodeType){if(s.hasAttributes())for(const t of s.getAttributeNames())if(t.endsWith(C)){const e=c[o++],a=s.getAttribute(t).split(A),n=/([.?@])?(.*)/.exec(e);r.push({type:1,index:i,name:n[2],strings:a,ctor:"."===n[1]?tt:"?"===n[1]?et:"@"===n[1]?at:Q}),s.removeAttribute(t)}else t.startsWith(A)&&(r.push({type:6,index:i}),s.removeAttribute(t));if(R.test(s.tagName)){const t=s.textContent.split(A),e=t.length-1;if(e>0){s.textContent=k?k.emptyScript:"";for(let a=0;a<e;a++)s.append(t[a],M()),q.nextNode(),r.push({type:2,index:++i});s.append(t[e],M())}}}else if(8===s.nodeType)if(s.data===S)r.push({type:2,index:i});else{let t=-1;for(;-1!==(t=s.data.indexOf(A,t+1));)r.push({type:7,index:i}),t+=A.length-1}i++}}static createElement(t,e){const a=T.createElement("template");return a.innerHTML=t,a}}function Y(t,e,a=t,s){if(e===G)return e;let i=void 0!==s?a.o?.[s]:a.l;const o=P(e)?void 0:e._$litDirective$;return i?.constructor!==o&&(i?._$AO?.(!1),void 0===o?i=void 0:(i=new o(t),i._$AT(t,a,s)),void 0!==s?(a.o??=[])[s]=i:a.l=i),void 0!==i&&(e=Y(t,i._$AS(t,e.values),i,s)),e}class J{constructor(t,e){this._$AV=[],this._$AN=void 0,this._$AD=t,this._$AM=e}get parentNode(){return this._$AM.parentNode}get _$AU(){return this._$AM._$AU}u(t){const{el:{content:e},parts:a}=this._$AD,s=(t?.creationScope??T).importNode(e,!0);q.currentNode=s;let i=q.nextNode(),o=0,n=0,r=a[0];for(;void 0!==r;){if(o===r.index){let e;2===r.type?e=new Z(i,i.nextSibling,this,t):1===r.type?e=new r.ctor(i,r.name,r.strings,this,t):6===r.type&&(e=new st(i,this,t)),this._$AV.push(e),r=a[++n]}o!==r?.index&&(i=q.nextNode(),o++)}return q.currentNode=T,s}p(t){let e=0;for(const a of this._$AV)void 0!==a&&(void 0!==a.strings?(a._$AI(t,a,e),e+=a.strings.length-2):a._$AI(t[e])),e++}}class Z{get _$AU(){return this._$AM?._$AU??this.v}constructor(t,e,a,s){this.type=2,this._$AH=F,this._$AN=void 0,this._$AA=t,this._$AB=e,this._$AM=a,this.options=s,this.v=s?.isConnected??!0}get parentNode(){let t=this._$AA.parentNode;const e=this._$AM;return void 0!==e&&11===t?.nodeType&&(t=e.parentNode),t}get startNode(){return this._$AA}get endNode(){return this._$AB}_$AI(t,e=this){t=Y(this,t,e),P(t)?t===F||null==t||""===t?(this._$AH!==F&&this._$AR(),this._$AH=F):t!==this._$AH&&t!==G&&this._(t):void 0!==t._$litType$?this.$(t):void 0!==t.nodeType?this.T(t):(t=>L(t)||"function"==typeof t?.[Symbol.iterator])(t)?this.k(t):this._(t)}O(t){return this._$AA.parentNode.insertBefore(t,this._$AB)}T(t){this._$AH!==t&&(this._$AR(),this._$AH=this.O(t))}_(t){this._$AH!==F&&P(this._$AH)?this._$AA.nextSibling.data=t:this.T(T.createTextNode(t)),this._$AH=t}$(t){const{values:e,_$litType$:a}=t,s="number"==typeof a?this._$AC(t):(void 0===a.el&&(a.el=K.createElement(X(a.h,a.h[0]),this.options)),a);if(this._$AH?._$AD===s)this._$AH.p(e);else{const t=new J(s,this),a=t.u(this.options);t.p(e),this.T(a),this._$AH=t}}_$AC(t){let e=W.get(t.strings);return void 0===e&&W.set(t.strings,e=new K(t)),e}k(t){L(this._$AH)||(this._$AH=[],this._$AR());const e=this._$AH;let a,s=0;for(const i of t)s===e.length?e.push(a=new Z(this.O(M()),this.O(M()),this,this.options)):a=e[s],a._$AI(i),s++;s<e.length&&(this._$AR(a&&a._$AB.nextSibling,s),e.length=s)}_$AR(t=this._$AA.nextSibling,e){for(this._$AP?.(!1,!0,e);t&&t!==this._$AB;){const e=t.nextSibling;t.remove(),t=e}}setConnected(t){void 0===this._$AM&&(this.v=t,this._$AP?.(t))}}class Q{get tagName(){return this.element.tagName}get _$AU(){return this._$AM._$AU}constructor(t,e,a,s,i){this.type=1,this._$AH=F,this._$AN=void 0,this.element=t,this.name=e,this._$AM=s,this.options=i,a.length>2||""!==a[0]||""!==a[1]?(this._$AH=Array(a.length-1).fill(new String),this.strings=a):this._$AH=F}_$AI(t,e=this,a,s){const i=this.strings;let o=!1;if(void 0===i)t=Y(this,t,e,0),o=!P(t)||t!==this._$AH&&t!==G,o&&(this._$AH=t);else{const s=t;let n,r;for(t=i[0],n=0;n<i.length-1;n++)r=Y(this,s[a+n],e,n),r===G&&(r=this._$AH[n]),o||=!P(r)||r!==this._$AH[n],r===F?t=F:t!==F&&(t+=(r??"")+i[n+1]),this._$AH[n]=r}o&&!s&&this.j(t)}j(t){t===F?this.element.removeAttribute(this.name):this.element.setAttribute(this.name,t??"")}}class tt extends Q{constructor(){super(...arguments),this.type=3}j(t){this.element[this.name]=t===F?void 0:t}}class et extends Q{constructor(){super(...arguments),this.type=4}j(t){this.element.toggleAttribute(this.name,!!t&&t!==F)}}class at extends Q{constructor(t,e,a,s,i){super(t,e,a,s,i),this.type=5}_$AI(t,e=this){if((t=Y(this,t,e,0)??F)===G)return;const a=this._$AH,s=t===F&&a!==F||t.capture!==a.capture||t.once!==a.once||t.passive!==a.passive,i=t!==F&&(a===F||s);s&&this.element.removeEventListener(this.name,this,a),i&&this.element.addEventListener(this.name,this,t),this._$AH=t}handleEvent(t){"function"==typeof this._$AH?this._$AH.call(this.options?.host??this.element,t):this._$AH.handleEvent(t)}}class st{constructor(t,e,a){this.element=t,this.type=6,this._$AN=void 0,this._$AM=e,this.options=a}get _$AU(){return this._$AM._$AU}_$AI(t){Y(this,t)}}const it=$.litHtmlPolyfillSupport;it?.(K,Z),($.litHtmlVersions??=[]).push("3.2.0");class ot extends w{constructor(){super(...arguments),this.renderOptions={host:this},this.o=void 0}createRenderRoot(){const t=super.createRenderRoot();return this.renderOptions.renderBefore??=t.firstChild,t}update(t){const e=this.render();this.hasUpdated||(this.renderOptions.isConnected=this.isConnected),super.update(t),this.o=((t,e,a)=>{const s=a?.renderBefore??e;let i=s._$litPart$;if(void 0===i){const t=a?.renderBefore??null;s._$litPart$=i=new Z(e.insertBefore(M(),t),t,void 0,a??{})}return i._$AI(t),i})(e,this.renderRoot,this.renderOptions)}connectedCallback(){super.connectedCallback(),this.o?.setConnected(!0)}disconnectedCallback(){super.disconnectedCallback(),this.o?.setConnected(!1)}render(){return G}}ot._$litElement$=!0,ot.finalized=!0,globalThis.litElementHydrateSupport?.({LitElement:ot});const nt=globalThis.litElementPolyfillSupport;nt?.({LitElement:ot}),(globalThis.litElementVersions??=[]).push("4.1.0"),customElements.define("calcio-live-classifica",class extends ot{static get properties(){return{hass:{},_config:{},maxTeamsVisible:{type:Number},hideHeader:{type:Boolean},selectedGroup:{type:String},_eventSubscriptions:{type:Array},_toastMessage:{type:String},_toastVisible:{type:Boolean},_toastVariant:{type:String}}}setConfig(t){if(!t.entity)throw new Error("Devi definire un'entità");this._config=t,this.maxTeamsVisible=t.max_teams_visible?t.max_teams_visible:10,this.hideHeader=t.hide_header||!1,this.selectedGroup=t.selected_group||"",this.showEventToasts=!0===t.show_event_toasts,this._toastMessage="",this._toastVisible=!1,this._toastVariant="goal",this._toastTimer=null}connectedCallback(){super.connectedCallback(),this._subscribeToEvents()}disconnectedCallback(){super.disconnectedCallback(),this._eventSubscriptions&&Array.isArray(this._eventSubscriptions)&&(this._eventSubscriptions.forEach((t=>{t&&t.unsubscribe()})),this._eventSubscriptions=[])}_subscribeToEvents(){this.hass&&this.hass.connection&&(this._eventSubscriptions=[],["calcio_live_goal","calcio_live_yellow_card","calcio_live_red_card","calcio_live_match_finished"].forEach((t=>{this._eventSubscriptions.push(this.hass.connection.subscribeEvents(this._handleCalcioLiveEvent.bind(this),t))})))}_eventBelongsToThisCard(t){if(!this.hass||!this._config)return!1;const e=this._config.entity||"",a=t.competition_code;if(!a)return!1;const s=a.replace(/\./g,"_").toLowerCase();return e.toLowerCase().includes(s)}_handleCalcioLiveEvent(t){const e=t.event_type,a=t.data;this._eventBelongsToThisCard(a)&&this.showEventToasts&&this._showEventToast(e,a)}_showEventToast(t,e){let a="",s="goal";"calcio_live_goal"===t?(a=`<strong>GOAL!</strong> ${e.player} · ${e.home_team} ${e.home_score} - ${e.away_score} ${e.away_team}`,s="goal"):"calcio_live_yellow_card"===t?(a=`🟨 <strong>Cartellino Giallo</strong> · ${e.player}${e.minute?` (${e.minute}')`:""}`,s="yellow"):"calcio_live_red_card"===t?(a=`🟥 <strong>Cartellino Rosso</strong> · ${e.player}${e.minute?` (${e.minute}')`:""}`,s="red"):"calcio_live_match_finished"===t&&(a=`<strong>Finita!</strong> ${e.home_team} ${e.home_score} - ${e.away_score} ${e.away_team}`,s="finished"),a&&(this._toastMessage=a,this._toastVariant=s,this._toastVisible=!0,this._toastTimer&&clearTimeout(this._toastTimer),this._toastTimer=setTimeout((()=>{this._toastVisible=!1,this.requestUpdate()}),4e3),this.requestUpdate())}getCardSize(){return 5}static getConfigElement(){return document.createElement("calcio-live-classifica-editor")}static getStubConfig(){return{entity:"sensor.calcio_live",max_teams_visible:10,hide_header:!1,selected_group:"",show_event_toasts:!1}}_zoneClass(t,e){return 1===t?"zone-cl rank-first":t<=4?"zone-cl":t<=6?"zone-el":e&&t>e-3?"zone-rel":"zone-default"}render(){if(!this.hass||!this._config)return I``;const t=this._config.entity,e=this.hass.states[t];if(!e)return I`<ha-card class="empty">Entità sconosciuta: ${t}</ha-card>`;const a=e.attributes.season||"",s=e.attributes.standings_groups||[],i=s.find((t=>t.name===this.selectedGroup))||s[0];let o=i?i.standings:[];o=o.filter((t=>null!=t.rank)),a.includes("MLS")?(o=o.slice().sort(((t,e)=>e.points!==t.points?e.points-t.points:e.goal_difference!==t.goal_difference?e.goal_difference-t.goal_difference:e.goals_for-t.goals_for)),o.forEach(((t,e)=>{t.rank=e+1}))):o=o.slice().sort(((t,e)=>t.rank-e.rank));const n=o.length,r=48*Math.min(this.maxTeamsVisible,n)+50;return I`
+(()=>{"use strict";const t=globalThis,e=t.ShadowRoot&&(void 0===t.ShadyCSS||t.ShadyCSS.nativeShadow)&&"adoptedStyleSheets"in Document.prototype&&"replace"in CSSStyleSheet.prototype,s=Symbol(),a=new WeakMap;class i{constructor(t,e,a){if(this._$cssResult$=!0,a!==s)throw Error("CSSResult is not constructable. Use `unsafeCSS` or `css` instead.");this.cssText=t,this.t=e}get styleSheet(){let t=this.o;const s=this.t;if(e&&void 0===t){const e=void 0!==s&&1===s.length;e&&(t=a.get(s)),void 0===t&&((this.o=t=new CSSStyleSheet).replaceSync(this.cssText),e&&a.set(s,t))}return t}toString(){return this.cssText}}const o=(t,...e)=>{const a=1===t.length?t[0]:e.reduce(((e,s,a)=>e+(t=>{if(!0===t._$cssResult$)return t.cssText;if("number"==typeof t)return t;throw Error("Value passed to 'css' function must be a 'css' function result: "+t+". Use 'unsafeCSS' to pass non-literal values, but take care to ensure page security.")})(s)+t[a+1]),t[0]);return new i(a,t,s)},n=(s,a)=>{if(e)s.adoptedStyleSheets=a.map((t=>t instanceof CSSStyleSheet?t:t.styleSheet));else for(const e of a){const a=document.createElement("style"),i=t.litNonce;void 0!==i&&a.setAttribute("nonce",i),a.textContent=e.cssText,s.appendChild(a)}},r=e?t=>t:t=>t instanceof CSSStyleSheet?(t=>{let e="";for(const s of t.cssRules)e+=s.cssText;return(t=>new i("string"==typeof t?t:t+"",void 0,s))(e)})(t):t,{is:l,defineProperty:c,getOwnPropertyDescriptor:d,getOwnPropertyNames:h,getOwnPropertySymbols:p,getPrototypeOf:g}=Object,u=globalThis,f=u.trustedTypes,m=f?f.emptyScript:"",b=u.reactiveElementPolyfillSupport,v=(t,e)=>t,x={toAttribute(t,e){switch(e){case Boolean:t=t?m:null;break;case Object:case Array:t=null==t?t:JSON.stringify(t)}return t},fromAttribute(t,e){let s=t;switch(e){case Boolean:s=null!==t;break;case Number:s=null===t?null:Number(t);break;case Object:case Array:try{s=JSON.parse(t)}catch(t){s=null}}return s}},_=(t,e)=>!l(t,e),y={attribute:!0,type:String,converter:x,reflect:!1,hasChanged:_};Symbol.metadata??=Symbol("metadata"),u.litPropertyMetadata??=new WeakMap;class w extends HTMLElement{static addInitializer(t){this._$Ei(),(this.l??=[]).push(t)}static get observedAttributes(){return this.finalize(),this._$Eh&&[...this._$Eh.keys()]}static createProperty(t,e=y){if(e.state&&(e.attribute=!1),this._$Ei(),this.elementProperties.set(t,e),!e.noAccessor){const s=Symbol(),a=this.getPropertyDescriptor(t,s,e);void 0!==a&&c(this.prototype,t,a)}}static getPropertyDescriptor(t,e,s){const{get:a,set:i}=d(this.prototype,t)??{get(){return this[e]},set(t){this[e]=t}};return{get(){return a?.call(this)},set(e){const o=a?.call(this);i.call(this,e),this.requestUpdate(t,o,s)},configurable:!0,enumerable:!0}}static getPropertyOptions(t){return this.elementProperties.get(t)??y}static _$Ei(){if(this.hasOwnProperty(v("elementProperties")))return;const t=g(this);t.finalize(),void 0!==t.l&&(this.l=[...t.l]),this.elementProperties=new Map(t.elementProperties)}static finalize(){if(this.hasOwnProperty(v("finalized")))return;if(this.finalized=!0,this._$Ei(),this.hasOwnProperty(v("properties"))){const t=this.properties,e=[...h(t),...p(t)];for(const s of e)this.createProperty(s,t[s])}const t=this[Symbol.metadata];if(null!==t){const e=litPropertyMetadata.get(t);if(void 0!==e)for(const[t,s]of e)this.elementProperties.set(t,s)}this._$Eh=new Map;for(const[t,e]of this.elementProperties){const s=this._$Eu(t,e);void 0!==s&&this._$Eh.set(s,t)}this.elementStyles=this.finalizeStyles(this.styles)}static finalizeStyles(t){const e=[];if(Array.isArray(t)){const s=new Set(t.flat(1/0).reverse());for(const t of s)e.unshift(r(t))}else void 0!==t&&e.push(r(t));return e}static _$Eu(t,e){const s=e.attribute;return!1===s?void 0:"string"==typeof s?s:"string"==typeof t?t.toLowerCase():void 0}constructor(){super(),this._$Ep=void 0,this.isUpdatePending=!1,this.hasUpdated=!1,this._$Em=null,this._$Ev()}_$Ev(){this._$ES=new Promise((t=>this.enableUpdating=t)),this._$AL=new Map,this._$E_(),this.requestUpdate(),this.constructor.l?.forEach((t=>t(this)))}addController(t){(this._$EO??=new Set).add(t),void 0!==this.renderRoot&&this.isConnected&&t.hostConnected?.()}removeController(t){this._$EO?.delete(t)}_$E_(){const t=new Map,e=this.constructor.elementProperties;for(const s of e.keys())this.hasOwnProperty(s)&&(t.set(s,this[s]),delete this[s]);t.size>0&&(this._$Ep=t)}createRenderRoot(){const t=this.shadowRoot??this.attachShadow(this.constructor.shadowRootOptions);return n(t,this.constructor.elementStyles),t}connectedCallback(){this.renderRoot??=this.createRenderRoot(),this.enableUpdating(!0),this._$EO?.forEach((t=>t.hostConnected?.()))}enableUpdating(t){}disconnectedCallback(){this._$EO?.forEach((t=>t.hostDisconnected?.()))}attributeChangedCallback(t,e,s){this._$AK(t,s)}_$EC(t,e){const s=this.constructor.elementProperties.get(t),a=this.constructor._$Eu(t,s);if(void 0!==a&&!0===s.reflect){const i=(void 0!==s.converter?.toAttribute?s.converter:x).toAttribute(e,s.type);this._$Em=t,null==i?this.removeAttribute(a):this.setAttribute(a,i),this._$Em=null}}_$AK(t,e){const s=this.constructor,a=s._$Eh.get(t);if(void 0!==a&&this._$Em!==a){const t=s.getPropertyOptions(a),i="function"==typeof t.converter?{fromAttribute:t.converter}:void 0!==t.converter?.fromAttribute?t.converter:x;this._$Em=a,this[a]=i.fromAttribute(e,t.type),this._$Em=null}}requestUpdate(t,e,s){if(void 0!==t){if(s??=this.constructor.getPropertyOptions(t),!(s.hasChanged??_)(this[t],e))return;this.P(t,e,s)}!1===this.isUpdatePending&&(this._$ES=this._$ET())}P(t,e,s){this._$AL.has(t)||this._$AL.set(t,e),!0===s.reflect&&this._$Em!==t&&(this._$Ej??=new Set).add(t)}async _$ET(){this.isUpdatePending=!0;try{await this._$ES}catch(t){Promise.reject(t)}const t=this.scheduleUpdate();return null!=t&&await t,!this.isUpdatePending}scheduleUpdate(){return this.performUpdate()}performUpdate(){if(!this.isUpdatePending)return;if(!this.hasUpdated){if(this.renderRoot??=this.createRenderRoot(),this._$Ep){for(const[t,e]of this._$Ep)this[t]=e;this._$Ep=void 0}const t=this.constructor.elementProperties;if(t.size>0)for(const[e,s]of t)!0!==s.wrapped||this._$AL.has(e)||void 0===this[e]||this.P(e,this[e],s)}let t=!1;const e=this._$AL;try{t=this.shouldUpdate(e),t?(this.willUpdate(e),this._$EO?.forEach((t=>t.hostUpdate?.())),this.update(e)):this._$EU()}catch(e){throw t=!1,this._$EU(),e}t&&this._$AE(e)}willUpdate(t){}_$AE(t){this._$EO?.forEach((t=>t.hostUpdated?.())),this.hasUpdated||(this.hasUpdated=!0,this.firstUpdated(t)),this.updated(t)}_$EU(){this._$AL=new Map,this.isUpdatePending=!1}get updateComplete(){return this.getUpdateComplete()}getUpdateComplete(){return this._$ES}shouldUpdate(t){return!0}update(t){this._$Ej&&=this._$Ej.forEach((t=>this._$EC(t,this[t]))),this._$EU()}updated(t){}firstUpdated(t){}}w.elementStyles=[],w.shadowRootOptions={mode:"open"},w[v("elementProperties")]=new Map,w[v("finalized")]=new Map,b?.({ReactiveElement:w}),(u.reactiveElementVersions??=[]).push("2.0.4");const $=globalThis,k=$.trustedTypes,C=k?k.createPolicy("lit-html",{createHTML:t=>t}):void 0,E="$lit$",A=`lit$${Math.random().toFixed(9).slice(2)}$`,S="?"+A,z=`<${S}>`,T=document,M=()=>T.createComment(""),P=t=>null===t||"object"!=typeof t&&"function"!=typeof t,N=Array.isArray,L="[ \t\n\f\r]",O=/<(?:(!--|\/[^a-zA-Z])|(\/?[a-zA-Z][^>\s]*)|(\/?$))/g,U=/-->/g,V=/>/g,H=RegExp(`>|${L}(?:([^\\s"'>=/]+)(${L}*=${L}*(?:[^ \t\n\f\r"'\`<>=]|("|')|))|$)`,"g"),j=/'/g,D=/"/g,R=/^(?:script|style|textarea|title)$/i,B=t=>(e,...s)=>({_$litType$:t,strings:e,values:s}),I=B(1),q=(B(2),B(3),Symbol.for("lit-noChange")),G=Symbol.for("lit-nothing"),F=new WeakMap,W=T.createTreeWalker(T,129);function X(t,e){if(!N(t)||!t.hasOwnProperty("raw"))throw Error("invalid template strings array");return void 0!==C?C.createHTML(e):e}class K{constructor({strings:t,_$litType$:e},s){let a;this.parts=[];let i=0,o=0;const n=t.length-1,r=this.parts,[l,c]=((t,e)=>{const s=t.length-1,a=[];let i,o=2===e?"<svg>":3===e?"<math>":"",n=O;for(let e=0;e<s;e++){const s=t[e];let r,l,c=-1,d=0;for(;d<s.length&&(n.lastIndex=d,l=n.exec(s),null!==l);)d=n.lastIndex,n===O?"!--"===l[1]?n=U:void 0!==l[1]?n=V:void 0!==l[2]?(R.test(l[2])&&(i=RegExp("</"+l[2],"g")),n=H):void 0!==l[3]&&(n=H):n===H?">"===l[0]?(n=i??O,c=-1):void 0===l[1]?c=-2:(c=n.lastIndex-l[2].length,r=l[1],n=void 0===l[3]?H:'"'===l[3]?D:j):n===D||n===j?n=H:n===U||n===V?n=O:(n=H,i=void 0);const h=n===H&&t[e+1].startsWith("/>")?" ":"";o+=n===O?s+z:c>=0?(a.push(r),s.slice(0,c)+E+s.slice(c)+A+h):s+A+(-2===c?e:h)}return[X(t,o+(t[s]||"<?>")+(2===e?"</svg>":3===e?"</math>":"")),a]})(t,e);if(this.el=K.createElement(l,s),W.currentNode=this.el.content,2===e||3===e){const t=this.el.content.firstChild;t.replaceWith(...t.childNodes)}for(;null!==(a=W.nextNode())&&r.length<n;){if(1===a.nodeType){if(a.hasAttributes())for(const t of a.getAttributeNames())if(t.endsWith(E)){const e=c[o++],s=a.getAttribute(t).split(A),n=/([.?@])?(.*)/.exec(e);r.push({type:1,index:i,name:n[2],strings:s,ctor:"."===n[1]?tt:"?"===n[1]?et:"@"===n[1]?st:Q}),a.removeAttribute(t)}else t.startsWith(A)&&(r.push({type:6,index:i}),a.removeAttribute(t));if(R.test(a.tagName)){const t=a.textContent.split(A),e=t.length-1;if(e>0){a.textContent=k?k.emptyScript:"";for(let s=0;s<e;s++)a.append(t[s],M()),W.nextNode(),r.push({type:2,index:++i});a.append(t[e],M())}}}else if(8===a.nodeType)if(a.data===S)r.push({type:2,index:i});else{let t=-1;for(;-1!==(t=a.data.indexOf(A,t+1));)r.push({type:7,index:i}),t+=A.length-1}i++}}static createElement(t,e){const s=T.createElement("template");return s.innerHTML=t,s}}function Y(t,e,s=t,a){if(e===q)return e;let i=void 0!==a?s.o?.[a]:s.l;const o=P(e)?void 0:e._$litDirective$;return i?.constructor!==o&&(i?._$AO?.(!1),void 0===o?i=void 0:(i=new o(t),i._$AT(t,s,a)),void 0!==a?(s.o??=[])[a]=i:s.l=i),void 0!==i&&(e=Y(t,i._$AS(t,e.values),i,a)),e}class J{constructor(t,e){this._$AV=[],this._$AN=void 0,this._$AD=t,this._$AM=e}get parentNode(){return this._$AM.parentNode}get _$AU(){return this._$AM._$AU}u(t){const{el:{content:e},parts:s}=this._$AD,a=(t?.creationScope??T).importNode(e,!0);W.currentNode=a;let i=W.nextNode(),o=0,n=0,r=s[0];for(;void 0!==r;){if(o===r.index){let e;2===r.type?e=new Z(i,i.nextSibling,this,t):1===r.type?e=new r.ctor(i,r.name,r.strings,this,t):6===r.type&&(e=new at(i,this,t)),this._$AV.push(e),r=s[++n]}o!==r?.index&&(i=W.nextNode(),o++)}return W.currentNode=T,a}p(t){let e=0;for(const s of this._$AV)void 0!==s&&(void 0!==s.strings?(s._$AI(t,s,e),e+=s.strings.length-2):s._$AI(t[e])),e++}}class Z{get _$AU(){return this._$AM?._$AU??this.v}constructor(t,e,s,a){this.type=2,this._$AH=G,this._$AN=void 0,this._$AA=t,this._$AB=e,this._$AM=s,this.options=a,this.v=a?.isConnected??!0}get parentNode(){let t=this._$AA.parentNode;const e=this._$AM;return void 0!==e&&11===t?.nodeType&&(t=e.parentNode),t}get startNode(){return this._$AA}get endNode(){return this._$AB}_$AI(t,e=this){t=Y(this,t,e),P(t)?t===G||null==t||""===t?(this._$AH!==G&&this._$AR(),this._$AH=G):t!==this._$AH&&t!==q&&this._(t):void 0!==t._$litType$?this.$(t):void 0!==t.nodeType?this.T(t):(t=>N(t)||"function"==typeof t?.[Symbol.iterator])(t)?this.k(t):this._(t)}O(t){return this._$AA.parentNode.insertBefore(t,this._$AB)}T(t){this._$AH!==t&&(this._$AR(),this._$AH=this.O(t))}_(t){this._$AH!==G&&P(this._$AH)?this._$AA.nextSibling.data=t:this.T(T.createTextNode(t)),this._$AH=t}$(t){const{values:e,_$litType$:s}=t,a="number"==typeof s?this._$AC(t):(void 0===s.el&&(s.el=K.createElement(X(s.h,s.h[0]),this.options)),s);if(this._$AH?._$AD===a)this._$AH.p(e);else{const t=new J(a,this),s=t.u(this.options);t.p(e),this.T(s),this._$AH=t}}_$AC(t){let e=F.get(t.strings);return void 0===e&&F.set(t.strings,e=new K(t)),e}k(t){N(this._$AH)||(this._$AH=[],this._$AR());const e=this._$AH;let s,a=0;for(const i of t)a===e.length?e.push(s=new Z(this.O(M()),this.O(M()),this,this.options)):s=e[a],s._$AI(i),a++;a<e.length&&(this._$AR(s&&s._$AB.nextSibling,a),e.length=a)}_$AR(t=this._$AA.nextSibling,e){for(this._$AP?.(!1,!0,e);t&&t!==this._$AB;){const e=t.nextSibling;t.remove(),t=e}}setConnected(t){void 0===this._$AM&&(this.v=t,this._$AP?.(t))}}class Q{get tagName(){return this.element.tagName}get _$AU(){return this._$AM._$AU}constructor(t,e,s,a,i){this.type=1,this._$AH=G,this._$AN=void 0,this.element=t,this.name=e,this._$AM=a,this.options=i,s.length>2||""!==s[0]||""!==s[1]?(this._$AH=Array(s.length-1).fill(new String),this.strings=s):this._$AH=G}_$AI(t,e=this,s,a){const i=this.strings;let o=!1;if(void 0===i)t=Y(this,t,e,0),o=!P(t)||t!==this._$AH&&t!==q,o&&(this._$AH=t);else{const a=t;let n,r;for(t=i[0],n=0;n<i.length-1;n++)r=Y(this,a[s+n],e,n),r===q&&(r=this._$AH[n]),o||=!P(r)||r!==this._$AH[n],r===G?t=G:t!==G&&(t+=(r??"")+i[n+1]),this._$AH[n]=r}o&&!a&&this.j(t)}j(t){t===G?this.element.removeAttribute(this.name):this.element.setAttribute(this.name,t??"")}}class tt extends Q{constructor(){super(...arguments),this.type=3}j(t){this.element[this.name]=t===G?void 0:t}}class et extends Q{constructor(){super(...arguments),this.type=4}j(t){this.element.toggleAttribute(this.name,!!t&&t!==G)}}class st extends Q{constructor(t,e,s,a,i){super(t,e,s,a,i),this.type=5}_$AI(t,e=this){if((t=Y(this,t,e,0)??G)===q)return;const s=this._$AH,a=t===G&&s!==G||t.capture!==s.capture||t.once!==s.once||t.passive!==s.passive,i=t!==G&&(s===G||a);a&&this.element.removeEventListener(this.name,this,s),i&&this.element.addEventListener(this.name,this,t),this._$AH=t}handleEvent(t){"function"==typeof this._$AH?this._$AH.call(this.options?.host??this.element,t):this._$AH.handleEvent(t)}}class at{constructor(t,e,s){this.element=t,this.type=6,this._$AN=void 0,this._$AM=e,this.options=s}get _$AU(){return this._$AM._$AU}_$AI(t){Y(this,t)}}const it=$.litHtmlPolyfillSupport;it?.(K,Z),($.litHtmlVersions??=[]).push("3.2.0");class ot extends w{constructor(){super(...arguments),this.renderOptions={host:this},this.o=void 0}createRenderRoot(){const t=super.createRenderRoot();return this.renderOptions.renderBefore??=t.firstChild,t}update(t){const e=this.render();this.hasUpdated||(this.renderOptions.isConnected=this.isConnected),super.update(t),this.o=((t,e,s)=>{const a=s?.renderBefore??e;let i=a._$litPart$;if(void 0===i){const t=s?.renderBefore??null;a._$litPart$=i=new Z(e.insertBefore(M(),t),t,void 0,s??{})}return i._$AI(t),i})(e,this.renderRoot,this.renderOptions)}connectedCallback(){super.connectedCallback(),this.o?.setConnected(!0)}disconnectedCallback(){super.disconnectedCallback(),this.o?.setConnected(!1)}render(){return q}}ot._$litElement$=!0,ot.finalized=!0,globalThis.litElementHydrateSupport?.({LitElement:ot});const nt=globalThis.litElementPolyfillSupport;nt?.({LitElement:ot}),(globalThis.litElementVersions??=[]).push("4.1.0"),customElements.define("calcio-live-classifica",class extends ot{static get properties(){return{hass:{},_config:{},maxTeamsVisible:{type:Number},hideHeader:{type:Boolean},selectedGroup:{type:String},_eventSubscriptions:{type:Array},_toastMessage:{type:String},_toastVisible:{type:Boolean},_toastVariant:{type:String}}}setConfig(t){if(!t.entity)throw new Error("Devi definire un'entità");this._config=t,this.maxTeamsVisible=t.max_teams_visible?t.max_teams_visible:10,this.hideHeader=t.hide_header||!1,this.selectedGroup=t.selected_group||"",this.showEventToasts=!0===t.show_event_toasts,this._toastMessage="",this._toastVisible=!1,this._toastVariant="goal",this._toastTimer=null}connectedCallback(){super.connectedCallback(),this._subscribeToEvents()}disconnectedCallback(){super.disconnectedCallback(),this._eventSubscriptions&&Array.isArray(this._eventSubscriptions)&&(this._eventSubscriptions.forEach((t=>{t&&t.unsubscribe()})),this._eventSubscriptions=[])}_subscribeToEvents(){this.hass&&this.hass.connection&&(this._eventSubscriptions=[],["calcio_live_goal","calcio_live_yellow_card","calcio_live_red_card","calcio_live_match_finished"].forEach((t=>{this._eventSubscriptions.push(this.hass.connection.subscribeEvents(this._handleCalcioLiveEvent.bind(this),t))})))}_eventBelongsToThisCard(t){if(!this.hass||!this._config)return!1;const e=this._config.entity||"",s=t.competition_code;if(!s)return!1;const a=s.replace(/\./g,"_").toLowerCase();return e.toLowerCase().includes(a)}_handleCalcioLiveEvent(t){const e=t.event_type,s=t.data;this._eventBelongsToThisCard(s)&&this.showEventToasts&&this._showEventToast(e,s)}_showEventToast(t,e){let s="",a="goal";"calcio_live_goal"===t?(s=`<strong>GOAL!</strong> ${e.player} · ${e.home_team} ${e.home_score} - ${e.away_score} ${e.away_team}`,a="goal"):"calcio_live_yellow_card"===t?(s=`🟨 <strong>Cartellino Giallo</strong> · ${e.player}${e.minute?` (${e.minute}')`:""}`,a="yellow"):"calcio_live_red_card"===t?(s=`🟥 <strong>Cartellino Rosso</strong> · ${e.player}${e.minute?` (${e.minute}')`:""}`,a="red"):"calcio_live_match_finished"===t&&(s=`<strong>Finita!</strong> ${e.home_team} ${e.home_score} - ${e.away_score} ${e.away_team}`,a="finished"),s&&(this._toastMessage=s,this._toastVariant=a,this._toastVisible=!0,this._toastTimer&&clearTimeout(this._toastTimer),this._toastTimer=setTimeout((()=>{this._toastVisible=!1,this.requestUpdate()}),4e3),this.requestUpdate())}getCardSize(){return 5}static getConfigElement(){return document.createElement("calcio-live-classifica-editor")}static getStubConfig(){return{entity:"sensor.calcio_live",max_teams_visible:10,hide_header:!1,selected_group:"",show_event_toasts:!1}}_zoneClass(t,e){return 1===t?"zone-cl rank-first":t<=4?"zone-cl":t<=6?"zone-el":e&&t>e-3?"zone-rel":"zone-default"}render(){if(!this.hass||!this._config)return I``;const t=this._config.entity,e=this.hass.states[t];if(!e)return I`<ha-card class="empty">Entità sconosciuta: ${t}</ha-card>`;const s=e.attributes.season||"",a=e.attributes.standings_groups||[],i=a.find((t=>t.name===this.selectedGroup))||a[0];let o=i?i.standings:[];o=o.filter((t=>null!=t.rank)),s.includes("MLS")?(o=o.slice().sort(((t,e)=>e.points!==t.points?e.points-t.points:e.goal_difference!==t.goal_difference?e.goal_difference-t.goal_difference:e.goals_for-t.goals_for)),o.forEach(((t,e)=>{t.rank=e+1}))):o=o.slice().sort(((t,e)=>t.rank-e.rank));const n=o.length,r=48*Math.min(this.maxTeamsVisible,n)+50;return I`
       <ha-card>
         ${this.showEventToasts&&this._toastVisible?I`
           <div class="event-toast variant-${this._toastVariant}" .innerHTML=${this._toastMessage}></div>
@@ -8,7 +8,7 @@
         ${this.hideHeader?"":I`
           <div class="top-bar">
             <h2>${e.state}</h2>
-            <div class="sub">${a} ${i&&i.name?`· ${i.name}`:""}</div>
+            <div class="sub">${s} ${i&&i.name?`· ${i.name}`:""}</div>
           </div>
         `}
 
@@ -27,7 +27,7 @@
               </tr>
             </thead>
             <tbody>
-              ${o.map((t=>{const e=t.goal_difference,a=e>0?"gd-pos":e<0?"gd-neg":"";return I`
+              ${o.map((t=>{const e=t.goal_difference,s=e>0?"gd-pos":e<0?"gd-neg":"";return I`
                   <tr class="${this._zoneClass(t.rank,n)}">
                     <td><div class="rank-cell"><div class="rank-num">${t.rank}</div></div></td>
                     <td class="team-cell">
@@ -38,7 +38,7 @@
                     <td>${t.wins??"-"}</td>
                     <td>${t.draws??"-"}</td>
                     <td>${t.losses??"-"}</td>
-                    <td class="${a}">${e>0?"+":""}${e??"-"}</td>
+                    <td class="${s}">${e>0?"+":""}${e??"-"}</td>
                     <td class="points-cell">${t.points??"-"}</td>
                   </tr>
                 `}))}
@@ -289,84 +289,105 @@
         90%  { opacity: 1; transform: translate(-50%, 0) scale(1); }
         100% { opacity: 0; transform: translate(-50%, -10px) scale(0.95); }
       }
-    `}}),window.customCards=window.customCards||[],window.customCards.push({type:"calcio-live-classifica",name:"Calcio Live Classifica Card",description:"Mostra la classifica del campionato o coppe"}),customElements.define("calcio-live-classifica-editor",class extends ot{static get properties(){return{_config:{type:Object},hass:{type:Object},entities:{type:Array},groups:{type:Array}}}constructor(){super(),this._entity="",this.entities=[],this.groups=[]}static get styles(){return o`
+    `}}),window.customCards=window.customCards||[],window.customCards.push({type:"calcio-live-classifica",name:"Calcio Live Classifica Card",description:"Mostra la classifica del campionato o coppe"}),customElements.define("calcio-live-classifica-editor",class extends ot{static get properties(){return{_config:{type:Object},hass:{type:Object},entities:{type:Array},groups:{type:Array}}}constructor(){super(),this.entities=[],this.groups=[]}static get styles(){return o`
       .card-config {
         display: flex;
         flex-direction: column;
-        gap: 20px; /* Spazio tra le opzioni */
+        gap: 16px;
       }
       .option {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        margin-bottom: 10px;
+        gap: 12px;
       }
-      ha-select {
-        width: 100%; /* Larghezza piena per il campo dei sensori */
+      label {
+        font-size: 14px;
+        color: var(--primary-text-color);
       }
-      ha-textfield {
-        width: 100%; /* Larghezza piena per i campi numerici */
+      .field-label {
+        display: block;
+        font-size: 12px;
+        color: var(--secondary-text-color);
+        margin-bottom: 4px;
+        font-weight: 600;
       }
-    `}setConfig(t){if(!t)throw new Error("Invalid configuration");this._config={...t},this._entity=this._config.entity||""}get config(){return this._config}updated(t){t.has("hass")&&this._fetchEntities(),t.has("_config")&&this._config&&this._config.entity&&(this._entity=this._config.entity,this._fetchGroups())}configChanged(t){const e=new CustomEvent("config-changed",{detail:{config:t},bubbles:!0,composed:!0});this.dispatchEvent(e)}_EntityChanged(t){if(!this._config)return;const e={...this._config,entity:t.target.value};this._entity=t.target.value,this.configChanged(e)}_fetchEntities(){this.hass&&(this.entities=Object.keys(this.hass.states).filter((t=>t.startsWith("sensor.calciolive_classifica"))).sort())}_fetchGroups(){const t=this._config.entity;if(this.hass&&t){const e=this.hass.states[t];e&&e.attributes.standings_groups?this.groups=e.attributes.standings_groups.map((t=>t.name)):this.groups=[]}}_valueChanged(t){if(!this._config)return;const e=t.target,a="number"===e.type?parseInt(e.value,10):void 0!==e.checked?e.checked:e.value;if(e.configValue){const t={...this._config,[e.configValue]:a};this.configChanged(t)}}_groupChanged(t){if(!this._config)return;const e=t.target.value,a={...this._config,selected_group:e};this.configChanged(a)}render(){return this._config&&this.hass?I`
-        <div class="card-config">
-          <h3>CalcioLive Sensor:</h3>
-          <ha-select
-              naturalMenuWidth
-              fixedMenuPosition
-              label="Entity"
-              .configValue=${"entity"}
-              .value=${this._entity}
-              @selected=${this._EntityChanged}
-              @closed=${t=>t.stopPropagation()}
-              >
-              ${this.entities.map((t=>I`<ha-list-item .value=${t}>${t}</ha-list-item>`))}
-          </ha-select>
-              
-        <h3>Settings:</h3>
-              
-        <div class="option">
-          <ha-select
-            label="Select Group"
-            .value=${this._config.selected_group||""}
-            .configValue=${"selected_group"}
-            @selected=${this._groupChanged}
-            @closed=${t=>t.stopPropagation()} 
-          >
-            ${this.groups.length?this.groups.map((t=>I`
-                  <ha-list-item .value=${t}>${t}</ha-list-item>
-                `)):I`<ha-list-item .value="">Nessun gruppo disponibile</ha-list-item>`}
-          </ha-select>
+      select, input[type="number"] {
+        width: 100%;
+        padding: 10px 12px;
+        font-size: 14px;
+        border-radius: 8px;
+        border: 1px solid var(--divider-color, rgba(0,0,0,0.12));
+        background: var(--card-background-color, #fff);
+        color: var(--primary-text-color, #000);
+        box-sizing: border-box;
+      }
+      select:focus, input:focus {
+        outline: 2px solid var(--primary-color, #03a9f4);
+        outline-offset: -1px;
+      }
+      h3 {
+        margin: 8px 0 0;
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--secondary-text-color);
+      }
+    `}setConfig(t){if(!t)throw new Error("Invalid configuration");this._config={...t}}get config(){return this._config}updated(t){t.has("hass")&&this._fetchEntities(),(t.has("_config")||t.has("hass"))&&this._config&&this._config.entity&&this._fetchGroups()}_fireConfigChanged(t){this._config=t,this.dispatchEvent(new CustomEvent("config-changed",{detail:{config:t},bubbles:!0,composed:!0})),this.requestUpdate()}_entityChanged(t){if(!this._config)return;const e=t.target.value;e!==this._config.entity&&this._fireConfigChanged({...this._config,entity:e})}_groupChanged(t){if(!this._config)return;const e=t.target.value;e!==this._config.selected_group&&this._fireConfigChanged({...this._config,selected_group:e})}_switchChanged(t){if(!this._config)return;const e=t.target;if(!e.dataset||!e.dataset.configValue)return;const s=e.dataset.configValue,a=e.checked;this._config[s]!==a&&this._fireConfigChanged({...this._config,[s]:a})}_numberChanged(t){if(!this._config)return;const e=t.target;if(!e.dataset||!e.dataset.configValue)return;const s=e.dataset.configValue,a=parseInt(e.value,10);isNaN(a)||this._config[s]!==a&&this._fireConfigChanged({...this._config,[s]:a})}_fetchEntities(){this.hass&&(this.entities=Object.keys(this.hass.states).filter((t=>t.startsWith("sensor.calciolive_classifica"))).sort())}_fetchGroups(){const t=this._config&&this._config.entity;if(!this.hass||!t)return void(this.groups=[]);const e=this.hass.states[t];e&&e.attributes&&e.attributes.standings_groups?this.groups=e.attributes.standings_groups.map((t=>t.name)):this.groups=[]}render(){if(!this._config||!this.hass)return I``;const t=this._config.entity||"",e=t&&this.entities.includes(t);return I`
+      <div class="card-config">
+        <h3>Sensore</h3>
+        <div>
+          <label class="field-label">Entity</label>
+          <select @change=${this._entityChanged}>
+            ${e?"":I`<option value="${t}" selected>${t||"— seleziona —"}</option>`}
+            ${this.entities.map((e=>I`
+              <option value="${e}" ?selected=${e===t}>${e}</option>
+            `))}
+          </select>
         </div>
 
+        <h3>Impostazioni</h3>
+        <div>
+          <label class="field-label">Gruppo</label>
+          <select @change=${this._groupChanged}>
+            <option value="" ?selected=${!this._config.selected_group}>— Tutti —</option>
+            ${this.groups.map((t=>I`
+              <option value="${t}" ?selected=${t===this._config.selected_group}>${t}</option>
+            `))}
+          </select>
         </div>
-          <div class="option">
+
+        <div class="option">
+          <label>Hide Header</label>
           <ha-switch
             .checked=${!0===this._config.hide_header}
-            @change=${this._valueChanged}
-            .configValue=${"hide_header"}
-          >
-          </ha-switch>
-          <label>Hide Header</label>
+            data-config-value="hide_header"
+            @change=${this._switchChanged}
+          ></ha-switch>
         </div>
+
         <div class="option">
+          <label>Show Event Toasts (in-card)</label>
           <ha-switch
             .checked=${!0===this._config.show_event_toasts}
-            @change=${this._valueChanged}
-            .configValue=${"show_event_toasts"}
-          >
-          </ha-switch>
-          <label>Show Event Toasts (in-card)</label>
+            data-config-value="show_event_toasts"
+            @change=${this._switchChanged}
+          ></ha-switch>
         </div>
-        <div class="option">
-          <ha-textfield
-            label="Max Teams Visible"
+
+        <div>
+          <label class="field-label">Max Teams Visible</label>
+          <input
             type="number"
+            min="1"
+            max="50"
             .value=${this._config.max_teams_visible||10}
-            @change=${this._valueChanged}
-            .configValue=${"max_teams_visible"}
-          ></ha-textfield>
+            data-config-value="max_teams_visible"
+            @change=${this._numberChanged}
+          />
         </div>
-      `:I``}}),customElements.define("calcio-live-matches",class extends ot{static get properties(){return{hass:{},_config:{},showPopup:{type:Boolean},activeMatch:{type:Object},_eventSubscriptions:{type:Array},_recentEventMatches:{type:Object},_toastMessage:{type:String},_toastVisible:{type:Boolean},_toastVariant:{type:String}}}constructor(){super(),this._recentEventMatches=new Map,this._eventSubscriptions=[],this._toastMessage="",this._toastVisible=!1,this._toastVariant="goal",this._toastTimer=null}setConfig(t){if(!t.entity)throw new Error("Devi definire un'entità");this._config=t,this.maxEventsVisible=t.max_events_visible?t.max_events_visible:5,this.maxEventsTotal=t.max_events_total?t.max_events_total:50,this.showFinishedMatches=void 0===t.show_finished_matches||t.show_finished_matches,this.hideHeader=void 0!==t.hide_header&&t.hide_header,this.hidePastDays=void 0!==t.hide_past_days?t.hide_past_days:0,this.showEventToasts=!0===t.show_event_toasts,this.activeMatch=null,this.showPopup=!1}connectedCallback(){super.connectedCallback(),this._subscribeToEvents()}disconnectedCallback(){super.disconnectedCallback(),this._eventSubscriptions&&Array.isArray(this._eventSubscriptions)&&(this._eventSubscriptions.forEach((t=>{t&&t.unsubscribe()})),this._eventSubscriptions=[])}_subscribeToEvents(){this.hass&&this.hass.connection&&(this._eventSubscriptions=[],["calcio_live_goal","calcio_live_yellow_card","calcio_live_red_card"].forEach((t=>{this._eventSubscriptions.push(this.hass.connection.subscribeEvents(this._handleCalcioLiveEvent.bind(this),t))})))}_eventBelongsToThisCard(t){if(!this.hass||!this._config)return!1;const e=this.hass.states[this._config.entity];return!!e&&(e.attributes.matches||[]).some((e=>e.home_team===t.home_team&&e.away_team===t.away_team))}_handleCalcioLiveEvent(t){const e=t.event_type,a=t.data;if(!this._eventBelongsToThisCard(a))return;const s=`${a.home_team}_${a.away_team}`;this._recentEventMatches.set(s,"calcio_live_goal"===e?"goal":"card"),this.requestUpdate(),setTimeout((()=>{this._recentEventMatches.delete(s),this.requestUpdate()}),5e3),this.showEventToasts&&this._showEventToast(e,a)}_showEventToast(t,e){let a="",s="goal";"calcio_live_goal"===t?(a=`<strong>GOAL!</strong> ${e.player} · ${e.home_team} ${e.home_score} - ${e.away_score} ${e.away_team}`,s="goal"):"calcio_live_yellow_card"===t?(a=`🟨 <strong>Cartellino Giallo</strong> · ${e.player}${e.minute?` (${e.minute}')`:""}`,s="yellow"):"calcio_live_red_card"===t&&(a=`🟥 <strong>Cartellino Rosso</strong> · ${e.player}${e.minute?` (${e.minute}')`:""}`,s="red"),a&&(this._toastMessage=a,this._toastVariant=s,this._toastVisible=!0,this._toastTimer&&clearTimeout(this._toastTimer),this._toastTimer=setTimeout((()=>{this._toastVisible=!1,this.requestUpdate()}),4e3),this.requestUpdate())}getCardSize(){return 4}static getConfigElement(){return document.createElement("calcio-live-matches-editor")}static getStubConfig(){return{entity:"sensor.calcio_live",max_events_visible:5,max_events_total:50,hide_past_days:0,show_finished_matches:!0,hide_header:!1,show_event_toasts:!1}}_parseMatchDate(t){if(!t)return null;const[e,a]=t.split(" "),[s,i,o]=e.split("/").map(Number),[n,r]=a?a.split(":").map(Number):[0,0];return new Date(o,i-1,s,n,r)}_matchTimeLabel(t){if("in"===t.state)return t.clock&&"N/A"!==t.clock?t.clock:"LIVE";if("post"===t.state)return"FT";if(t.date){const e=t.date.split(" ");return e[1]||e[0]}return"—"}_matchScore(t,e){return"pre"===t.state?"-":t["home"===e?"home_score":"away_score"]??"-"}_isWinner(t,e){if("pre"===t.state)return null;const a=parseInt(t.home_score),s=parseInt(t.away_score);return isNaN(a)||isNaN(s)||a===s?null:"home"===e?a>s:s>a}_dayKey(t){if(!t.date)return"Altro";const e=this._parseMatchDate(t.date);if(!e)return t.date.split(" ")[0]||"Altro";const a=new Date;a.setHours(0,0,0,0);const s=new Date(e);s.setHours(0,0,0,0);const i=Math.round((s-a)/864e5);return 0===i?"⚡ Oggi":-1===i?"Ieri":1===i?"Domani":`${s.getDate()} ${["Gen","Feb","Mar","Apr","Mag","Giu","Lug","Ago","Set","Ott","Nov","Dic"][s.getMonth()]}`}showDetails(t){this.activeMatch=t,this.showPopup=!0}closePopup(){this.showPopup=!1}separateEvents(t){const e=[],a=[],s=[];return t.forEach((t=>{t.includes("Goal")||t.includes("Penalty - Scored")?e.push(t):t.includes("Yellow Card")?a.push(t):t.includes("Red Card")&&s.push(t)})),{goals:e,yellowCards:a,redCards:s}}render(){if(!this.hass||!this._config)return I``;const t=this._config.entity,e=this.hass.states[t];if(!e)return I`<ha-card class="empty">Entità sconosciuta: ${t}</ha-card>`;let a=e.attributes.matches||[];const s=e.attributes.league_info?e.attributes.league_info[0]:null,i=e.attributes.team_logo||null;if(this.showFinishedMatches||(a=a.filter((t=>"Full Time"!==t.status))),a=a.slice().sort(((t,e)=>new Date(t.date)-new Date(e.date))),this.hidePastDays>0){const t=new Date;t.setDate(t.getDate()-this.hidePastDays),a=a.filter((e=>{const a=this._parseMatchDate(e.date);return!a||a>=t}))}const o=a.slice(0,this.maxEventsTotal);if(0===o.length)return I`<ha-card class="empty">Nessuna partita disponibile</ha-card>`;const n=o.filter((t=>"in"===t.state)).length,r=[];let l=null;o.forEach((t=>{const e=this._dayKey(t);e!==l?(l=e,r.push({key:e,matches:[t]})):r[r.length-1].matches.push(t)}));const c=Math.max(80*this.maxEventsVisible,240);return I`
+      </div>
+    `}}),customElements.define("calcio-live-matches",class extends ot{static get properties(){return{hass:{},_config:{},showPopup:{type:Boolean},activeMatch:{type:Object},_eventSubscriptions:{type:Array},_recentEventMatches:{type:Object},_toastMessage:{type:String},_toastVisible:{type:Boolean},_toastVariant:{type:String}}}constructor(){super(),this._recentEventMatches=new Map,this._eventSubscriptions=[],this._toastMessage="",this._toastVisible=!1,this._toastVariant="goal",this._toastTimer=null}setConfig(t){if(!t.entity)throw new Error("Devi definire un'entità");this._config=t,this.maxEventsVisible=t.max_events_visible?t.max_events_visible:5,this.maxEventsTotal=t.max_events_total?t.max_events_total:50,this.showFinishedMatches=void 0===t.show_finished_matches||t.show_finished_matches,this.hideHeader=void 0!==t.hide_header&&t.hide_header,this.hidePastDays=void 0!==t.hide_past_days?t.hide_past_days:0,this.showEventToasts=!0===t.show_event_toasts,this.activeMatch=null,this.showPopup=!1}connectedCallback(){super.connectedCallback(),this._subscribeToEvents()}disconnectedCallback(){super.disconnectedCallback(),this._eventSubscriptions&&Array.isArray(this._eventSubscriptions)&&(this._eventSubscriptions.forEach((t=>{t&&t.unsubscribe()})),this._eventSubscriptions=[])}_subscribeToEvents(){this.hass&&this.hass.connection&&(this._eventSubscriptions=[],["calcio_live_goal","calcio_live_yellow_card","calcio_live_red_card"].forEach((t=>{this._eventSubscriptions.push(this.hass.connection.subscribeEvents(this._handleCalcioLiveEvent.bind(this),t))})))}_eventBelongsToThisCard(t){if(!this.hass||!this._config)return!1;const e=this.hass.states[this._config.entity];return!!e&&(e.attributes.matches||[]).some((e=>e.home_team===t.home_team&&e.away_team===t.away_team))}_handleCalcioLiveEvent(t){const e=t.event_type,s=t.data;if(!this._eventBelongsToThisCard(s))return;const a=`${s.home_team}_${s.away_team}`;this._recentEventMatches.set(a,"calcio_live_goal"===e?"goal":"card"),this.requestUpdate(),setTimeout((()=>{this._recentEventMatches.delete(a),this.requestUpdate()}),5e3),this.showEventToasts&&this._showEventToast(e,s)}_showEventToast(t,e){let s="",a="goal";"calcio_live_goal"===t?(s=`<strong>GOAL!</strong> ${e.player} · ${e.home_team} ${e.home_score} - ${e.away_score} ${e.away_team}`,a="goal"):"calcio_live_yellow_card"===t?(s=`🟨 <strong>Cartellino Giallo</strong> · ${e.player}${e.minute?` (${e.minute}')`:""}`,a="yellow"):"calcio_live_red_card"===t&&(s=`🟥 <strong>Cartellino Rosso</strong> · ${e.player}${e.minute?` (${e.minute}')`:""}`,a="red"),s&&(this._toastMessage=s,this._toastVariant=a,this._toastVisible=!0,this._toastTimer&&clearTimeout(this._toastTimer),this._toastTimer=setTimeout((()=>{this._toastVisible=!1,this.requestUpdate()}),4e3),this.requestUpdate())}getCardSize(){return 4}static getConfigElement(){return document.createElement("calcio-live-matches-editor")}static getStubConfig(){return{entity:"sensor.calcio_live",max_events_visible:5,max_events_total:50,hide_past_days:0,show_finished_matches:!0,hide_header:!1,show_event_toasts:!1}}_parseMatchDate(t){if(!t)return null;const[e,s]=t.split(" "),[a,i,o]=e.split("/").map(Number),[n,r]=s?s.split(":").map(Number):[0,0];return new Date(o,i-1,a,n,r)}_matchTimeLabel(t){if("in"===t.state)return t.clock&&"N/A"!==t.clock?t.clock:"LIVE";if("post"===t.state)return"FT";if(t.date){const e=t.date.split(" ");return e[1]||e[0]}return"—"}_matchScore(t,e){return"pre"===t.state?"-":t["home"===e?"home_score":"away_score"]??"-"}_isWinner(t,e){if("pre"===t.state)return null;const s=parseInt(t.home_score),a=parseInt(t.away_score);return isNaN(s)||isNaN(a)||s===a?null:"home"===e?s>a:a>s}_dayKey(t){if(!t.date)return"Altro";const e=this._parseMatchDate(t.date);if(!e)return t.date.split(" ")[0]||"Altro";const s=new Date;s.setHours(0,0,0,0);const a=new Date(e);a.setHours(0,0,0,0);const i=Math.round((a-s)/864e5);return 0===i?"⚡ Oggi":-1===i?"Ieri":1===i?"Domani":`${a.getDate()} ${["Gen","Feb","Mar","Apr","Mag","Giu","Lug","Ago","Set","Ott","Nov","Dic"][a.getMonth()]}`}showDetails(t){this.activeMatch=t,this.showPopup=!0}closePopup(){this.showPopup=!1}separateEvents(t){const e=[],s=[],a=[];return t.forEach((t=>{t.includes("Goal")||t.includes("Penalty - Scored")?e.push(t):t.includes("Yellow Card")?s.push(t):t.includes("Red Card")&&a.push(t)})),{goals:e,yellowCards:s,redCards:a}}render(){if(!this.hass||!this._config)return I``;const t=this._config.entity,e=this.hass.states[t];if(!e)return I`<ha-card class="empty">Entità sconosciuta: ${t}</ha-card>`;let s=e.attributes.matches||[];const a=e.attributes.league_info?e.attributes.league_info[0]:null,i=e.attributes.team_logo||null;if(this.showFinishedMatches||(s=s.filter((t=>"Full Time"!==t.status))),s=s.slice().sort(((t,e)=>new Date(t.date)-new Date(e.date))),this.hidePastDays>0){const t=new Date;t.setDate(t.getDate()-this.hidePastDays),s=s.filter((e=>{const s=this._parseMatchDate(e.date);return!s||s>=t}))}const o=s.slice(0,this.maxEventsTotal);if(0===o.length)return I`<ha-card class="empty">Nessuna partita disponibile</ha-card>`;const n=o.filter((t=>"in"===t.state)).length,r=[];let l=null;o.forEach((t=>{const e=this._dayKey(t);e!==l?(l=e,r.push({key:e,matches:[t]})):r[r.length-1].matches.push(t)}));const c=Math.max(80*this.maxEventsVisible,240);return I`
       <ha-card>
         <div class="hero-bg"></div>
 
@@ -376,11 +397,11 @@
 
         ${this.hideHeader?"":I`
           <div class="matches-header">
-            ${s&&s.logo_href?I`<img class="league-logo" src="${s.logo_href}" alt="${s.abbreviation||""}" />`:i?I`<img class="league-logo" src="${i}" alt="" />`:""}
+            ${a&&a.logo_href?I`<img class="league-logo" src="${a.logo_href}" alt="${a.abbreviation||""}" />`:i?I`<img class="league-logo" src="${i}" alt="" />`:""}
             <div class="league-info">
-              <div class="league-name">${s&&s.abbreviation||e.state||"Calcio Live"}</div>
+              <div class="league-name">${a&&a.abbreviation||e.state||"Calcio Live"}</div>
               <div class="league-dates">
-                ${s&&s.startDate?`${s.startDate} → ${s.endDate}`:`${o.length} partite`}
+                ${a&&a.startDate?`${a.startDate} → ${a.endDate}`:`${o.length} partite`}
               </div>
             </div>
             ${n>0?I`<span class="live-counter">${n} LIVE</span>`:""}
@@ -390,10 +411,10 @@
         <div class="scroll-content" style="max-height: ${c}px;">
           ${r.map((t=>I`
             <div class="day-divider ${t.key.includes("Oggi")?"today":""}">${t.key}</div>
-            ${t.matches.map((t=>{const e=`${t.home_team}_${t.away_team}`,a="in"===t.state,s=this._recentEventMatches.get(e),i=this._isWinner(t,"home"),o=this._isWinner(t,"away");return I`
-                <div class="match-row ${a?"live":""} ${"goal"===s?"goal-pulse":""} ${"card"===s?"card-pulse":""}"
+            ${t.matches.map((t=>{const e=`${t.home_team}_${t.away_team}`,s="in"===t.state,a=this._recentEventMatches.get(e),i=this._isWinner(t,"home"),o=this._isWinner(t,"away");return I`
+                <div class="match-row ${s?"live":""} ${"goal"===a?"goal-pulse":""} ${"card"===a?"card-pulse":""}"
                      @click="${()=>this.showDetails(t)}">
-                  <div class="match-time ${a?"live-time":""} ${"post"===t.state?"ft":""}">
+                  <div class="match-time ${s?"live-time":""} ${"post"===t.state?"ft":""}">
                     ${this._matchTimeLabel(t)}
                   </div>
                   <div class="match-teams">
@@ -414,7 +435,7 @@
           `))}
         </div>
       </ha-card>
-    `}updated(t){(t.has("showPopup")||t.has("activeMatch"))&&this.renderPopupToBody()}renderPopupToBody(){if(!this.showPopup||!this.activeMatch){const t=document.getElementById("calcio-live-matches-popup");return void(t&&t.remove())}let t=document.getElementById("calcio-live-matches-popup");t||(t=document.createElement("div"),t.id="calcio-live-matches-popup",t.style.cssText="\n        position: fixed; inset: 0;\n        display: flex; justify-content: center; align-items: center;\n        z-index: 999999;\n        background: rgba(0,0,0,0.7);\n        backdrop-filter: blur(8px);\n        overflow: auto;\n      ",t.addEventListener("click",(e=>{e.target===t&&(this.showPopup=!1)})),document.body.appendChild(t));const e=this.activeMatch;t.innerHTML=`\n      <div style="background:#1a1f2e; padding:24px; border-radius:20px; width:90%; max-width:560px; max-height:85vh; overflow-y:auto; border:1px solid rgba(255,255,255,0.08); box-shadow:0 24px 64px rgba(0,0,0,0.6); margin:auto; color:#f8fafc; font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display',sans-serif;">\n        <h3 style="margin:0 0 20px; font-size:22px; font-weight:800; letter-spacing:-0.02em; background:linear-gradient(135deg,#6366f1,#ec4899); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;">Dettagli partita</h3>\n        <div style="display:flex; justify-content:center; align-items:center; gap:18px; margin-bottom:24px;">\n          <img style="width:64px; height:64px; object-fit:contain;" src="${e.home_logo}" alt="${e.home_team}" />\n          <div style="text-align:center;">\n            <div style="font-size:38px; font-weight:900; letter-spacing:-0.04em; line-height:1;">${e.home_score??"-"} <span style="opacity:0.4;">-</span> ${e.away_score??"-"}</div>\n            <div style="font-size:12px; color:#94a3b8; margin-top:8px; font-weight:600;">${e.clock??e.status??""}</div>\n          </div>\n          <img style="width:64px; height:64px; object-fit:contain;" src="${e.away_logo}" alt="${e.away_team}" />\n        </div>\n        <p style="text-align:center; color:#cbd5e1; font-size:14px; margin:0 0 20px;"><strong>${e.home_team}</strong> vs <strong>${e.away_team}</strong></p>\n        <div id="matches-events-container"></div>\n        <button id="popup-close-btn" style="background:linear-gradient(135deg,#6366f1,#ec4899); color:white; padding:12px 20px; border:none; border-radius:12px; cursor:pointer; margin-top:20px; font-weight:800; width:100%; font-size:14px;">Chiudi</button>\n      </div>\n    `;const a=t.querySelector("#popup-close-btn");a&&a.addEventListener("click",(()=>{this.showPopup=!1}));const s=t.querySelector("#matches-events-container"),{goals:i,yellowCards:o,redCards:n}=this.separateEvents(e.match_details||[]),r=(t,e,a)=>e.length?`<div style="margin-bottom:14px; padding:14px; background:${a.bg}; border-left:3px solid ${a.border}; border-radius:10px;">\n        <h5 style="margin:0 0 8px; font-size:12px; text-transform:uppercase; letter-spacing:0.08em; color:${a.border}; font-weight:800;">${t}</h5>\n        <ul style="margin:0; padding-left:18px; font-size:13px; color:#cbd5e1;">${e.map((t=>`<li style="margin:4px 0;">${t}</li>`)).join("")}</ul>\n      </div>`:"";let l="";l+=r("Goal",i,{bg:"rgba(99,102,241,0.1)",border:"#6366f1"}),l+=r("Cartellini Gialli",o,{bg:"rgba(245,158,11,0.1)",border:"#f59e0b"}),l+=r("Cartellini Rossi",n,{bg:"rgba(239,68,68,0.1)",border:"#ef4444"}),s.innerHTML=l||'<p style="text-align:center; color:#94a3b8; font-size:13px;">Nessun evento disponibile</p>'}static get styles(){return o`
+    `}updated(t){(t.has("showPopup")||t.has("activeMatch"))&&this.renderPopupToBody()}renderPopupToBody(){if(!this.showPopup||!this.activeMatch){const t=document.getElementById("calcio-live-matches-popup");return void(t&&t.remove())}let t=document.getElementById("calcio-live-matches-popup");t||(t=document.createElement("div"),t.id="calcio-live-matches-popup",t.style.cssText="\n        position: fixed; inset: 0;\n        display: flex; justify-content: center; align-items: center;\n        z-index: 999999;\n        background: rgba(0,0,0,0.7);\n        backdrop-filter: blur(8px);\n        overflow: auto;\n      ",t.addEventListener("click",(e=>{e.target===t&&(this.showPopup=!1)})),document.body.appendChild(t));const e=this.activeMatch;t.innerHTML=`\n      <div style="background:#1a1f2e; padding:24px; border-radius:20px; width:90%; max-width:560px; max-height:85vh; overflow-y:auto; border:1px solid rgba(255,255,255,0.08); box-shadow:0 24px 64px rgba(0,0,0,0.6); margin:auto; color:#f8fafc; font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display',sans-serif;">\n        <h3 style="margin:0 0 20px; font-size:22px; font-weight:800; letter-spacing:-0.02em; background:linear-gradient(135deg,#6366f1,#ec4899); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;">Dettagli partita</h3>\n        <div style="display:flex; justify-content:center; align-items:center; gap:18px; margin-bottom:24px;">\n          <img style="width:64px; height:64px; object-fit:contain;" src="${e.home_logo}" alt="${e.home_team}" />\n          <div style="text-align:center;">\n            <div style="font-size:38px; font-weight:900; letter-spacing:-0.04em; line-height:1;">${e.home_score??"-"} <span style="opacity:0.4;">-</span> ${e.away_score??"-"}</div>\n            <div style="font-size:12px; color:#94a3b8; margin-top:8px; font-weight:600;">${e.clock??e.status??""}</div>\n          </div>\n          <img style="width:64px; height:64px; object-fit:contain;" src="${e.away_logo}" alt="${e.away_team}" />\n        </div>\n        <p style="text-align:center; color:#cbd5e1; font-size:14px; margin:0 0 20px;"><strong>${e.home_team}</strong> vs <strong>${e.away_team}</strong></p>\n        <div id="matches-events-container"></div>\n        <button id="popup-close-btn" style="background:linear-gradient(135deg,#6366f1,#ec4899); color:white; padding:12px 20px; border:none; border-radius:12px; cursor:pointer; margin-top:20px; font-weight:800; width:100%; font-size:14px;">Chiudi</button>\n      </div>\n    `;const s=t.querySelector("#popup-close-btn");s&&s.addEventListener("click",(()=>{this.showPopup=!1}));const a=t.querySelector("#matches-events-container"),{goals:i,yellowCards:o,redCards:n}=this.separateEvents(e.match_details||[]),r=(t,e,s)=>e.length?`<div style="margin-bottom:14px; padding:14px; background:${s.bg}; border-left:3px solid ${s.border}; border-radius:10px;">\n        <h5 style="margin:0 0 8px; font-size:12px; text-transform:uppercase; letter-spacing:0.08em; color:${s.border}; font-weight:800;">${t}</h5>\n        <ul style="margin:0; padding-left:18px; font-size:13px; color:#cbd5e1;">${e.map((t=>`<li style="margin:4px 0;">${t}</li>`)).join("")}</ul>\n      </div>`:"";let l="";l+=r("Goal",i,{bg:"rgba(99,102,241,0.1)",border:"#6366f1"}),l+=r("Cartellini Gialli",o,{bg:"rgba(245,158,11,0.1)",border:"#f59e0b"}),l+=r("Cartellini Rossi",n,{bg:"rgba(239,68,68,0.1)",border:"#ef4444"}),a.innerHTML=l||'<p style="text-align:center; color:#94a3b8; font-size:13px;">Nessun evento disponibile</p>'}static get styles(){return o`
       :host {
         --cl-accent: #6366f1;
         --cl-accent-2: #ec4899;
@@ -681,108 +702,141 @@
         90%  { opacity: 1; transform: translate(-50%, 0) scale(1); }
         100% { opacity: 0; transform: translate(-50%, -10px) scale(0.95); }
       }
-    `}}),window.customCards=window.customCards||[],window.customCards.push({type:"calcio-live-matches",name:"Calcio Live Matches Card",description:"Mostra le partite della settimana o del tuo Team"}),customElements.define("calcio-live-matches-editor",class extends ot{static get properties(){return{_config:{type:Object},hass:{type:Object},entities:{type:Array}}}constructor(){super(),this._entity="",this.entities=[]}static get styles(){return o`
+    `}}),window.customCards=window.customCards||[],window.customCards.push({type:"calcio-live-matches",name:"Calcio Live Matches Card",description:"Mostra le partite della settimana o del tuo Team"}),customElements.define("calcio-live-matches-editor",class extends ot{static get properties(){return{_config:{type:Object},hass:{type:Object},entities:{type:Array}}}constructor(){super(),this.entities=[]}static get styles(){return o`
       .card-config {
         display: flex;
         flex-direction: column;
-        gap: 20px; /* Spazio tra le opzioni */
+        gap: 16px;
       }
       .option {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        margin-bottom: 10px;
+        gap: 12px;
       }
-      ha-select {
-        width: 100%; /* Larghezza piena per il campo dei sensori */
+      label {
+        font-size: 14px;
+        color: var(--primary-text-color);
       }
-      ha-textfield {
-        width: 100%; /* Larghezza piena per i campi numerici */
+      .field-label {
+        display: block;
+        font-size: 12px;
+        color: var(--secondary-text-color);
+        margin-bottom: 4px;
+        font-weight: 600;
       }
-    `}setConfig(t){if(!t)throw new Error("Invalid configuration");this._config={...t},this._entity=this._config.entity||""}get config(){return this._config}updated(t){t.has("hass")&&this._fetchEntities(),t.has("_config")&&this._config&&this._config.entity&&(this._entity=this._config.entity)}configChanged(t){const e=new CustomEvent("config-changed",{detail:{config:t},bubbles:!0,composed:!0});this.dispatchEvent(e)}_EntityChanged(t){if(!this._config)return;const e={...this._config,entity:t.target.value};this._entity=t.target.value,this.configChanged(e)}_fetchEntities(){this.hass&&(this.entities=Object.keys(this.hass.states).filter((t=>t.startsWith("sensor.calciolive_all"))).sort())}_valueChanged(t){if(!this._config)return;const e=t.target,a="number"===e.type?parseInt(e.value,10):void 0!==e.checked?e.checked:e.value;if(e.configValue){const t={...this._config,[e.configValue]:a};this.configChanged(t)}}render(){return this._config&&this.hass?I`
-        <div class="card-config">
-          <h3>CalcioLive Sensor:</h3>
-          <ha-select
-              naturalMenuWidth
-              fixedMenuPosition
-              label="Entity"
-              .configValue=${"entity"}
-              .value=${this._entity}
-              @selected=${this._EntityChanged}
-              @closed=${t=>t.stopPropagation()}
-              >
-              ${this.entities.map((t=>I`<ha-list-item .value=${t}>${t}</ha-list-item>`))}
-          </ha-select>
-        
-          <h3>Settings:</h3>
-          <div class="option">
-            <ha-switch
-              .checked=${!1!==this._config.show_finished_matches}
-              @change=${this._valueChanged}
-              .configValue=${"show_finished_matches"}
-            >
-            </ha-switch>
-            <label>Show Finished Matches</label>
-          </div>
-
-          <div class="option">
-            <ha-switch
-              .checked=${!0===this._config.hide_header}
-              @change=${this._valueChanged}
-              .configValue=${"hide_header"}
-            >
-            </ha-switch>
-            <label>Hide Header</label>
-          </div>
-
-          <div class="option">
-            <ha-switch
-              .checked=${!0===this._config.show_event_toasts}
-              @change=${this._valueChanged}
-              .configValue=${"show_event_toasts"}
-            >
-            </ha-switch>
-            <label>Show Event Toasts (in-card)</label>
-          </div>
-
-          <div class="option">
-            <ha-textfield
-              label="Max Events Visible"
-              type="number"
-              .value=${this._config.max_events_visible||5}
-              @change=${this._valueChanged}
-              .configValue=${"max_events_visible"}
-            ></ha-textfield>
-          </div>
-
-          <div class="option">
-            <ha-textfield
-              label="Max Events Total"
-              type="number"
-              .value=${this._config.max_events_total||50}
-              @change=${this._valueChanged}
-              .configValue=${"max_events_total"}
-            ></ha-textfield>
-          </div>
-          
-          <h4>For work, 'Show Finished Matches' it must be enabled. </h4>
-          <div class="option">
-            <ha-textfield
-              label="Hide Matches Older Than (Days)"
-              type="number"
-              .value=${this._config.hide_past_days||0}
-              @change=${this._valueChanged}
-              .configValue=${"hide_past_days"}
-            ></ha-textfield>
-          </div>
+      select, input[type="number"] {
+        width: 100%;
+        padding: 10px 12px;
+        font-size: 14px;
+        border-radius: 8px;
+        border: 1px solid var(--divider-color, rgba(0,0,0,0.12));
+        background: var(--card-background-color, #fff);
+        color: var(--primary-text-color, #000);
+        box-sizing: border-box;
+      }
+      select:focus, input:focus {
+        outline: 2px solid var(--primary-color, #03a9f4);
+        outline-offset: -1px;
+      }
+      h3 {
+        margin: 8px 0 0;
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--secondary-text-color);
+      }
+      .hint {
+        font-size: 12px;
+        color: var(--secondary-text-color);
+        margin-top: -4px;
+      }
+    `}setConfig(t){if(!t)throw new Error("Invalid configuration");this._config={...t}}get config(){return this._config}updated(t){t.has("hass")&&this._fetchEntities()}_fireConfigChanged(t){this._config=t,this.dispatchEvent(new CustomEvent("config-changed",{detail:{config:t},bubbles:!0,composed:!0})),this.requestUpdate()}_entityChanged(t){if(!this._config)return;const e=t.target.value;e!==this._config.entity&&this._fireConfigChanged({...this._config,entity:e})}_switchChanged(t){if(!this._config)return;const e=t.target;if(!e.dataset||!e.dataset.configValue)return;const s=e.dataset.configValue,a=e.checked;this._config[s]!==a&&this._fireConfigChanged({...this._config,[s]:a})}_numberChanged(t){if(!this._config)return;const e=t.target;if(!e.dataset||!e.dataset.configValue)return;const s=e.dataset.configValue,a=parseInt(e.value,10);isNaN(a)||this._config[s]!==a&&this._fireConfigChanged({...this._config,[s]:a})}_fetchEntities(){this.hass&&(this.entities=Object.keys(this.hass.states).filter((t=>t.startsWith("sensor.calciolive_all"))).sort())}render(){if(!this._config||!this.hass)return I``;const t=this._config.entity||"",e=t&&this.entities.includes(t);return I`
+      <div class="card-config">
+        <h3>Sensore</h3>
+        <div>
+          <label class="field-label">Entity</label>
+          <select @change=${this._entityChanged}>
+            ${e?"":I`<option value="${t}" selected>${t||"— seleziona —"}</option>`}
+            ${this.entities.map((e=>I`
+              <option value="${e}" ?selected=${e===t}>${e}</option>
+            `))}
+          </select>
         </div>
-      `:I``}}),customElements.define("calcio-live-team",class extends ot{static get properties(){return{hass:{},_config:{},showPopup:{type:Boolean},activeMatch:{type:Object},_eventSubscriptions:{type:Array},_toastMessage:{type:String},_toastVisible:{type:Boolean},_toastVariant:{type:String}}}setConfig(t){if(!t.entity)throw new Error("Devi definire un'entità");this._config=t,this.showPopup=!1,this.activeMatch=null,this.showEventToasts=!0===t.show_event_toasts,this._toastMessage="",this._toastVisible=!1,this._toastVariant="goal",this._toastTimer=null}connectedCallback(){super.connectedCallback(),this._subscribeToEvents()}disconnectedCallback(){super.disconnectedCallback(),this._eventSubscriptions&&Array.isArray(this._eventSubscriptions)&&(this._eventSubscriptions.forEach((t=>{t&&t.unsubscribe()})),this._eventSubscriptions=[])}_subscribeToEvents(){this.hass&&this.hass.connection&&(this._eventSubscriptions=[],["calcio_live_goal","calcio_live_yellow_card","calcio_live_red_card"].forEach((t=>{this._eventSubscriptions.push(this.hass.connection.subscribeEvents(this._handleCalcioLiveEvent.bind(this),t))})))}_eventBelongsToThisCard(t){if(!this.hass||!this._config)return!1;const e=this.hass.states[this._config.entity];if(!e)return!1;const a=e.attributes.matches||[];if(0===a.length)return!1;const s=a[0];return s.home_team===t.home_team&&s.away_team===t.away_team}_handleCalcioLiveEvent(t){const e=t.event_type,a=t.data;if(this._eventBelongsToThisCard(a)&&this.showEventToasts)if("calcio_live_goal"===e){const t=a.team===a.home_team?"home":"away";requestAnimationFrame((()=>this._triggerGoalCelebration(t,a)))}else this._showEventToast(e,a)}_showEventToast(t,e){let a="",s="goal";"calcio_live_goal"===t?(a=`<strong>GOAL!</strong> ${e.player} · ${e.home_team} ${e.home_score} - ${e.away_score} ${e.away_team}`,s="goal"):"calcio_live_yellow_card"===t?(a=`🟨 <strong>Cartellino Giallo</strong> · ${e.player}${e.minute?` (${e.minute}')`:""}`,s="yellow"):"calcio_live_red_card"===t&&(a=`🟥 <strong>Cartellino Rosso</strong> · ${e.player}${e.minute?` (${e.minute}')`:""}`,s="red"),a&&(this._toastMessage=a,this._toastVariant=s,this._toastVisible=!0,this._toastTimer&&clearTimeout(this._toastTimer),this._toastTimer=setTimeout((()=>{this._toastVisible=!1,this.requestUpdate()}),4e3),this.requestUpdate())}_triggerGoalCelebration(t,e){const a=this.shadowRoot&&this.shadowRoot.querySelector("ha-card");if(!a)return;a.querySelectorAll(".confetti, .goal-banner, .goal-flash-overlay").forEach((t=>t.remove())),a.classList.remove("goal-flash"),a.offsetWidth,a.classList.add("goal-flash"),setTimeout((()=>a.classList.remove("goal-flash")),1700);const s=document.createElement("div");s.className="goal-flash-overlay",a.appendChild(s),setTimeout((()=>s.remove()),1e3);const i=document.createElement("div");i.className="goal-banner",i.innerHTML='<div class="goal-banner-text">GOAL!</div>',a.appendChild(i),setTimeout((()=>i.remove()),1700);const o=a.querySelector(".score-numbers");o&&(o.classList.remove("goal-scored"),o.offsetWidth,o.classList.add("goal-scored"),setTimeout((()=>o.classList.remove("goal-scored")),1300));const n=a.querySelectorAll(".team-side .team-logo-big"),r="away"===t?n[1]:n[0];r&&(r.classList.remove("scorer-bounce"),r.offsetWidth,r.classList.add("scorer-bounce"),setTimeout((()=>r.classList.remove("scorer-bounce")),1300)),navigator.vibrate&&navigator.vibrate([180,80,180,80,280]),setTimeout((()=>this._showEventToast("calcio_live_goal",e)),600);const l=["#ec4899","#6366f1","#06b6d4","#fbbf24","#10b981","#ef4444"],c=["⚽","🎉","✨","🔥","⭐"];for(let t=0;t<36;t++){const t=document.createElement("div");t.className="confetti",Math.random()>.55?(t.textContent=c[Math.floor(Math.random()*c.length)],t.style.fontSize=14+10*Math.random()+"px",t.style.background="transparent"):(t.style.background=l[Math.floor(Math.random()*l.length)],t.style.borderRadius=Math.random()>.5?"50%":"2px");const e=380*(Math.random()-.5)+"px",s=240*Math.random()+100+"px";t.style.setProperty("--dx",e),t.style.setProperty("--dy",s),t.style.animationDelay=.3*Math.random()+"s",a.appendChild(t),setTimeout((()=>t.remove()),2e3)}}getCardSize(){return 4}static getConfigElement(){return document.createElement("calcio-live-team-editor")}static getStubConfig(){return{entity:"sensor.calcio_live",show_event_toasts:!1}}showDetails(t){this.activeMatch=t,this.showPopup=!0}closePopup(){this.showPopup=!1}separateEvents(t){const e=[],a=[],s=[];return t.forEach((t=>{t.includes("Goal")||t.includes("Penalty - Scored")?e.push(t):t.includes("Yellow Card")?a.push(t):t.includes("Red Card")&&s.push(t)})),{goals:e,yellowCards:a,redCards:s}}_renderStatusBadge(t){const e=t.state;return"in"===e?I`<span class="status-badge live"><span class="dot"></span>Live</span>`:"post"===e?I`<span class="status-badge finished">Finita</span>`:I`<span class="status-badge scheduled">${t.date||"Programmata"}</span>`}_renderClock(t){const e=t.state;if("in"===e){const e=t.clock&&"N/A"!==t.clock?t.clock:t.status||"";return I`<div class="clock"><span class="dot"></span>${e}</div>`}return"post"===e?I`<div class="clock finished">Full Time</div>`:I`<div class="clock upcoming">${t.date||""}</div>`}_renderForm(t){if(!t||"N/A"===t)return"";const e=String(t).replace(/[^WLDwld]/g,"").toUpperCase();if(!e.length)return"";const a=e.slice(-5).split("");return I`
-      <div class="form-pills">
-        ${a.map((t=>I`<div class="form-pill ${t}">${(t=>"W"===t?"V":"L"===t?"P":"N")(t)}</div>`))}
+
+        <h3>Impostazioni</h3>
+
+        <div class="option">
+          <label>Show Finished Matches</label>
+          <ha-switch
+            .checked=${!1!==this._config.show_finished_matches}
+            data-config-value="show_finished_matches"
+            @change=${this._switchChanged}
+          ></ha-switch>
+        </div>
+
+        <div class="option">
+          <label>Hide Header</label>
+          <ha-switch
+            .checked=${!0===this._config.hide_header}
+            data-config-value="hide_header"
+            @change=${this._switchChanged}
+          ></ha-switch>
+        </div>
+
+        <div class="option">
+          <label>Show Event Toasts (in-card)</label>
+          <ha-switch
+            .checked=${!0===this._config.show_event_toasts}
+            data-config-value="show_event_toasts"
+            @change=${this._switchChanged}
+          ></ha-switch>
+        </div>
+
+        <div>
+          <label class="field-label">Max Events Visible</label>
+          <input
+            type="number"
+            min="1"
+            max="100"
+            .value=${this._config.max_events_visible||5}
+            data-config-value="max_events_visible"
+            @change=${this._numberChanged}
+          />
+        </div>
+
+        <div>
+          <label class="field-label">Max Events Total</label>
+          <input
+            type="number"
+            min="1"
+            max="500"
+            .value=${this._config.max_events_total||50}
+            data-config-value="max_events_total"
+            @change=${this._numberChanged}
+          />
+        </div>
+
+        <div>
+          <label class="field-label">Hide Matches Older Than (Days)</label>
+          <input
+            type="number"
+            min="0"
+            max="365"
+            .value=${this._config.hide_past_days||0}
+            data-config-value="hide_past_days"
+            @change=${this._numberChanged}
+          />
+          <div class="hint">Per funzionare, "Show Finished Matches" deve essere attivo.</div>
+        </div>
       </div>
-    `}_renderStatsRow(t){const e=t.home_statistics||{},a=t.away_statistics||{},s=[],i=t=>{const e=parseFloat(t);return isNaN(e)?null:e},o=function(t,o,n){let r=arguments.length>3&&void 0!==arguments[3]?arguments[3]:"";const l=i(e[o]),c=i(a[n]);null!==l&&null!==c&&s.push({label:t,home:e[o],away:a[n],hNum:l,aNum:c,suffix:r})};return o("Possesso","possessionPct","possessionPct","%"),o("Tiri","totalShots","totalShots"),o("In porta","shotsOnTarget","shotsOnTarget"),0===s.length?"":I`
+    `}}),customElements.define("calcio-live-team",class extends ot{static get properties(){return{hass:{},_config:{},showPopup:{type:Boolean},activeMatch:{type:Object},_eventSubscriptions:{type:Array},_toastMessage:{type:String},_toastVisible:{type:Boolean},_toastVariant:{type:String}}}setConfig(t){if(!t.entity)throw new Error("Devi definire un'entità");this._config=t,this.showPopup=!1,this.activeMatch=null,this.showEventToasts=!0===t.show_event_toasts,this._toastMessage="",this._toastVisible=!1,this._toastVariant="goal",this._toastTimer=null}connectedCallback(){super.connectedCallback(),this._subscribeToEvents()}disconnectedCallback(){super.disconnectedCallback(),this._eventSubscriptions&&Array.isArray(this._eventSubscriptions)&&(this._eventSubscriptions.forEach((t=>{t&&t.unsubscribe()})),this._eventSubscriptions=[])}_subscribeToEvents(){this.hass&&this.hass.connection&&(this._eventSubscriptions=[],["calcio_live_goal","calcio_live_yellow_card","calcio_live_red_card"].forEach((t=>{this._eventSubscriptions.push(this.hass.connection.subscribeEvents(this._handleCalcioLiveEvent.bind(this),t))})))}_eventBelongsToThisCard(t){if(!this.hass||!this._config)return!1;const e=this.hass.states[this._config.entity];if(!e)return!1;const s=e.attributes.matches||[];if(0===s.length)return!1;const a=s[0];return a.home_team===t.home_team&&a.away_team===t.away_team}_handleCalcioLiveEvent(t){const e=t.event_type,s=t.data;if(this._eventBelongsToThisCard(s)&&this.showEventToasts)if("calcio_live_goal"===e){const t=s.team===s.home_team?"home":"away";requestAnimationFrame((()=>this._triggerGoalCelebration(t,s)))}else this._showEventToast(e,s)}_showEventToast(t,e){let s="",a="goal";"calcio_live_goal"===t?(s=`<strong>GOAL!</strong> ${e.player} · ${e.home_team} ${e.home_score} - ${e.away_score} ${e.away_team}`,a="goal"):"calcio_live_yellow_card"===t?(s=`🟨 <strong>Cartellino Giallo</strong> · ${e.player}${e.minute?` (${e.minute}')`:""}`,a="yellow"):"calcio_live_red_card"===t&&(s=`🟥 <strong>Cartellino Rosso</strong> · ${e.player}${e.minute?` (${e.minute}')`:""}`,a="red"),s&&(this._toastMessage=s,this._toastVariant=a,this._toastVisible=!0,this._toastTimer&&clearTimeout(this._toastTimer),this._toastTimer=setTimeout((()=>{this._toastVisible=!1,this.requestUpdate()}),4e3),this.requestUpdate())}_triggerGoalCelebration(t,e){const s=this.shadowRoot&&this.shadowRoot.querySelector("ha-card");if(!s)return;s.querySelectorAll(".confetti, .goal-banner, .goal-flash-overlay").forEach((t=>t.remove())),s.classList.remove("goal-flash"),s.offsetWidth,s.classList.add("goal-flash"),setTimeout((()=>s.classList.remove("goal-flash")),1700);const a=document.createElement("div");a.className="goal-flash-overlay",s.appendChild(a),setTimeout((()=>a.remove()),1e3);const i=document.createElement("div");i.className="goal-banner",i.innerHTML='<div class="goal-banner-text">GOAL!</div>',s.appendChild(i),setTimeout((()=>i.remove()),1700);const o=s.querySelector(".score-numbers");o&&(o.classList.remove("goal-scored"),o.offsetWidth,o.classList.add("goal-scored"),setTimeout((()=>o.classList.remove("goal-scored")),1300));const n=s.querySelectorAll(".team-side .team-logo-big"),r="away"===t?n[1]:n[0];r&&(r.classList.remove("scorer-bounce"),r.offsetWidth,r.classList.add("scorer-bounce"),setTimeout((()=>r.classList.remove("scorer-bounce")),1300)),navigator.vibrate&&navigator.vibrate([180,80,180,80,280]),setTimeout((()=>this._showEventToast("calcio_live_goal",e)),600);const l=["#ec4899","#6366f1","#06b6d4","#fbbf24","#10b981","#ef4444"],c=["⚽","🎉","✨","🔥","⭐"];for(let t=0;t<36;t++){const t=document.createElement("div");t.className="confetti",Math.random()>.55?(t.textContent=c[Math.floor(Math.random()*c.length)],t.style.fontSize=14+10*Math.random()+"px",t.style.background="transparent"):(t.style.background=l[Math.floor(Math.random()*l.length)],t.style.borderRadius=Math.random()>.5?"50%":"2px");const e=380*(Math.random()-.5)+"px",a=240*Math.random()+100+"px";t.style.setProperty("--dx",e),t.style.setProperty("--dy",a),t.style.animationDelay=.3*Math.random()+"s",s.appendChild(t),setTimeout((()=>t.remove()),2e3)}}getCardSize(){return 4}static getConfigElement(){return document.createElement("calcio-live-team-editor")}static getStubConfig(){return{entity:"sensor.calcio_live",show_event_toasts:!1}}showDetails(t){this.activeMatch=t,this.showPopup=!0}closePopup(){this.showPopup=!1}separateEvents(t){const e=[],s=[],a=[];return t.forEach((t=>{t.includes("Goal")||t.includes("Penalty - Scored")?e.push(t):t.includes("Yellow Card")?s.push(t):t.includes("Red Card")&&a.push(t)})),{goals:e,yellowCards:s,redCards:a}}_renderStatusBadge(t){const e=t.state;return"in"===e?I`<span class="status-badge live"><span class="dot"></span>Live</span>`:"post"===e?I`<span class="status-badge finished">Finita</span>`:I`<span class="status-badge scheduled">${t.date||"Programmata"}</span>`}_renderClock(t){const e=t.state;if("in"===e){const e=t.clock&&"N/A"!==t.clock?t.clock:t.status||"";return I`<div class="clock"><span class="dot"></span>${e}</div>`}return"post"===e?I`<div class="clock finished">Full Time</div>`:I`<div class="clock upcoming">${t.date||""}</div>`}_renderForm(t){if(!t||"N/A"===t)return"";const e=String(t).replace(/[^WLDwld]/g,"").toUpperCase();if(!e.length)return"";const s=e.slice(-5).split("");return I`
+      <div class="form-pills">
+        ${s.map((t=>I`<div class="form-pill ${t}">${(t=>"W"===t?"V":"L"===t?"P":"N")(t)}</div>`))}
+      </div>
+    `}_renderStatsRow(t){const e=t.home_statistics||{},s=t.away_statistics||{},a=[],i=t=>{const e=parseFloat(t);return isNaN(e)?null:e},o=function(t,o,n){let r=arguments.length>3&&void 0!==arguments[3]?arguments[3]:"";const l=i(e[o]),c=i(s[n]);null!==l&&null!==c&&a.push({label:t,home:e[o],away:s[n],hNum:l,aNum:c,suffix:r})};return o("Possesso","possessionPct","possessionPct","%"),o("Tiri","totalShots","totalShots"),o("In porta","shotsOnTarget","shotsOnTarget"),0===a.length?"":I`
       <div class="stats-row">
-        ${s.map((t=>{const e=t.hNum+t.aNum,a=e>0?t.hNum/e*100:50,s=100-a;return I`
+        ${a.map((t=>{const e=t.hNum+t.aNum,s=e>0?t.hNum/e*100:50,a=100-s;return I`
             <div class="stat-bar">
               <div class="stat-bar-label">
                 <span class="home-val">${t.home}${t.suffix}</span>
@@ -790,17 +844,17 @@
                 <span class="away-val">${t.away}${t.suffix}</span>
               </div>
               <div class="stat-bar-track">
-                <div class="stat-bar-home" style="width: ${a}%;"></div>
-                <div class="stat-bar-away" style="width: ${s}%;"></div>
+                <div class="stat-bar-home" style="width: ${s}%;"></div>
+                <div class="stat-bar-away" style="width: ${a}%;"></div>
               </div>
             </div>
           `}))}
       </div>
-    `}render(){if(!this.hass||!this._config)return I``;const t=this._config.entity,e=this.hass.states[t];if(!e)return I`<ha-card class="empty">Entità sconosciuta: ${t}</ha-card>`;if(!e.attributes.matches||0===e.attributes.matches.length)return I`<ha-card class="empty">Nessuna partita disponibile</ha-card>`;const a=e.attributes.matches[0],s="in"===a.state,i="post"===a.state,o=s||i,n=a.league_name&&"N/A"!==a.league_name?a.league_name:a.season_info&&"N/A"!==a.season_info?a.season_info:"",r=a.venue&&"N/A"!==a.venue?a.venue:"";return I`
-      <ha-card class="${s?"live":""}">
+    `}render(){if(!this.hass||!this._config)return I``;const t=this._config.entity,e=this.hass.states[t];if(!e)return I`<ha-card class="empty">Entità sconosciuta: ${t}</ha-card>`;if(!e.attributes.matches||0===e.attributes.matches.length)return I`<ha-card class="empty">Nessuna partita disponibile</ha-card>`;const s=e.attributes.matches[0],a="in"===s.state,i="post"===s.state,o=a||i,n=s.league_name&&"N/A"!==s.league_name?s.league_name:s.season_info&&"N/A"!==s.season_info?s.season_info:"",r=s.venue&&"N/A"!==s.venue?s.venue:"";return I`
+      <ha-card class="${a?"live":""}">
         <div class="bg-logos">
-          <div class="bg-logo home"><img src="${a.home_logo}" alt="" loading="lazy"></div>
-          <div class="bg-logo away"><img src="${a.away_logo}" alt="" loading="lazy"></div>
+          <div class="bg-logo home"><img src="${s.home_logo}" alt="" loading="lazy"></div>
+          <div class="bg-logo away"><img src="${s.away_logo}" alt="" loading="lazy"></div>
         </div>
         <div class="hero-bg"></div>
 
@@ -813,48 +867,48 @@
             <span class="comp-icon">⚽</span>
             <span class="comp-name">${n||" "}</span>
           </div>
-          ${this._renderStatusBadge(a)}
+          ${this._renderStatusBadge(s)}
         </div>
 
         <div class="scoreboard">
           <div class="team-side home">
             <div class="team-logo-wrap">
-              <img class="team-logo-big" src="${a.home_logo}" alt="${a.home_team}" />
+              <img class="team-logo-big" src="${s.home_logo}" alt="${s.home_team}" />
             </div>
-            <div class="team-name-big">${a.home_team}</div>
-            ${this._renderForm(a.home_form)}
+            <div class="team-name-big">${s.home_team}</div>
+            ${this._renderForm(s.home_form)}
           </div>
 
           <div class="score-center">
-            ${o?I`<div class="score-numbers">${a.home_score} <span class="dash">-</span> ${a.away_score}</div>`:I`<div class="score-vs">VS</div>`}
-            ${this._renderClock(a)}
+            ${o?I`<div class="score-numbers">${s.home_score} <span class="dash">-</span> ${s.away_score}</div>`:I`<div class="score-vs">VS</div>`}
+            ${this._renderClock(s)}
           </div>
 
           <div class="team-side away">
             <div class="team-logo-wrap">
-              <img class="team-logo-big" src="${a.away_logo}" alt="${a.away_team}" />
+              <img class="team-logo-big" src="${s.away_logo}" alt="${s.away_team}" />
             </div>
-            <div class="team-name-big">${a.away_team}</div>
-            ${this._renderForm(a.away_form)}
+            <div class="team-name-big">${s.away_team}</div>
+            ${this._renderForm(s.away_form)}
           </div>
         </div>
 
-        ${s?this._renderStatsRow(a):""}
+        ${a?this._renderStatsRow(s):""}
 
         <div class="meta-row">
           <div class="meta-item">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
             <span>${r||"—"}</span>
           </div>
-          ${o?I`<button class="info-btn" @click="${()=>this.showDetails(a)}">Dettagli ›</button>`:I`
+          ${o?I`<button class="info-btn" @click="${()=>this.showDetails(s)}">Dettagli ›</button>`:I`
               <div class="meta-item">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                <span>${a.date||""}</span>
+                <span>${s.date||""}</span>
               </div>
             `}
         </div>
       </ha-card>
-    `}updated(t){(t.has("showPopup")||t.has("activeMatch"))&&this.renderPopupToBody()}renderPopupToBody(){if(!this.showPopup||!this.activeMatch){const t=document.getElementById("calcio-live-team-popup");return void(t&&t.remove())}let t=document.getElementById("calcio-live-team-popup");t||(t=document.createElement("div"),t.id="calcio-live-team-popup",t.style.cssText="\n        position: fixed; inset: 0;\n        display: flex; justify-content: center; align-items: center;\n        z-index: 999999;\n        background: rgba(0,0,0,0.7);\n        backdrop-filter: blur(8px);\n        overflow: auto;\n      ",t.addEventListener("click",(e=>{e.target===t&&(this.showPopup=!1)})),document.body.appendChild(t));const e=this.activeMatch;t.innerHTML=`\n      <div style="background: #1a1f2e; padding: 24px; border-radius: 20px; width: 90%; max-width: 560px; max-height: 85vh; overflow-y: auto; border: 1px solid rgba(255,255,255,0.08); box-shadow: 0 24px 64px rgba(0,0,0,0.6); margin: auto; color: #f8fafc; font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;">\n        <h3 style="margin:0 0 20px; font-size: 22px; font-weight: 800; letter-spacing:-0.02em; background: linear-gradient(135deg,#6366f1,#ec4899); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color: transparent;">Dettagli partita</h3>\n        <div style="display:flex; justify-content:center; align-items:center; gap:18px; margin-bottom:24px;">\n          <img style="width:72px; height:72px; object-fit:contain; filter: drop-shadow(0 4px 12px rgba(0,0,0,0.4));" src="${e.home_logo}" alt="${e.home_team}" />\n          <div style="text-align:center;">\n            <div style="font-size:42px; font-weight:900; letter-spacing:-0.04em; line-height:1;">${e.home_score??"-"} <span style="opacity:0.4;">-</span> ${e.away_score??"-"}</div>\n            <div style="font-size:12px; color:#94a3b8; margin-top:8px; font-weight:600;">${e.clock??e.status??""}</div>\n          </div>\n          <img style="width:72px; height:72px; object-fit:contain; filter: drop-shadow(0 4px 12px rgba(0,0,0,0.4));" src="${e.away_logo}" alt="${e.away_team}" />\n        </div>\n        <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:18px;">\n          <div style="background:rgba(255,255,255,0.04); padding:14px; border-radius:14px;">\n            <div style="font-size:10px; text-transform:uppercase; letter-spacing:0.1em; color:#94a3b8; font-weight:700; margin-bottom:6px;">${e.home_team}</div>\n            <div style="font-size:13px;"><span style="color:#94a3b8;">Possesso:</span> <strong>${e.home_statistics?.possessionPct??"—"}%</strong></div>\n            <div style="font-size:13px;"><span style="color:#94a3b8;">Tiri:</span> <strong>${e.home_statistics?.totalShots??"—"}</strong></div>\n            <div style="font-size:13px;"><span style="color:#94a3b8;">In porta:</span> <strong>${e.home_statistics?.shotsOnTarget??"—"}</strong></div>\n            <div style="font-size:13px;"><span style="color:#94a3b8;">Falli:</span> <strong>${e.home_statistics?.foulsCommitted??"—"}</strong></div>\n          </div>\n          <div style="background:rgba(255,255,255,0.04); padding:14px; border-radius:14px;">\n            <div style="font-size:10px; text-transform:uppercase; letter-spacing:0.1em; color:#94a3b8; font-weight:700; margin-bottom:6px;">${e.away_team}</div>\n            <div style="font-size:13px;"><span style="color:#94a3b8;">Possesso:</span> <strong>${e.away_statistics?.possessionPct??"—"}%</strong></div>\n            <div style="font-size:13px;"><span style="color:#94a3b8;">Tiri:</span> <strong>${e.away_statistics?.totalShots??"—"}</strong></div>\n            <div style="font-size:13px;"><span style="color:#94a3b8;">In porta:</span> <strong>${e.away_statistics?.shotsOnTarget??"—"}</strong></div>\n            <div style="font-size:13px;"><span style="color:#94a3b8;">Falli:</span> <strong>${e.away_statistics?.foulsCommitted??"—"}</strong></div>\n          </div>\n        </div>\n        <div id="team-events-container"></div>\n        <button id="popup-close-btn" style="background:linear-gradient(135deg,#6366f1,#ec4899); color:white; padding:12px 20px; border:none; border-radius:12px; cursor:pointer; margin-top:20px; font-weight:800; width:100%; font-size:14px;">Chiudi</button>\n      </div>\n    `;const a=t.querySelector("#popup-close-btn");a&&a.addEventListener("click",(()=>{this.showPopup=!1}));const s=t.querySelector("#team-events-container"),{goals:i,yellowCards:o,redCards:n}=this.separateEvents(e.match_details||[]),r=(t,e,a)=>e.length?`<div style="margin-bottom:14px; padding:14px; background:${a.bg}; border-left:3px solid ${a.border}; border-radius:10px;">\n        <h5 style="margin:0 0 8px; font-size:12px; text-transform:uppercase; letter-spacing:0.08em; color:${a.border}; font-weight:800;">${t}</h5>\n        <ul style="margin:0; padding-left:18px; font-size:13px; color:#cbd5e1;">${e.map((t=>`<li style="margin:4px 0;">${t}</li>`)).join("")}</ul>\n      </div>`:"";let l="";l+=r("Goal",i,{bg:"rgba(99,102,241,0.1)",border:"#6366f1"}),l+=r("Cartellini Gialli",o,{bg:"rgba(245,158,11,0.1)",border:"#f59e0b"}),l+=r("Cartellini Rossi",n,{bg:"rgba(239,68,68,0.1)",border:"#ef4444"}),s.innerHTML=l||'<p style="text-align:center; color:#94a3b8; font-size:13px;">Nessun evento disponibile</p>'}static get styles(){return o`
+    `}updated(t){(t.has("showPopup")||t.has("activeMatch"))&&this.renderPopupToBody()}renderPopupToBody(){if(!this.showPopup||!this.activeMatch){const t=document.getElementById("calcio-live-team-popup");return void(t&&t.remove())}let t=document.getElementById("calcio-live-team-popup");t||(t=document.createElement("div"),t.id="calcio-live-team-popup",t.style.cssText="\n        position: fixed; inset: 0;\n        display: flex; justify-content: center; align-items: center;\n        z-index: 999999;\n        background: rgba(0,0,0,0.7);\n        backdrop-filter: blur(8px);\n        overflow: auto;\n      ",t.addEventListener("click",(e=>{e.target===t&&(this.showPopup=!1)})),document.body.appendChild(t));const e=this.activeMatch;t.innerHTML=`\n      <div style="background: #1a1f2e; padding: 24px; border-radius: 20px; width: 90%; max-width: 560px; max-height: 85vh; overflow-y: auto; border: 1px solid rgba(255,255,255,0.08); box-shadow: 0 24px 64px rgba(0,0,0,0.6); margin: auto; color: #f8fafc; font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;">\n        <h3 style="margin:0 0 20px; font-size: 22px; font-weight: 800; letter-spacing:-0.02em; background: linear-gradient(135deg,#6366f1,#ec4899); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color: transparent;">Dettagli partita</h3>\n        <div style="display:flex; justify-content:center; align-items:center; gap:18px; margin-bottom:24px;">\n          <img style="width:72px; height:72px; object-fit:contain; filter: drop-shadow(0 4px 12px rgba(0,0,0,0.4));" src="${e.home_logo}" alt="${e.home_team}" />\n          <div style="text-align:center;">\n            <div style="font-size:42px; font-weight:900; letter-spacing:-0.04em; line-height:1;">${e.home_score??"-"} <span style="opacity:0.4;">-</span> ${e.away_score??"-"}</div>\n            <div style="font-size:12px; color:#94a3b8; margin-top:8px; font-weight:600;">${e.clock??e.status??""}</div>\n          </div>\n          <img style="width:72px; height:72px; object-fit:contain; filter: drop-shadow(0 4px 12px rgba(0,0,0,0.4));" src="${e.away_logo}" alt="${e.away_team}" />\n        </div>\n        <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:18px;">\n          <div style="background:rgba(255,255,255,0.04); padding:14px; border-radius:14px;">\n            <div style="font-size:10px; text-transform:uppercase; letter-spacing:0.1em; color:#94a3b8; font-weight:700; margin-bottom:6px;">${e.home_team}</div>\n            <div style="font-size:13px;"><span style="color:#94a3b8;">Possesso:</span> <strong>${e.home_statistics?.possessionPct??"—"}%</strong></div>\n            <div style="font-size:13px;"><span style="color:#94a3b8;">Tiri:</span> <strong>${e.home_statistics?.totalShots??"—"}</strong></div>\n            <div style="font-size:13px;"><span style="color:#94a3b8;">In porta:</span> <strong>${e.home_statistics?.shotsOnTarget??"—"}</strong></div>\n            <div style="font-size:13px;"><span style="color:#94a3b8;">Falli:</span> <strong>${e.home_statistics?.foulsCommitted??"—"}</strong></div>\n          </div>\n          <div style="background:rgba(255,255,255,0.04); padding:14px; border-radius:14px;">\n            <div style="font-size:10px; text-transform:uppercase; letter-spacing:0.1em; color:#94a3b8; font-weight:700; margin-bottom:6px;">${e.away_team}</div>\n            <div style="font-size:13px;"><span style="color:#94a3b8;">Possesso:</span> <strong>${e.away_statistics?.possessionPct??"—"}%</strong></div>\n            <div style="font-size:13px;"><span style="color:#94a3b8;">Tiri:</span> <strong>${e.away_statistics?.totalShots??"—"}</strong></div>\n            <div style="font-size:13px;"><span style="color:#94a3b8;">In porta:</span> <strong>${e.away_statistics?.shotsOnTarget??"—"}</strong></div>\n            <div style="font-size:13px;"><span style="color:#94a3b8;">Falli:</span> <strong>${e.away_statistics?.foulsCommitted??"—"}</strong></div>\n          </div>\n        </div>\n        <div id="team-events-container"></div>\n        <button id="popup-close-btn" style="background:linear-gradient(135deg,#6366f1,#ec4899); color:white; padding:12px 20px; border:none; border-radius:12px; cursor:pointer; margin-top:20px; font-weight:800; width:100%; font-size:14px;">Chiudi</button>\n      </div>\n    `;const s=t.querySelector("#popup-close-btn");s&&s.addEventListener("click",(()=>{this.showPopup=!1}));const a=t.querySelector("#team-events-container"),{goals:i,yellowCards:o,redCards:n}=this.separateEvents(e.match_details||[]),r=(t,e,s)=>e.length?`<div style="margin-bottom:14px; padding:14px; background:${s.bg}; border-left:3px solid ${s.border}; border-radius:10px;">\n        <h5 style="margin:0 0 8px; font-size:12px; text-transform:uppercase; letter-spacing:0.08em; color:${s.border}; font-weight:800;">${t}</h5>\n        <ul style="margin:0; padding-left:18px; font-size:13px; color:#cbd5e1;">${e.map((t=>`<li style="margin:4px 0;">${t}</li>`)).join("")}</ul>\n      </div>`:"";let l="";l+=r("Goal",i,{bg:"rgba(99,102,241,0.1)",border:"#6366f1"}),l+=r("Cartellini Gialli",o,{bg:"rgba(245,158,11,0.1)",border:"#f59e0b"}),l+=r("Cartellini Rossi",n,{bg:"rgba(239,68,68,0.1)",border:"#ef4444"}),a.innerHTML=l||'<p style="text-align:center; color:#94a3b8; font-size:13px;">Nessun evento disponibile</p>'}static get styles(){return o`
       :host {
         --cl-accent: #6366f1;
         --cl-accent-2: #ec4899;
@@ -1362,46 +1416,71 @@
           opacity: 0;
         }
       }
-    `}}),window.customCards=window.customCards||[],window.customCards.push({type:"calcio-live-team",name:"Calcio Live team Card",description:"Mostra la prossima partita / partita in corso del tuo Team"}),customElements.define("calcio-live-team-editor",class extends ot{static get properties(){return{_config:{type:Object},hass:{type:Object},entities:{type:Array}}}constructor(){super(),this._entity="",this.entities=[]}static get styles(){return o`
+    `}}),window.customCards=window.customCards||[],window.customCards.push({type:"calcio-live-team",name:"Calcio Live team Card",description:"Mostra la prossima partita / partita in corso del tuo Team"}),customElements.define("calcio-live-team-editor",class extends ot{static get properties(){return{_config:{type:Object},hass:{type:Object},entities:{type:Array}}}constructor(){super(),this.entities=[]}static get styles(){return o`
       .card-config {
         display: flex;
         flex-direction: column;
-        gap: 20px; /* Spazio tra le opzioni */
+        gap: 16px;
       }
       .option {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        margin-bottom: 10px;
+        gap: 12px;
       }
-      ha-select {
-        width: 100%; /* Larghezza piena per il campo dei sensori */
+      label {
+        font-size: 14px;
+        color: var(--primary-text-color);
       }
-      ha-textfield {
-        width: 100%; /* Larghezza piena per i campi numerici */
+      .field-label {
+        display: block;
+        font-size: 12px;
+        color: var(--secondary-text-color);
+        margin-bottom: 4px;
+        font-weight: 600;
       }
-    `}setConfig(t){if(!t)throw new Error("Invalid configuration");this._config={...t},this._entity=this._config.entity||""}get config(){return this._config}updated(t){t.has("hass")&&this._fetchEntities(),t.has("_config")&&this._config&&this._config.entity&&(this._entity=this._config.entity)}configChanged(t){const e=new CustomEvent("config-changed",{detail:{config:t},bubbles:!0,composed:!0});this.dispatchEvent(e)}_EntityChanged(t){if(!this._config)return;const e={...this._config,entity:t.target.value};this._entity=t.target.value,this.configChanged(e)}_fetchEntities(){this.hass&&(this.entities=Object.keys(this.hass.states).filter((t=>t.startsWith("sensor.calciolive_next"))).sort())}_valueChanged(t){if(!this._config)return;const e=t.target,a="number"===e.type?parseInt(e.value,10):void 0!==e.checked?e.checked:e.value;if(e.configValue){const t={...this._config,[e.configValue]:a};this.configChanged(t)}}render(){return this._config&&this.hass?I`
-        <div class="card-config">
-          <h4>CalcioLive Sensor:</h4>
-          <ha-select
-              naturalMenuWidth
-              fixedMenuPosition
-              label="Entity"
-              .configValue=${"entity"}
-              .value=${this._entity}
-              @selected=${this._EntityChanged}
-              @closed=${t=>t.stopPropagation()}
-              >
-              ${this.entities.map((t=>I`<ha-list-item .value=${t}>${t}</ha-list-item>`))}
-          </ha-select>
-          <div class="option">
-            <ha-switch
-              .checked=${!0===this._config.show_event_toasts}
-              @change=${this._valueChanged}
-              .configValue=${"show_event_toasts"}
-            >
-            </ha-switch>
-            <label>Show Event Toasts (in-card)</label>
-          </div>
+      select {
+        width: 100%;
+        padding: 10px 12px;
+        font-size: 14px;
+        border-radius: 8px;
+        border: 1px solid var(--divider-color, rgba(0,0,0,0.12));
+        background: var(--card-background-color, #fff);
+        color: var(--primary-text-color, #000);
+        box-sizing: border-box;
+      }
+      select:focus {
+        outline: 2px solid var(--primary-color, #03a9f4);
+        outline-offset: -1px;
+      }
+      h3 {
+        margin: 8px 0 0;
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--secondary-text-color);
+      }
+    `}setConfig(t){if(!t)throw new Error("Invalid configuration");this._config={...t}}get config(){return this._config}updated(t){t.has("hass")&&this._fetchEntities()}_fireConfigChanged(t){this._config=t,this.dispatchEvent(new CustomEvent("config-changed",{detail:{config:t},bubbles:!0,composed:!0})),this.requestUpdate()}_entityChanged(t){if(!this._config)return;const e=t.target.value;e!==this._config.entity&&this._fireConfigChanged({...this._config,entity:e})}_switchChanged(t){if(!this._config)return;const e=t.target;if(!e.dataset||!e.dataset.configValue)return;const s=e.dataset.configValue,a=e.checked;this._config[s]!==a&&this._fireConfigChanged({...this._config,[s]:a})}_fetchEntities(){this.hass&&(this.entities=Object.keys(this.hass.states).filter((t=>t.startsWith("sensor.calciolive_next"))).sort())}render(){if(!this._config||!this.hass)return I``;const t=this._config.entity||"",e=t&&this.entities.includes(t);return I`
+      <div class="card-config">
+        <h3>Sensore</h3>
+        <div>
+          <label class="field-label">Entity</label>
+          <select @change=${this._entityChanged}>
+            ${e?"":I`<option value="${t}" selected>${t||"— seleziona —"}</option>`}
+            ${this.entities.map((e=>I`
+              <option value="${e}" ?selected=${e===t}>${e}</option>
+            `))}
+          </select>
         </div>
-      `:I``}})})();
+
+        <h3>Impostazioni</h3>
+        <div class="option">
+          <label>Show Event Toasts (in-card)</label>
+          <ha-switch
+            .checked=${!0===this._config.show_event_toasts}
+            data-config-value="show_event_toasts"
+            @change=${this._switchChanged}
+          ></ha-switch>
+        </div>
+      </div>
+    `}})})();

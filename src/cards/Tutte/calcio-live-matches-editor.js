@@ -11,7 +11,6 @@ class CalcioLiveTodayMatchesEditor extends LitElement {
 
   constructor() {
     super();
-    this._entity = '';
     this.entities = [];
   }
 
@@ -20,167 +19,196 @@ class CalcioLiveTodayMatchesEditor extends LitElement {
       .card-config {
         display: flex;
         flex-direction: column;
-        gap: 20px; /* Spazio tra le opzioni */
+        gap: 16px;
       }
       .option {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        margin-bottom: 10px;
+        gap: 12px;
       }
-      ha-select {
-        width: 100%; /* Larghezza piena per il campo dei sensori */
+      label {
+        font-size: 14px;
+        color: var(--primary-text-color);
       }
-      ha-textfield {
-        width: 100%; /* Larghezza piena per i campi numerici */
+      .field-label {
+        display: block;
+        font-size: 12px;
+        color: var(--secondary-text-color);
+        margin-bottom: 4px;
+        font-weight: 600;
+      }
+      select, input[type="number"] {
+        width: 100%;
+        padding: 10px 12px;
+        font-size: 14px;
+        border-radius: 8px;
+        border: 1px solid var(--divider-color, rgba(0,0,0,0.12));
+        background: var(--card-background-color, #fff);
+        color: var(--primary-text-color, #000);
+        box-sizing: border-box;
+      }
+      select:focus, input:focus {
+        outline: 2px solid var(--primary-color, #03a9f4);
+        outline-offset: -1px;
+      }
+      h3 {
+        margin: 8px 0 0;
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--secondary-text-color);
+      }
+      .hint {
+        font-size: 12px;
+        color: var(--secondary-text-color);
+        margin-top: -4px;
       }
     `;
   }
 
   setConfig(config) {
-    if (!config) {
-      throw new Error('Invalid configuration');
-    }
+    if (!config) throw new Error('Invalid configuration');
     this._config = { ...config };
-    this._entity = this._config.entity || '';
   }
 
-  get config() {
-    return this._config;
-  }
+  get config() { return this._config; }
 
   updated(changedProperties) {
-    if (changedProperties.has('hass')) {
-      this._fetchEntities();
-    }
-    if (changedProperties.has('_config') && this._config && this._config.entity) {
-      this._entity = this._config.entity;
-    }
+    if (changedProperties.has('hass')) this._fetchEntities();
   }
 
-  configChanged(newConfig) {
-    const event = new CustomEvent('config-changed', {
+  _fireConfigChanged(newConfig) {
+    this._config = newConfig;
+    this.dispatchEvent(new CustomEvent('config-changed', {
       detail: { config: newConfig },
       bubbles: true,
       composed: true,
-    });
-    this.dispatchEvent(event);
+    }));
+    this.requestUpdate();
   }
 
-  _EntityChanged(ev) {
+  _entityChanged(ev) {
     if (!this._config) return;
+    const value = ev.target.value;
+    if (value === this._config.entity) return;
+    this._fireConfigChanged({ ...this._config, entity: value });
+  }
 
-    const newConfig = { ...this._config, entity: ev.target.value };
-    this._entity = ev.target.value;
+  _switchChanged(ev) {
+    if (!this._config) return;
+    const target = ev.target;
+    if (!target.dataset || !target.dataset.configValue) return;
+    const key = target.dataset.configValue;
+    const value = target.checked;
+    if (this._config[key] === value) return;
+    this._fireConfigChanged({ ...this._config, [key]: value });
+  }
 
-    this.configChanged(newConfig);
+  _numberChanged(ev) {
+    if (!this._config) return;
+    const target = ev.target;
+    if (!target.dataset || !target.dataset.configValue) return;
+    const key = target.dataset.configValue;
+    const value = parseInt(target.value, 10);
+    if (isNaN(value)) return;
+    if (this._config[key] === value) return;
+    this._fireConfigChanged({ ...this._config, [key]: value });
   }
 
   _fetchEntities() {
-    if (this.hass) {
-      this.entities = Object.keys(this.hass.states)
-        .filter((entityId) => entityId.startsWith('sensor.calciolive_all'))
-        .sort();
-    }
-  }
-  
-  _valueChanged(ev) {
-    if (!this._config) return;
-    const target = ev.target;
-    const value = target.type === 'number' ? parseInt(target.value, 10) : (target.checked !== undefined ? target.checked : target.value);
-
-    if (target.configValue) {
-      const newConfig = { ...this._config, [target.configValue]: value };
-      this.configChanged(newConfig);
-    }
+    if (!this.hass) return;
+    this.entities = Object.keys(this.hass.states)
+      .filter((entityId) => entityId.startsWith('sensor.calciolive_all'))
+      .sort();
   }
 
   render() {
-      if (!this._config || !this.hass) {
-        return html``;
-      }
+    if (!this._config || !this.hass) return html``;
+    const currentEntity = this._config.entity || '';
+    const entityInList = currentEntity && this.entities.includes(currentEntity);
 
-      return html`
-        <div class="card-config">
-          <h3>CalcioLive Sensor:</h3>
-          <ha-select
-              naturalMenuWidth
-              fixedMenuPosition
-              label="Entity"
-              .configValue=${'entity'}
-              .value=${this._entity}
-              @selected=${this._EntityChanged}
-              @closed=${(ev) => ev.stopPropagation()}
-              >
-              ${this.entities.map((entity) => {
-                  return html`<ha-list-item .value=${entity}>${entity}</ha-list-item>`;
-              })}
-          </ha-select>
-        
-          <h3>Settings:</h3>
-          <div class="option">
-            <ha-switch
-              .checked=${this._config.show_finished_matches !== false}
-              @change=${this._valueChanged}
-              .configValue=${'show_finished_matches'}
-            >
-            </ha-switch>
-            <label>Show Finished Matches</label>
-          </div>
-
-          <div class="option">
-            <ha-switch
-              .checked=${this._config.hide_header === true}
-              @change=${this._valueChanged}
-              .configValue=${'hide_header'}
-            >
-            </ha-switch>
-            <label>Hide Header</label>
-          </div>
-
-          <div class="option">
-            <ha-switch
-              .checked=${this._config.show_event_toasts === true}
-              @change=${this._valueChanged}
-              .configValue=${'show_event_toasts'}
-            >
-            </ha-switch>
-            <label>Show Event Toasts (in-card)</label>
-          </div>
-
-          <div class="option">
-            <ha-textfield
-              label="Max Events Visible"
-              type="number"
-              .value=${this._config.max_events_visible || 5}
-              @change=${this._valueChanged}
-              .configValue=${'max_events_visible'}
-            ></ha-textfield>
-          </div>
-
-          <div class="option">
-            <ha-textfield
-              label="Max Events Total"
-              type="number"
-              .value=${this._config.max_events_total || 50}
-              @change=${this._valueChanged}
-              .configValue=${'max_events_total'}
-            ></ha-textfield>
-          </div>
-          
-          <h4>For work, 'Show Finished Matches' it must be enabled. </h4>
-          <div class="option">
-            <ha-textfield
-              label="Hide Matches Older Than (Days)"
-              type="number"
-              .value=${this._config.hide_past_days || 0}
-              @change=${this._valueChanged}
-              .configValue=${'hide_past_days'}
-            ></ha-textfield>
-          </div>
+    return html`
+      <div class="card-config">
+        <h3>Sensore</h3>
+        <div>
+          <label class="field-label">Entity</label>
+          <select @change=${this._entityChanged}>
+            ${!entityInList ? html`<option value="${currentEntity}" selected>${currentEntity || '— seleziona —'}</option>` : ''}
+            ${this.entities.map(e => html`
+              <option value="${e}" ?selected=${e === currentEntity}>${e}</option>
+            `)}
+          </select>
         </div>
-      `;
-    }
+
+        <h3>Impostazioni</h3>
+
+        <div class="option">
+          <label>Show Finished Matches</label>
+          <ha-switch
+            .checked=${this._config.show_finished_matches !== false}
+            data-config-value="show_finished_matches"
+            @change=${this._switchChanged}
+          ></ha-switch>
+        </div>
+
+        <div class="option">
+          <label>Hide Header</label>
+          <ha-switch
+            .checked=${this._config.hide_header === true}
+            data-config-value="hide_header"
+            @change=${this._switchChanged}
+          ></ha-switch>
+        </div>
+
+        <div class="option">
+          <label>Show Event Toasts (in-card)</label>
+          <ha-switch
+            .checked=${this._config.show_event_toasts === true}
+            data-config-value="show_event_toasts"
+            @change=${this._switchChanged}
+          ></ha-switch>
+        </div>
+
+        <div>
+          <label class="field-label">Max Events Visible</label>
+          <input
+            type="number"
+            min="1"
+            max="100"
+            .value=${this._config.max_events_visible || 5}
+            data-config-value="max_events_visible"
+            @change=${this._numberChanged}
+          />
+        </div>
+
+        <div>
+          <label class="field-label">Max Events Total</label>
+          <input
+            type="number"
+            min="1"
+            max="500"
+            .value=${this._config.max_events_total || 50}
+            data-config-value="max_events_total"
+            @change=${this._numberChanged}
+          />
+        </div>
+
+        <div>
+          <label class="field-label">Hide Matches Older Than (Days)</label>
+          <input
+            type="number"
+            min="0"
+            max="365"
+            .value=${this._config.hide_past_days || 0}
+            data-config-value="hide_past_days"
+            @change=${this._numberChanged}
+          />
+          <div class="hint">Per funzionare, "Show Finished Matches" deve essere attivo.</div>
+        </div>
+      </div>
+    `;
+  }
 }
 
 customElements.define('calcio-live-matches-editor', CalcioLiveTodayMatchesEditor);
