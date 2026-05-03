@@ -1,4 +1,5 @@
 import { LitElement, html, css } from "lit-element";
+import { t, resolveLang } from "../../i18n.js";
 
 class CalcioLiveStandingsCard extends LitElement {
   static get properties() {
@@ -17,7 +18,7 @@ class CalcioLiveStandingsCard extends LitElement {
 
   setConfig(config) {
     if (!config.entity) {
-      throw new Error("Devi definire un'entità");
+      throw new Error("Entity required");
     }
     this._config = config;
     this.maxTeamsVisible = config.max_teams_visible ? config.max_teams_visible : 10;
@@ -28,6 +29,10 @@ class CalcioLiveStandingsCard extends LitElement {
     this._toastVisible = false;
     this._toastVariant = 'goal';
     this._toastTimer = null;
+  }
+
+  _t(key, vars) {
+    return t(key, resolveLang(this.hass, this._config), vars);
   }
 
   connectedCallback() {
@@ -122,7 +127,7 @@ class CalcioLiveStandingsCard extends LitElement {
     if (!this.hass || !this._config) return html``;
     const entityId = this._config.entity;
     const stateObj = this.hass.states[entityId];
-    if (!stateObj) return html`<ha-card class="empty">Entità sconosciuta: ${entityId}</ha-card>`;
+    if (!stateObj) return html`<ha-card class="empty">${this._t('generic.unknown_entity')}: ${entityId}</ha-card>`;
 
     const seasonName = stateObj.attributes.season || '';
     const standingsGroups = stateObj.attributes.standings_groups || [];
@@ -162,14 +167,14 @@ class CalcioLiveStandingsCard extends LitElement {
           <table class="standings-table">
             <thead>
               <tr>
-                <th>#</th>
-                <th class="team-col">Squadra</th>
-                <th>P</th>
-                <th>V</th>
-                <th>N</th>
-                <th>S</th>
-                <th>+/-</th>
-                <th>Pt</th>
+                <th>${this._t('col.pos')}</th>
+                <th class="team-col">${this._t('col.team')}</th>
+                <th>${this._t('col.played')}</th>
+                <th>${this._t('col.wins')}</th>
+                <th>${this._t('col.draws')}</th>
+                <th>${this._t('col.losses')}</th>
+                <th>${this._t('col.gd')}</th>
+                <th>${this._t('col.points')}</th>
               </tr>
             </thead>
             <tbody>
@@ -207,9 +212,9 @@ class CalcioLiveStandingsCard extends LitElement {
         </div>
 
         <div class="legend">
-          <div class="legend-item"><span class="legend-dot cl"></span>Champions</div>
-          <div class="legend-item"><span class="legend-dot el"></span>Europa</div>
-          <div class="legend-item"><span class="legend-dot rel"></span>Retrocessione</div>
+          <div class="legend-item"><span class="legend-dot cl"></span>${this._t('zone.champions')}</div>
+          <div class="legend-item"><span class="legend-dot el"></span>${this._t('zone.europa')}</div>
+          <div class="legend-item"><span class="legend-dot rel"></span>${this._t('zone.relegation')}</div>
         </div>
       </ha-card>
     `;

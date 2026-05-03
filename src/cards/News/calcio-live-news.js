@@ -1,4 +1,5 @@
 import { LitElement, html, css } from "lit-element";
+import { t, resolveLang } from "../../i18n.js";
 
 class CalcioLiveNewsCard extends LitElement {
   static get properties() {
@@ -9,11 +10,15 @@ class CalcioLiveNewsCard extends LitElement {
   }
 
   setConfig(config) {
-    if (!config.entity) throw new Error("Devi definire un'entità");
+    if (!config.entity) throw new Error("Entity required");
     this._config = config;
     this.maxArticles = config.max_articles ? config.max_articles : 5;
     this.hideHeader = config.hide_header === true;
     this.hideImages = config.hide_images === true;
+  }
+
+  _t(key, vars) {
+    return t(key, resolveLang(this.hass, this._config), vars);
   }
 
   getCardSize() { return 4; }
@@ -33,11 +38,12 @@ class CalcioLiveNewsCard extends LitElement {
       const d = new Date(iso);
       const now = new Date();
       const diff = (now - d) / 1000;
-      if (diff < 3600) return `${Math.floor(diff/60)} min fa`;
-      if (diff < 86400) return `${Math.floor(diff/3600)} h fa`;
-      if (diff < 604800) return `${Math.floor(diff/86400)} g fa`;
-      const months = ['Gen','Feb','Mar','Apr','Mag','Giu','Lug','Ago','Set','Ott','Nov','Dic'];
-      return `${d.getDate()} ${months[d.getMonth()]}`;
+      if (diff < 60) return this._t('time.now');
+      if (diff < 3600) return this._t('time.n_min_ago', { n: Math.floor(diff/60) });
+      if (diff < 86400) return this._t('time.n_h_ago', { n: Math.floor(diff/3600) });
+      if (diff < 604800) return this._t('time.n_d_ago', { n: Math.floor(diff/86400) });
+      const month = this._t('month.' + (d.getMonth() + 1));
+      return `${d.getDate()} ${month}`;
     } catch (e) { return ''; }
   }
 
@@ -49,9 +55,9 @@ class CalcioLiveNewsCard extends LitElement {
   render() {
     if (!this.hass || !this._config) return html``;
     const stateObj = this.hass.states[this._config.entity];
-    if (!stateObj) return html`<ha-card class="empty">Entità sconosciuta: ${this._config.entity}</ha-card>`;
+    if (!stateObj) return html`<ha-card class="empty">${this._t('generic.unknown_entity')}: ${this._config.entity}</ha-card>`;
     const articles = (stateObj.attributes.articles || []).slice(0, this.maxArticles);
-    if (articles.length === 0) return html`<ha-card class="empty">Nessuna notizia disponibile</ha-card>`;
+    if (articles.length === 0) return html`<ha-card class="empty">${this._t('news.empty')}</ha-card>`;
 
     return html`
       <ha-card>
@@ -60,7 +66,7 @@ class CalcioLiveNewsCard extends LitElement {
           <div class="news-header">
             <div class="header-icon">📰</div>
             <div class="header-text">
-              <div class="title">News</div>
+              <div class="title">${this._t('card.news')}</div>
               <div class="subtitle">${stateObj.state}</div>
             </div>
           </div>

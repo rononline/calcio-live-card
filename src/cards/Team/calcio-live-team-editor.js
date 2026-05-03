@@ -100,6 +100,16 @@ class CalcioLiveTeamNextCardEditor extends LitElement {
     this._fireConfigChanged({ ...this._config, [key]: value });
   }
 
+  _selectChanged(ev) {
+    if (!this._config) return;
+    const target = ev.target;
+    if (!target.dataset || !target.dataset.configValue) return;
+    const key = target.dataset.configValue;
+    const value = target.value;
+    if (this._config[key] === value) return;
+    this._fireConfigChanged({ ...this._config, [key]: value });
+  }
+
   _fetchEntities() {
     if (!this.hass) return;
     this.entities = Object.keys(this.hass.states)
@@ -133,6 +143,16 @@ class CalcioLiveTeamNextCardEditor extends LitElement {
             data-config-value="show_event_toasts"
             @change=${this._switchChanged}
           ></ha-switch>
+        </div>
+        <div>
+          <label class="field-label">Language · Lingua</label>
+          <select data-config-value="language" @change=${this._selectChanged}>
+            <option value="" ?selected=${!this._config.language}>Auto (HA locale)</option>
+            <option value="en" ?selected=${this._config.language === 'en'}>English</option>
+            <option value="it" ?selected=${this._config.language === 'it'}>Italiano</option>
+            <option value="fr" ?selected=${this._config.language === 'fr'}>Français</option>
+            <option value="es" ?selected=${this._config.language === 'es'}>Español</option>
+          </select>
         </div>
       </div>
     `;

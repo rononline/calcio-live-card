@@ -1,4 +1,5 @@
 import { LitElement, html, css } from "lit-element";
+import { t, resolveLang } from "../../i18n.js";
 
 class CalcioLiveTimelineCard extends LitElement {
   static get properties() {
@@ -9,10 +10,14 @@ class CalcioLiveTimelineCard extends LitElement {
   }
 
   setConfig(config) {
-    if (!config.entity) throw new Error("Devi definire un'entità");
+    if (!config.entity) throw new Error("Entity required");
     this._config = config;
     this.hideHeader = config.hide_header === true;
     this.reverseOrder = config.reverse_order === true;
+  }
+
+  _t(key, vars) {
+    return t(key, resolveLang(this.hass, this._config), vars);
   }
 
   getCardSize() { return 5; }
@@ -22,28 +27,28 @@ class CalcioLiveTimelineCard extends LitElement {
   }
 
   _eventMeta(ev) {
-    const t = (ev.type || '').toLowerCase();
+    const ty = (ev.type || '').toLowerCase();
     const text = (ev.type_text || '').toLowerCase();
-    if (text.includes('kickoff') || t === 'kickoff') return { icon: '⚽', label: 'Inizio', cls: 'meta' };
-    if (text.includes('halftime') || text.includes('intervallo')) return { icon: '⏸', label: 'Intervallo', cls: 'meta' };
-    if (text.includes('start 2nd') || text.includes('secondo tempo')) return { icon: '▶', label: 'Inizio 2°T', cls: 'meta' };
-    if (text.includes('end regular') || text.includes('full time')) return { icon: '🏁', label: 'Fine', cls: 'meta' };
-    if (t === 'goal' || ev.scoring_play) return { icon: '⚽', label: 'Goal', cls: 'goal' };
-    if (text.includes('penalty')) return { icon: '⚽', label: 'Rigore', cls: 'goal' };
-    if (text.includes('yellow card')) return { icon: '🟨', label: 'Cartellino giallo', cls: 'yellow' };
-    if (text.includes('red card')) return { icon: '🟥', label: 'Cartellino rosso', cls: 'red' };
-    if (t === 'substitution' || text.includes('substitution')) return { icon: '🔄', label: 'Sostituzione', cls: 'sub' };
-    if (text.includes('var')) return { icon: '📺', label: 'VAR', cls: 'meta' };
-    return { icon: '·', label: ev.type_text || 'Evento', cls: 'meta' };
+    if (text.includes('kickoff') || ty === 'kickoff') return { icon: '⚽', label: this._t('status.kickoff'), cls: 'meta' };
+    if (text.includes('halftime') || text.includes('intervallo')) return { icon: '⏸', label: this._t('status.halftime'), cls: 'meta' };
+    if (text.includes('start 2nd') || text.includes('secondo tempo')) return { icon: '▶', label: this._t('status.second_half'), cls: 'meta' };
+    if (text.includes('end regular') || text.includes('full time')) return { icon: '🏁', label: this._t('status.end'), cls: 'meta' };
+    if (ty === 'goal' || ev.scoring_play) return { icon: '⚽', label: this._t('event.goal'), cls: 'goal' };
+    if (text.includes('penalty')) return { icon: '⚽', label: this._t('timeline.penalty'), cls: 'goal' };
+    if (text.includes('yellow card')) return { icon: '🟨', label: this._t('event.yellow_card'), cls: 'yellow' };
+    if (text.includes('red card')) return { icon: '🟥', label: this._t('event.red_card'), cls: 'red' };
+    if (ty === 'substitution' || text.includes('substitution')) return { icon: '🔄', label: this._t('event.substitution'), cls: 'sub' };
+    if (text.includes('var')) return { icon: '📺', label: this._t('event.var'), cls: 'meta' };
+    return { icon: '·', label: ev.type_text || this._t('timeline.event'), cls: 'meta' };
   }
 
   render() {
     if (!this.hass || !this._config) return html``;
     const stateObj = this.hass.states[this._config.entity];
-    if (!stateObj) return html`<ha-card class="empty">Entità sconosciuta: ${this._config.entity}</ha-card>`;
+    if (!stateObj) return html`<ha-card class="empty">${this._t('generic.unknown_entity')}: ${this._config.entity}</ha-card>`;
 
     const matches = stateObj.attributes.matches || [];
-    if (matches.length === 0) return html`<ha-card class="empty">Nessuna partita</ha-card>`;
+    if (matches.length === 0) return html`<ha-card class="empty">${this._t('generic.no_match')}</ha-card>`;
     const m = matches[0];
     const events = m.key_events || stateObj.attributes.key_events || [];
 
@@ -53,8 +58,8 @@ class CalcioLiveTimelineCard extends LitElement {
           <div class="hero-bg"></div>
           <div class="empty-state">
             <div class="empty-icon">⏱</div>
-            <div class="empty-title">Nessun evento ancora</div>
-            <div class="empty-sub">Gli eventi compaiono durante la partita</div>
+            <div class="empty-title">${this._t('timeline.empty.title')}</div>
+            <div class="empty-sub">${this._t('timeline.empty.sub')}</div>
           </div>
         </ha-card>
       `;
@@ -69,7 +74,7 @@ class CalcioLiveTimelineCard extends LitElement {
           <div class="tl-header">
             <div class="header-icon">⏱</div>
             <div class="header-text">
-              <div class="title">Cronologia</div>
+              <div class="title">${this._t('card.timeline')}</div>
               <div class="subtitle">
                 <img class="mini-logo" src="${m.home_logo}" alt="" />
                 <span>${m.home_score ?? '-'} - ${m.away_score ?? '-'}</span>

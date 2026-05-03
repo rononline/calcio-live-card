@@ -1,4 +1,5 @@
 import { LitElement, html, css } from "lit-element";
+import { t, resolveLang } from "../../i18n.js";
 
 class CalcioLiveTeamNextCard extends LitElement {
   static get properties() {
@@ -16,7 +17,7 @@ class CalcioLiveTeamNextCard extends LitElement {
 
   setConfig(config) {
     if (!config.entity) {
-      throw new Error("Devi definire un'entità");
+      throw new Error("Entity required");
     }
     this._config = config;
     this.showPopup = false;
@@ -26,6 +27,10 @@ class CalcioLiveTeamNextCard extends LitElement {
     this._toastVisible = false;
     this._toastVariant = 'goal';
     this._toastTimer = null;
+  }
+
+  _t(key, vars) {
+    return t(key, resolveLang(this.hass, this._config), vars);
   }
 
   connectedCallback() {
@@ -79,13 +84,13 @@ class CalcioLiveTeamNextCard extends LitElement {
     let message = '';
     let variant = 'goal';
     if (eventType === 'calcio_live_goal') {
-      message = `<strong>GOAL!</strong> ${eventData.player} · ${eventData.home_team} ${eventData.home_score} - ${eventData.away_score} ${eventData.away_team}`;
+      message = `<strong>${this._t('event.goal').toUpperCase()}!</strong> ${eventData.player} · ${eventData.home_team} ${eventData.home_score} - ${eventData.away_score} ${eventData.away_team}`;
       variant = 'goal';
     } else if (eventType === 'calcio_live_yellow_card') {
-      message = `🟨 <strong>Cartellino Giallo</strong> · ${eventData.player}${eventData.minute ? ` (${eventData.minute}')` : ''}`;
+      message = `🟨 <strong>${this._t('event.yellow_card')}</strong> · ${eventData.player}${eventData.minute ? ` (${eventData.minute}')` : ''}`;
       variant = 'yellow';
     } else if (eventType === 'calcio_live_red_card') {
-      message = `🟥 <strong>Cartellino Rosso</strong> · ${eventData.player}${eventData.minute ? ` (${eventData.minute}')` : ''}`;
+      message = `🟥 <strong>${this._t('event.red_card')}</strong> · ${eventData.player}${eventData.minute ? ` (${eventData.minute}')` : ''}`;
       variant = 'red';
     }
     if (!message) return;
@@ -189,12 +194,12 @@ class CalcioLiveTeamNextCard extends LitElement {
   _renderStatusBadge(match) {
     const state = match.state;
     if (state === 'in') {
-      return html`<span class="status-badge live"><span class="dot"></span>Live</span>`;
+      return html`<span class="status-badge live"><span class="dot"></span>${this._t('status.live')}</span>`;
     }
     if (state === 'post') {
-      return html`<span class="status-badge finished">Finita</span>`;
+      return html`<span class="status-badge finished">${this._t('status.finished')}</span>`;
     }
-    return html`<span class="status-badge scheduled">${match.date || 'Programmata'}</span>`;
+    return html`<span class="status-badge scheduled">${match.date || this._t('status.scheduled')}</span>`;
   }
 
   _renderClock(match) {
@@ -206,7 +211,7 @@ class CalcioLiveTeamNextCard extends LitElement {
       return html`<div class="clock"><span class="dot"></span>${txt}</div>`;
     }
     if (state === 'post') {
-      return html`<div class="clock finished">Full Time</div>`;
+      return html`<div class="clock finished">${this._t('status.full_time')}</div>`;
     }
     return html`<div class="clock upcoming">${match.date || ''}</div>`;
   }
@@ -215,7 +220,11 @@ class CalcioLiveTeamNextCard extends LitElement {
     if (!record || record === 'N/A') return '';
     const parts = String(record).split('-');
     if (parts.length === 3) {
-      return html`<div class="record"><span class="rec rec-w">${parts[0]}V</span><span class="rec rec-d">${parts[1]}N</span><span class="rec rec-l">${parts[2]}P</span></div>`;
+      return html`<div class="record">
+        <span class="rec rec-w">${parts[0]}${this._t('form.W')}</span>
+        <span class="rec rec-d">${parts[1]}${this._t('form.D')}</span>
+        <span class="rec rec-l">${parts[2]}${this._t('form.L')}</span>
+      </div>`;
     }
     return html`<div class="record"><span class="rec">${record}</span></div>`;
   }
@@ -237,7 +246,7 @@ class CalcioLiveTeamNextCard extends LitElement {
     const letters = String(formStr).replace(/[^WLDwld]/g, '').toUpperCase();
     if (!letters.length) return '';
     const recent = letters.slice(-5).split('');
-    const labelOf = (l) => l === 'W' ? 'V' : (l === 'L' ? 'P' : 'N');
+    const labelOf = (l) => this._t('form.' + l);
     return html`
       <div class="form-pills">
         ${recent.map(l => html`<div class="form-pill ${l}">${labelOf(l)}</div>`)}
@@ -259,9 +268,9 @@ class CalcioLiveTeamNextCard extends LitElement {
       if (h === null || a === null) return;
       stats.push({ label, home: hs[hKey], away: as[aKey], hNum: h, aNum: a, suffix });
     };
-    pushStat('Possesso', 'possessionPct', 'possessionPct', '%');
-    pushStat('Tiri', 'totalShots', 'totalShots');
-    pushStat('In porta', 'shotsOnTarget', 'shotsOnTarget');
+    pushStat(this._t('team.possession'), 'possessionPct', 'possessionPct', '%');
+    pushStat(this._t('team.shots'), 'totalShots', 'totalShots');
+    pushStat(this._t('team.on_target'), 'shotsOnTarget', 'shotsOnTarget');
     if (stats.length === 0) return '';
 
     return html`
@@ -292,9 +301,9 @@ class CalcioLiveTeamNextCard extends LitElement {
     if (!this.hass || !this._config) return html``;
     const entityId = this._config.entity;
     const stateObj = this.hass.states[entityId];
-    if (!stateObj) return html`<ha-card class="empty">Entità sconosciuta: ${entityId}</ha-card>`;
+    if (!stateObj) return html`<ha-card class="empty">${this._t('generic.unknown_entity')}: ${entityId}</ha-card>`;
     if (!stateObj.attributes.matches || stateObj.attributes.matches.length === 0) {
-      return html`<ha-card class="empty">Nessuna partita disponibile</ha-card>`;
+      return html`<ha-card class="empty">${this._t('generic.no_match')}</ha-card>`;
     }
 
     const match = stateObj.attributes.matches[0];
@@ -369,7 +378,7 @@ class CalcioLiveTeamNextCard extends LitElement {
             <span>${venueLabel}</span>
           </div>
           ${showScore
-            ? html`<button class="info-btn" @click="${() => this.showDetails(match)}">Dettagli ›</button>`
+            ? html`<button class="info-btn" @click="${() => this.showDetails(match)}">${this._t('team.details')} ›</button>`
             : html`
               <div class="meta-item">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
@@ -390,7 +399,7 @@ class CalcioLiveTeamNextCard extends LitElement {
             ${hasAttendance ? html`
               <div class="extra-chip attendance">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
-                <span>${attendance.toLocaleString('it-IT')} spettatori</span>
+                <span>${attendance.toLocaleString(resolveLang(this.hass, this._config))} ${this._t('team.spectators')}</span>
               </div>
             ` : ''}
           </div>
@@ -431,9 +440,10 @@ class CalcioLiveTeamNextCard extends LitElement {
     }
 
     const m = this.activeMatch;
+    const tx = (k) => this._t(k);
     popupContainer.innerHTML = `
       <div style="background: #1a1f2e; padding: 24px; border-radius: 20px; width: 90%; max-width: 560px; max-height: 85vh; overflow-y: auto; border: 1px solid rgba(255,255,255,0.08); box-shadow: 0 24px 64px rgba(0,0,0,0.6); margin: auto; color: #f8fafc; font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;">
-        <h3 style="margin:0 0 20px; font-size: 22px; font-weight: 800; letter-spacing:-0.02em; background: linear-gradient(135deg,#6366f1,#ec4899); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color: transparent;">Dettagli partita</h3>
+        <h3 style="margin:0 0 20px; font-size: 22px; font-weight: 800; letter-spacing:-0.02em; background: linear-gradient(135deg,#6366f1,#ec4899); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color: transparent;">${tx('popup.match_details')}</h3>
         <div style="display:flex; justify-content:center; align-items:center; gap:18px; margin-bottom:24px;">
           <img style="width:72px; height:72px; object-fit:contain; filter: drop-shadow(0 4px 12px rgba(0,0,0,0.4));" src="${m.home_logo}" alt="${m.home_team}" />
           <div style="text-align:center;">
@@ -445,21 +455,21 @@ class CalcioLiveTeamNextCard extends LitElement {
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:18px;">
           <div style="background:rgba(255,255,255,0.04); padding:14px; border-radius:14px;">
             <div style="font-size:10px; text-transform:uppercase; letter-spacing:0.1em; color:#94a3b8; font-weight:700; margin-bottom:6px;">${m.home_team}</div>
-            <div style="font-size:13px;"><span style="color:#94a3b8;">Possesso:</span> <strong>${m.home_statistics?.possessionPct ?? '—'}%</strong></div>
-            <div style="font-size:13px;"><span style="color:#94a3b8;">Tiri:</span> <strong>${m.home_statistics?.totalShots ?? '—'}</strong></div>
-            <div style="font-size:13px;"><span style="color:#94a3b8;">In porta:</span> <strong>${m.home_statistics?.shotsOnTarget ?? '—'}</strong></div>
-            <div style="font-size:13px;"><span style="color:#94a3b8;">Falli:</span> <strong>${m.home_statistics?.foulsCommitted ?? '—'}</strong></div>
+            <div style="font-size:13px;"><span style="color:#94a3b8;">${tx('team.possession')}:</span> <strong>${m.home_statistics?.possessionPct ?? '—'}%</strong></div>
+            <div style="font-size:13px;"><span style="color:#94a3b8;">${tx('team.shots')}:</span> <strong>${m.home_statistics?.totalShots ?? '—'}</strong></div>
+            <div style="font-size:13px;"><span style="color:#94a3b8;">${tx('team.on_target')}:</span> <strong>${m.home_statistics?.shotsOnTarget ?? '—'}</strong></div>
+            <div style="font-size:13px;"><span style="color:#94a3b8;">${tx('team.fouls')}:</span> <strong>${m.home_statistics?.foulsCommitted ?? '—'}</strong></div>
           </div>
           <div style="background:rgba(255,255,255,0.04); padding:14px; border-radius:14px;">
             <div style="font-size:10px; text-transform:uppercase; letter-spacing:0.1em; color:#94a3b8; font-weight:700; margin-bottom:6px;">${m.away_team}</div>
-            <div style="font-size:13px;"><span style="color:#94a3b8;">Possesso:</span> <strong>${m.away_statistics?.possessionPct ?? '—'}%</strong></div>
-            <div style="font-size:13px;"><span style="color:#94a3b8;">Tiri:</span> <strong>${m.away_statistics?.totalShots ?? '—'}</strong></div>
-            <div style="font-size:13px;"><span style="color:#94a3b8;">In porta:</span> <strong>${m.away_statistics?.shotsOnTarget ?? '—'}</strong></div>
-            <div style="font-size:13px;"><span style="color:#94a3b8;">Falli:</span> <strong>${m.away_statistics?.foulsCommitted ?? '—'}</strong></div>
+            <div style="font-size:13px;"><span style="color:#94a3b8;">${tx('team.possession')}:</span> <strong>${m.away_statistics?.possessionPct ?? '—'}%</strong></div>
+            <div style="font-size:13px;"><span style="color:#94a3b8;">${tx('team.shots')}:</span> <strong>${m.away_statistics?.totalShots ?? '—'}</strong></div>
+            <div style="font-size:13px;"><span style="color:#94a3b8;">${tx('team.on_target')}:</span> <strong>${m.away_statistics?.shotsOnTarget ?? '—'}</strong></div>
+            <div style="font-size:13px;"><span style="color:#94a3b8;">${tx('team.fouls')}:</span> <strong>${m.away_statistics?.foulsCommitted ?? '—'}</strong></div>
           </div>
         </div>
         <div id="team-events-container"></div>
-        <button id="popup-close-btn" style="background:linear-gradient(135deg,#6366f1,#ec4899); color:white; padding:12px 20px; border:none; border-radius:12px; cursor:pointer; margin-top:20px; font-weight:800; width:100%; font-size:14px;">Chiudi</button>
+        <button id="popup-close-btn" style="background:linear-gradient(135deg,#6366f1,#ec4899); color:white; padding:12px 20px; border:none; border-radius:12px; cursor:pointer; margin-top:20px; font-weight:800; width:100%; font-size:14px;">${tx('generic.close')}</button>
       </div>
     `;
 
@@ -476,9 +486,9 @@ class CalcioLiveTeamNextCard extends LitElement {
       </div>`;
     };
     let eventsHTML = '';
-    eventsHTML += renderGroup('Goal', goals, { bg: 'rgba(99,102,241,0.1)', border: '#6366f1' });
-    eventsHTML += renderGroup('Cartellini Gialli', yellowCards, { bg: 'rgba(245,158,11,0.1)', border: '#f59e0b' });
-    eventsHTML += renderGroup('Cartellini Rossi', redCards, { bg: 'rgba(239,68,68,0.1)', border: '#ef4444' });
+    eventsHTML += renderGroup(tx('event.goal'), goals, { bg: 'rgba(99,102,241,0.1)', border: '#6366f1' });
+    eventsHTML += renderGroup(tx('event.yellow_card'), yellowCards, { bg: 'rgba(245,158,11,0.1)', border: '#f59e0b' });
+    eventsHTML += renderGroup(tx('event.red_card'), redCards, { bg: 'rgba(239,68,68,0.1)', border: '#ef4444' });
 
     // Lineup (se disponibile dal sensor team_match arricchito con summary)
     const lineupHome = m.lineup_home || [];
@@ -500,7 +510,7 @@ class CalcioLiveTeamNextCard extends LitElement {
         </div>`;
       };
       eventsHTML += `<div style="margin-bottom:14px; padding:14px; background:rgba(16,185,129,0.08); border-left:3px solid #10b981; border-radius:10px;">
-        <h5 style="margin:0 0 10px; font-size:12px; text-transform:uppercase; letter-spacing:0.08em; color:#10b981; font-weight:800;">Formazioni</h5>
+        <h5 style="margin:0 0 10px; font-size:12px; text-transform:uppercase; letter-spacing:0.08em; color:#10b981; font-weight:800;">${tx('popup.lineups')}</h5>
         ${renderLineup(lineupHome, fH, m.home_team)}
         ${renderLineup(lineupAway, fA, m.away_team)}
       </div>`;
@@ -522,7 +532,7 @@ class CalcioLiveTeamNextCard extends LitElement {
         return '·';
       };
       eventsHTML += `<div style="margin-bottom:14px; padding:14px; background:rgba(251,191,36,0.08); border-left:3px solid #fbbf24; border-radius:10px;">
-        <h5 style="margin:0 0 10px; font-size:12px; text-transform:uppercase; letter-spacing:0.08em; color:#fbbf24; font-weight:800;">Cronologia</h5>
+        <h5 style="margin:0 0 10px; font-size:12px; text-transform:uppercase; letter-spacing:0.08em; color:#fbbf24; font-weight:800;">${tx('popup.timeline')}</h5>
         <ul style="margin:0; padding:0; list-style:none;">
           ${keyEvents.map(e => `<li style="display:grid; grid-template-columns:36px 24px 1fr; gap:8px; align-items:start; padding:5px 0; border-bottom:1px solid rgba(255,255,255,0.04); font-size:12px; color:#cbd5e1;">
             <span style="text-align:right; font-weight:700; color:#94a3b8; font-variant-numeric:tabular-nums;">${e.clock || ''}</span>
@@ -537,10 +547,10 @@ class CalcioLiveTeamNextCard extends LitElement {
     const h2h = m.head_to_head || [];
     if (h2h.length) {
       eventsHTML += `<div style="margin-bottom:14px; padding:14px; background:rgba(99,102,241,0.08); border-left:3px solid #6366f1; border-radius:10px;">
-        <h5 style="margin:0 0 10px; font-size:12px; text-transform:uppercase; letter-spacing:0.08em; color:#6366f1; font-weight:800;">Precedenti (${h2h.length})</h5>
+        <h5 style="margin:0 0 10px; font-size:12px; text-transform:uppercase; letter-spacing:0.08em; color:#6366f1; font-weight:800;">${tx('popup.h2h')} (${h2h.length})</h5>
         <ul style="margin:0; padding:0; list-style:none;">
           ${h2h.slice(0, 8).map(g => {
-            const dt = g.date ? new Date(g.date).toLocaleDateString('it-IT') : '';
+            const dt = g.date ? new Date(g.date).toLocaleDateString(resolveLang(this.hass, this._config)) : '';
             return `<li style="display:flex; justify-content:space-between; padding:5px 0; border-bottom:1px solid rgba(255,255,255,0.04); font-size:12px; color:#cbd5e1;">
               <span>${g.home_team} <strong>${g.home_score ?? '-'}</strong> - <strong>${g.away_score ?? '-'}</strong> ${g.away_team}</span>
               <span style="color:#94a3b8;">${dt}</span>
@@ -550,7 +560,7 @@ class CalcioLiveTeamNextCard extends LitElement {
       </div>`;
     }
 
-    eventsContainer.innerHTML = eventsHTML || '<p style="text-align:center; color:#94a3b8; font-size:13px;">Nessun evento disponibile</p>';
+    eventsContainer.innerHTML = eventsHTML || `<p style="text-align:center; color:#94a3b8; font-size:13px;">${tx('popup.no_events')}</p>`;
   }
 
   static get styles() {

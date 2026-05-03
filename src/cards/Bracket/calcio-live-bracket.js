@@ -1,4 +1,5 @@
 import { LitElement, html, css } from "lit-element";
+import { t, resolveLang } from "../../i18n.js";
 
 class CalcioLiveBracketCard extends LitElement {
   static get properties() {
@@ -9,13 +10,40 @@ class CalcioLiveBracketCard extends LitElement {
   }
 
   setConfig(config) {
-    if (!config.entity) throw new Error("Devi definire un'entità");
+    if (!config.entity) throw new Error("Entity required");
     this._config = config;
     this.hideHeader = config.hide_header === true;
     this.compactMode = config.compact === true;
-    // style: 'list' (default, current) | 'tree' (tournament tree with trophy)
     this.style = config.style === 'tree' ? 'tree' : 'list';
     this.treeShowPlayoffs = config.tree_show_playoffs === true;
+  }
+
+  _t(key, vars) {
+    return t(key, resolveLang(this.hass, this._config), vars);
+  }
+
+  _formatDate(iso) {
+    if (!iso) return '';
+    try {
+      const d = new Date(iso);
+      const month = this._t('month.' + (d.getMonth() + 1));
+      return `${d.getDate()} ${month}`;
+    } catch (e) { return ''; }
+  }
+
+  _localizeRoundName(round) {
+    // Mappa il nome inglese dal sensor alla traduzione i18n
+    const map = {
+      'Final': 'round.final',
+      'Semifinals': 'round.semifinals',
+      'Quarterfinals': 'round.quarterfinals',
+      'Round of 16': 'round.r16',
+      'Round of 32': 'round.r32',
+      'Knockout Playoffs': 'round.knockout_playoffs',
+      'Preliminary Round': 'round.preliminary',
+    };
+    const key = map[round.name];
+    return key ? this._t(key) : round.name;
   }
 
   getCardSize() { return 6; }
@@ -27,15 +55,6 @@ class CalcioLiveBracketCard extends LitElement {
   _formatScore(s) {
     if (s === null || s === undefined) return '-';
     return String(s);
-  }
-
-  _formatDate(iso) {
-    if (!iso) return '';
-    try {
-      const d = new Date(iso);
-      const months = ['Gen','Feb','Mar','Apr','Mag','Giu','Lug','Ago','Set','Ott','Nov','Dic'];
-      return `${d.getDate()} ${months[d.getMonth()]}`;
-    } catch (e) { return ''; }
   }
 
   _renderTie(tie) {
@@ -91,10 +110,10 @@ class CalcioLiveBracketCard extends LitElement {
         </div>
         <div class="tie-foot">
           ${isLive ? html`<span class="live-badge"><span class="dot"></span>LIVE</span>` : ''}
-          ${tie.aggregate ? html`<span class="agg">Agg. ${tie.aggregate}</span>` : ''}
-          ${tie.tied ? html`<span class="agg tied">Tied agg.</span>` : ''}
+          ${tie.aggregate ? html`<span class="agg">${this._t('bracket.agg')} ${tie.aggregate}</span>` : ''}
+          ${tie.tied ? html`<span class="agg tied">${this._t('bracket.tied_agg')}</span>` : ''}
           ${!tie.completed && !isLive && tie.first_leg_date ? html`<span class="date">${this._formatDate(tie.first_leg_date)}</span>` : ''}
-          ${isPending ? html`<span class="date pending">TBD</span>` : ''}
+          ${isPending ? html`<span class="date pending">${this._t('bracket.tbd')}</span>` : ''}
         </div>
       </div>
     `;
@@ -147,12 +166,11 @@ class CalcioLiveBracketCard extends LitElement {
     `;
   }
 
-  _renderTreeRound(ties, label, labelIt) {
+  _renderTreeRound(ties, labelKey) {
     return html`
       <div class="tree-col">
         <div class="tree-col-label">
-          <span class="tree-col-label-en">${label}</span>
-          ${labelIt && labelIt !== label ? html`<span class="tree-col-label-it">${labelIt}</span>` : ''}
+          <span class="tree-col-label-en">${this._t(labelKey)}</span>
         </div>
         <div class="tree-col-ties">
           ${ties.map(t => this._renderMiniTie(t))}
@@ -223,36 +241,36 @@ class CalcioLiveBracketCard extends LitElement {
         <div class="tree">
           <div class="tree-half left">
             ${playoffsSplit && playoffsSplit.left.length ? html`
-              ${this._renderTreeRound(playoffsSplit.left, 'Playoffs', 'Spareggi')}
+              ${this._renderTreeRound(playoffsSplit.left, 'round.knockout_playoffs')}
               ${r16Split.left.length ? this._renderArrows(r16Split.left.length, 'left') : ''}
             ` : ''}
-            ${r16Split.left.length ? this._renderTreeRound(r16Split.left, 'Round of 16', 'Ottavi') : ''}
+            ${r16Split.left.length ? this._renderTreeRound(r16Split.left, 'round.r16') : ''}
             ${r16Split.left.length && qfSplit.left.length ? this._renderArrows(qfSplit.left.length, 'left') : ''}
-            ${qfSplit.left.length ? this._renderTreeRound(qfSplit.left, 'Quarterfinals', 'Quarti') : ''}
+            ${qfSplit.left.length ? this._renderTreeRound(qfSplit.left, 'round.quarterfinals') : ''}
             ${qfSplit.left.length && sfSplit.left.length ? this._renderArrows(sfSplit.left.length, 'left') : ''}
-            ${sfSplit.left.length ? this._renderTreeRound(sfSplit.left, 'Semifinals', 'Semifinali') : ''}
+            ${sfSplit.left.length ? this._renderTreeRound(sfSplit.left, 'round.semifinals') : ''}
             ${sfSplit.left.length ? this._renderArrows(1, 'left') : ''}
           </div>
 
           <div class="tree-center">
             <div class="trophy">🏆</div>
-            <div class="trophy-label">FINAL <span class="trophy-label-it">· Finale</span></div>
+            <div class="trophy-label">${this._t('round.final')}</div>
             ${finalTie
               ? html`<div class="final-tie-wrap">${this._renderMiniTie(finalTie)}</div>`
-              : html`<div class="final-placeholder">TBD</div>`
+              : html`<div class="final-placeholder">${this._t('bracket.tbd')}</div>`
             }
           </div>
 
           <div class="tree-half right">
             ${sfSplit.right.length ? this._renderArrows(1, 'right') : ''}
-            ${sfSplit.right.length ? this._renderTreeRound(sfSplit.right, 'Semifinals', 'Semifinali') : ''}
+            ${sfSplit.right.length ? this._renderTreeRound(sfSplit.right, 'round.semifinals') : ''}
             ${sfSplit.right.length && qfSplit.right.length ? this._renderArrows(sfSplit.right.length, 'right') : ''}
-            ${qfSplit.right.length ? this._renderTreeRound(qfSplit.right, 'Quarterfinals', 'Quarti') : ''}
+            ${qfSplit.right.length ? this._renderTreeRound(qfSplit.right, 'round.quarterfinals') : ''}
             ${qfSplit.right.length && r16Split.right.length ? this._renderArrows(qfSplit.right.length, 'right') : ''}
-            ${r16Split.right.length ? this._renderTreeRound(r16Split.right, 'Round of 16', 'Ottavi') : ''}
+            ${r16Split.right.length ? this._renderTreeRound(r16Split.right, 'round.r16') : ''}
             ${playoffsSplit && playoffsSplit.right.length ? html`
               ${r16Split.right.length ? this._renderArrows(r16Split.right.length, 'right') : ''}
-              ${this._renderTreeRound(playoffsSplit.right, 'Playoffs', 'Spareggi')}
+              ${this._renderTreeRound(playoffsSplit.right, 'round.knockout_playoffs')}
             ` : ''}
           </div>
         </div>
@@ -272,8 +290,8 @@ class CalcioLiveBracketCard extends LitElement {
           <div class="hero-bg"></div>
           <div class="empty-state">
             <div class="empty-icon">🏆</div>
-            <div class="empty-title">Bracket not available</div>
-            <div class="empty-sub">Knockout stage starts soon · La fase a eliminazione diretta inizierà presto</div>
+            <div class="empty-title">${this._t('bracket.empty.title')}</div>
+            <div class="empty-sub">${this._t('bracket.empty.sub')}</div>
           </div>
         </ha-card>
       `;
@@ -286,7 +304,7 @@ class CalcioLiveBracketCard extends LitElement {
           <div class="bracket-header">
             <div class="header-icon">🏆</div>
             <div class="header-text">
-              <div class="title">Bracket <span class="title-it">· Tabellone</span></div>
+              <div class="title">${this._t('card.bracket')}</div>
               <div class="subtitle">${stateObj.state}</div>
             </div>
           </div>
@@ -297,8 +315,7 @@ class CalcioLiveBracketCard extends LitElement {
             ${rounds.map(round => html`
               <div class="round">
                 <div class="round-name">
-                  <span class="round-name-en">${round.name}</span>
-                  ${round.name_it && round.name_it !== round.name ? html`<span class="round-name-it">${round.name_it}</span>` : ''}
+                  <span class="round-name-en">${this._localizeRoundName(round)}</span>
                 </div>
                 <div class="round-ties">
                   ${round.ties.map(tie => this._renderTie(tie))}

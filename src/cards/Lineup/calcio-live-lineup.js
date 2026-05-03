@@ -1,4 +1,5 @@
 import { LitElement, html, css } from "lit-element";
+import { t, resolveLang } from "../../i18n.js";
 
 class CalcioLiveLineupCard extends LitElement {
   static get properties() {
@@ -9,9 +10,13 @@ class CalcioLiveLineupCard extends LitElement {
   }
 
   setConfig(config) {
-    if (!config.entity) throw new Error("Devi definire un'entità");
+    if (!config.entity) throw new Error("Entity required");
     this._config = config;
     this.hideHeader = config.hide_header === true;
+  }
+
+  _t(key, vars) {
+    return t(key, resolveLang(this.hass, this._config), vars);
   }
 
   getCardSize() { return 6; }
@@ -48,10 +53,10 @@ class CalcioLiveLineupCard extends LitElement {
   render() {
     if (!this.hass || !this._config) return html``;
     const stateObj = this.hass.states[this._config.entity];
-    if (!stateObj) return html`<ha-card class="empty">Entità sconosciuta: ${this._config.entity}</ha-card>`;
+    if (!stateObj) return html`<ha-card class="empty">${this._t('generic.unknown_entity')}: ${this._config.entity}</ha-card>`;
 
     const matches = stateObj.attributes.matches || [];
-    if (matches.length === 0) return html`<ha-card class="empty">Nessuna partita</ha-card>`;
+    if (matches.length === 0) return html`<ha-card class="empty">${this._t('generic.no_match')}</ha-card>`;
 
     const m = matches[0];
     const lineupHome = m.lineup_home || stateObj.attributes.lineup_home || [];
@@ -65,8 +70,8 @@ class CalcioLiveLineupCard extends LitElement {
           <div class="hero-bg"></div>
           <div class="empty-state">
             <div class="empty-icon">👥</div>
-            <div class="empty-title">Formazioni non disponibili</div>
-            <div class="empty-sub">Le formazioni vengono pubblicate poco prima del fischio d'inizio</div>
+            <div class="empty-title">${this._t('lineup.empty.title')}</div>
+            <div class="empty-sub">${this._t('lineup.empty.sub')}</div>
           </div>
         </ha-card>
       `;
@@ -84,7 +89,7 @@ class CalcioLiveLineupCard extends LitElement {
           <div class="lineup-header">
             <div class="header-icon">👥</div>
             <div class="header-text">
-              <div class="title">Formazioni</div>
+              <div class="title">${this._t('card.lineup')}</div>
               <div class="subtitle">${m.home_team} vs ${m.away_team}</div>
             </div>
           </div>
@@ -103,7 +108,7 @@ class CalcioLiveLineupCard extends LitElement {
               ${startersHome.map(p => this._renderPlayer(p))}
             </div>
             ${benchHome.length ? html`
-              <div class="bench-label">Panchina</div>
+              <div class="bench-label">${this._t('lineup.bench')}</div>
               <div class="players-grid bench">
                 ${benchHome.map(p => this._renderPlayer(p))}
               </div>
@@ -122,7 +127,7 @@ class CalcioLiveLineupCard extends LitElement {
               ${startersAway.map(p => this._renderPlayer(p))}
             </div>
             ${benchAway.length ? html`
-              <div class="bench-label">Panchina</div>
+              <div class="bench-label">${this._t('lineup.bench')}</div>
               <div class="players-grid bench">
                 ${benchAway.map(p => this._renderPlayer(p))}
               </div>

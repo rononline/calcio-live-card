@@ -1,4 +1,5 @@
 import { LitElement, html, css } from "lit-element";
+import { t, resolveLang } from "../../i18n.js";
 
 class CalcioLiveTodayMatchesCard extends LitElement {
   static get properties() {
@@ -27,7 +28,7 @@ class CalcioLiveTodayMatchesCard extends LitElement {
 
   setConfig(config) {
     if (!config.entity) {
-      throw new Error("Devi definire un'entità");
+      throw new Error("Entity required");
     }
     this._config = config;
     this.maxEventsVisible = config.max_events_visible ? config.max_events_visible : 5;
@@ -38,6 +39,10 @@ class CalcioLiveTodayMatchesCard extends LitElement {
     this.showEventToasts = config.show_event_toasts === true;
     this.activeMatch = null;
     this.showPopup = false;
+  }
+
+  _t(key, vars) {
+    return t(key, resolveLang(this.hass, this._config), vars);
   }
 
   connectedCallback() {
@@ -93,13 +98,13 @@ class CalcioLiveTodayMatchesCard extends LitElement {
     let message = '';
     let variant = 'goal';
     if (eventType === 'calcio_live_goal') {
-      message = `<strong>GOAL!</strong> ${eventData.player} · ${eventData.home_team} ${eventData.home_score} - ${eventData.away_score} ${eventData.away_team}`;
+      message = `<strong>${this._t('event.goal').toUpperCase()}!</strong> ${eventData.player} · ${eventData.home_team} ${eventData.home_score} - ${eventData.away_score} ${eventData.away_team}`;
       variant = 'goal';
     } else if (eventType === 'calcio_live_yellow_card') {
-      message = `🟨 <strong>Cartellino Giallo</strong> · ${eventData.player}${eventData.minute ? ` (${eventData.minute}')` : ''}`;
+      message = `🟨 <strong>${this._t('event.yellow_card')}</strong> · ${eventData.player}${eventData.minute ? ` (${eventData.minute}')` : ''}`;
       variant = 'yellow';
     } else if (eventType === 'calcio_live_red_card') {
-      message = `🟥 <strong>Cartellino Rosso</strong> · ${eventData.player}${eventData.minute ? ` (${eventData.minute}')` : ''}`;
+      message = `🟥 <strong>${this._t('event.red_card')}</strong> · ${eventData.player}${eventData.minute ? ` (${eventData.minute}')` : ''}`;
       variant = 'red';
     }
     if (!message) return;
@@ -160,19 +165,19 @@ class CalcioLiveTodayMatchesCard extends LitElement {
   }
 
   _dayKey(match) {
-    if (!match.date) return 'Altro';
+    if (!match.date) return '—';
     const d = this._parseMatchDate(match.date);
-    if (!d) return match.date.split(' ')[0] || 'Altro';
+    if (!d) return match.date.split(' ')[0] || '—';
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     const matchDay = new Date(d);
     matchDay.setHours(0, 0, 0, 0);
     const diff = Math.round((matchDay - today) / (24 * 3600 * 1000));
-    if (diff === 0) return '⚡ Oggi';
-    if (diff === -1) return 'Ieri';
-    if (diff === 1) return 'Domani';
-    const months = ['Gen','Feb','Mar','Apr','Mag','Giu','Lug','Ago','Set','Ott','Nov','Dic'];
-    return `${matchDay.getDate()} ${months[matchDay.getMonth()]}`;
+    if (diff === 0) return '⚡ ' + this._t('time.today');
+    if (diff === -1) return this._t('time.yesterday');
+    if (diff === 1) return this._t('time.tomorrow');
+    const month = this._t('month.' + (matchDay.getMonth() + 1));
+    return `${matchDay.getDate()} ${month}`;
   }
 
   showDetails(match) {
@@ -195,7 +200,7 @@ class CalcioLiveTodayMatchesCard extends LitElement {
     if (!this.hass || !this._config) return html``;
     const entityId = this._config.entity;
     const stateObj = this.hass.states[entityId];
-    if (!stateObj) return html`<ha-card class="empty">Entità sconosciuta: ${entityId}</ha-card>`;
+    if (!stateObj) return html`<ha-card class="empty">${this._t('generic.unknown_entity')}: ${entityId}</ha-card>`;
 
     let matches = stateObj.attributes.matches || [];
     const leagueInfo = stateObj.attributes.league_info ? stateObj.attributes.league_info[0] : null;
@@ -217,7 +222,7 @@ class CalcioLiveTodayMatchesCard extends LitElement {
     const limited = matches.slice(0, this.maxEventsTotal);
 
     if (limited.length === 0) {
-      return html`<ha-card class="empty">Nessuna partita disponibile</ha-card>`;
+      return html`<ha-card class="empty">${this._t('generic.no_match')}</ha-card>`;
     }
 
     const liveCount = limited.filter(m => m.state === 'in').length;
@@ -252,7 +257,7 @@ class CalcioLiveTodayMatchesCard extends LitElement {
             <div class="league-info">
               <div class="league-name">${(leagueInfo && leagueInfo.abbreviation) || stateObj.state || 'Calcio Live'}</div>
               <div class="league-dates">
-                ${leagueInfo && leagueInfo.startDate ? `${leagueInfo.startDate} → ${leagueInfo.endDate}` : `${limited.length} partite`}
+                ${leagueInfo && leagueInfo.startDate ? `${leagueInfo.startDate} → ${leagueInfo.endDate}` : this._t('generic.matches_count', { n: limited.length })}
               </div>
             </div>
             ${liveCount > 0 ? html`<span class="live-counter">${liveCount} LIVE</span>` : ''}
@@ -336,9 +341,10 @@ class CalcioLiveTodayMatchesCard extends LitElement {
       document.body.appendChild(popupContainer);
     }
     const m = this.activeMatch;
+    const tx = (k) => this._t(k);
     popupContainer.innerHTML = `
       <div style="background:#1a1f2e; padding:24px; border-radius:20px; width:90%; max-width:560px; max-height:85vh; overflow-y:auto; border:1px solid rgba(255,255,255,0.08); box-shadow:0 24px 64px rgba(0,0,0,0.6); margin:auto; color:#f8fafc; font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display',sans-serif;">
-        <h3 style="margin:0 0 20px; font-size:22px; font-weight:800; letter-spacing:-0.02em; background:linear-gradient(135deg,#6366f1,#ec4899); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;">Dettagli partita</h3>
+        <h3 style="margin:0 0 20px; font-size:22px; font-weight:800; letter-spacing:-0.02em; background:linear-gradient(135deg,#6366f1,#ec4899); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;">${tx('popup.match_details')}</h3>
         <div style="display:flex; justify-content:center; align-items:center; gap:18px; margin-bottom:24px;">
           <img style="width:64px; height:64px; object-fit:contain;" src="${m.home_logo}" alt="${m.home_team}" />
           <div style="text-align:center;">
@@ -349,7 +355,7 @@ class CalcioLiveTodayMatchesCard extends LitElement {
         </div>
         <p style="text-align:center; color:#cbd5e1; font-size:14px; margin:0 0 20px;"><strong>${m.home_team}</strong> vs <strong>${m.away_team}</strong></p>
         <div id="matches-events-container"></div>
-        <button id="popup-close-btn" style="background:linear-gradient(135deg,#6366f1,#ec4899); color:white; padding:12px 20px; border:none; border-radius:12px; cursor:pointer; margin-top:20px; font-weight:800; width:100%; font-size:14px;">Chiudi</button>
+        <button id="popup-close-btn" style="background:linear-gradient(135deg,#6366f1,#ec4899); color:white; padding:12px 20px; border:none; border-radius:12px; cursor:pointer; margin-top:20px; font-weight:800; width:100%; font-size:14px;">${tx('generic.close')}</button>
       </div>
     `;
     const closeBtn = popupContainer.querySelector('#popup-close-btn');
@@ -364,10 +370,10 @@ class CalcioLiveTodayMatchesCard extends LitElement {
       </div>`;
     };
     let html = '';
-    html += renderGroup('Goal', goals, { bg: 'rgba(99,102,241,0.1)', border: '#6366f1' });
-    html += renderGroup('Cartellini Gialli', yellowCards, { bg: 'rgba(245,158,11,0.1)', border: '#f59e0b' });
-    html += renderGroup('Cartellini Rossi', redCards, { bg: 'rgba(239,68,68,0.1)', border: '#ef4444' });
-    eventsContainer.innerHTML = html || '<p style="text-align:center; color:#94a3b8; font-size:13px;">Nessun evento disponibile</p>';
+    html += renderGroup(tx('event.goal'), goals, { bg: 'rgba(99,102,241,0.1)', border: '#6366f1' });
+    html += renderGroup(tx('event.yellow_card'), yellowCards, { bg: 'rgba(245,158,11,0.1)', border: '#f59e0b' });
+    html += renderGroup(tx('event.red_card'), redCards, { bg: 'rgba(239,68,68,0.1)', border: '#ef4444' });
+    eventsContainer.innerHTML = html || `<p style="text-align:center; color:#94a3b8; font-size:13px;">${tx('popup.no_events')}</p>`;
   }
 
   static get styles() {
