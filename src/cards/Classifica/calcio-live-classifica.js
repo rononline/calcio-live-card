@@ -42,19 +42,31 @@ class CalcioLiveStandingsCard extends LitElement {
 
   disconnectedCallback() {
     super.disconnectedCallback();
+
     if (this._eventSubscriptions && Array.isArray(this._eventSubscriptions)) {
-      this._eventSubscriptions.forEach(sub => { if (sub) sub.unsubscribe(); });
+      this._eventSubscriptions.forEach(unsub => {
+        if (typeof unsub === 'function') {
+          unsub();
+        }
+      });
       this._eventSubscriptions = [];
     }
   }
 
   _subscribeToEvents() {
     if (!this.hass || !this.hass.connection) return;
+
     this._eventSubscriptions = [];
-    ['calcio_live_goal', 'calcio_live_yellow_card', 'calcio_live_red_card', 'calcio_live_match_finished'].forEach(evt => {
-      this._eventSubscriptions.push(
-        this.hass.connection.subscribeEvents(this._handleCalcioLiveEvent.bind(this), evt)
-      );
+
+    ['calcio_live_goal', 'calcio_live_yellow_card', 'calcio_live_red_card'].forEach(evt => {
+      this.hass.connection.subscribeEvents(
+        this._handleCalcioLiveEvent.bind(this),
+        evt
+      ).then(unsub => {
+        if (typeof unsub === 'function') {
+          this._eventSubscriptions.push(unsub);
+        }
+      });
     });
   }
 
