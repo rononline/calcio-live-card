@@ -84,8 +84,6 @@ show_event_toasts: false
 - Il **primo posto** ha uno shimmer dorato animato.
 - Header tabella sticky durante lo scroll.
 
-<img src="images/classifica.png" alt="Classifica" width="400">
-
 ### ⚽ Squadra · singola partita
 
 ```yaml
@@ -104,8 +102,6 @@ Mostra la prossima/attuale/ultima partita di una squadra:
 - Barre statistiche live (possesso / tiri / in porta) durante la partita
 - Click **Dettagli** apre un popup con formazioni complete + cronologia + precedenti H2H
 
-<img src="images/squadra.png" alt="Card Squadra" width="400">
-
 ### 📋 Lista partite
 
 ```yaml
@@ -123,8 +119,6 @@ show_event_toasts: false
 - Partite live: barra rossa di highlight + glow
 - Mini chip TV sulle partite future
 - Click su una riga → popup dettagli
-
-<img src="images/squadra-tutte.png" alt="Lista partite" width="400">
 
 ### 📰 Card News
 

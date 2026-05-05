@@ -84,8 +84,6 @@ show_event_toasts: false
 - The **top spot** has an animated gold shimmer.
 - Sticky table header during scroll.
 
-<img src="images/classifica.png" alt="Classifica" width="400">
-
 ### ⚽ Team · single match
 
 ```yaml
@@ -104,8 +102,6 @@ Shows the next/live/finished match for one team:
 - Live stats bars (possession / shots / on target) when match is in progress
 - Click **Details** to open a popup with full lineups + timeline + head-to-head precedents
 
-<img src="images/squadra.png" alt="Team card" width="400">
-
 ### 📋 Matches list · all matches
 
 ```yaml
@@ -123,8 +119,6 @@ show_event_toasts: false
 - Live matches: red highlight bar + glow
 - Mini TV chip on upcoming matches
 - Click any row → details popup
-
-<img src="images/squadra-tutte.png" alt="Matches list" width="400">
 
 ### 📰 News card
 
