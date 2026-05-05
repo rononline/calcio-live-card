@@ -103,6 +103,7 @@ const TRANSLATIONS = {
     'zone.champions': 'Champions',
     'zone.europa': 'Europa',
     'zone.relegation': 'Relegation',
+    'zone.conference': 'Conference League',
 
     // Standings table
     'col.pos': '#',
@@ -220,6 +221,7 @@ const TRANSLATIONS = {
 
     'zone.champions': 'Champions League',
     'zone.europa': 'Europa League',
+    'zone.conference': 'Conference League',
     'zone.relegation': 'Degradatie',
 
     'col.pos': '#',
