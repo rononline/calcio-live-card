@@ -1,6 +1,67 @@
 import { LitElement, html, css } from "lit-element";
 import { t, resolveLang } from "../../i18n.js";
 
+// Helper per generare un range inclusivo
+const range = (a, b) => Array.from({ length: b - a + 1 }, (_, i) => a + i);
+
+// Preset zone classifica per competizione. Ogni preset definisce:
+// - match(code, entity): funzione che decide se applicare il preset
+// - champions / europa / conference / relegation: range posizioni o "bottomN"
+// L'utente può sovrascrivere con `zone_config` o sceglierne uno con `zone_preset`.
+const ZONE_PRESETS = {
+  // Italian Serie A (20 squadre): 1-4 CL, 5 EL, 6 CnL, ult. 3 retrocesse
+  serie_a: {
+    match: (code, entity) => code === 'ita.1' || entity.includes('italian_serie_a'),
+    champions: [1, 2, 3, 4], europa: [5], conference: [6], relegation: 'bottom3',
+  },
+  // English Premier League (20): 1-5 CL, 6 EL, 7 CnL, ult. 3 retrocesse
+  premier_league: {
+    match: (code, entity) => code === 'eng.1' || entity.includes('english_premier'),
+    champions: [1, 2, 3, 4, 5], europa: [6], conference: [7], relegation: 'bottom3',
+  },
+  // Spanish LaLiga (20): 1-4 CL, 5 EL, 6 CnL, ult. 3 retrocesse
+  laliga: {
+    match: (code, entity) => code === 'esp.1' || entity.includes('spanish_la_liga') || entity.includes('spanish_laliga'),
+    champions: [1, 2, 3, 4], europa: [5], conference: [6], relegation: 'bottom3',
+  },
+  // Bundesliga (18): 1-4 CL, 5 EL, 6 CnL, 17-18 retrocesse, 16 spareggio
+  bundesliga: {
+    match: (code, entity) => code === 'ger.1' || entity.includes('german_bundesliga'),
+    champions: [1, 2, 3, 4], europa: [5], conference: [6], relegation: [17, 18],
+  },
+  // Ligue 1 (18): 1-3 CL (3° via spareggio), 4 EL, 5 CnL, 17-18 retrocesse
+  ligue_1: {
+    match: (code, entity) => code === 'fra.1' || entity.includes('french_ligue_1'),
+    champions: [1, 2, 3], europa: [4], conference: [5], relegation: [17, 18],
+  },
+  // Eredivisie (18): 1-2 CL, 3 EL, 4-5 CnL, 17-18 retrocesse
+  eredivisie: {
+    match: (code, entity) => code === 'ned.1' || entity.includes('dutch_eredivisie'),
+    champions: [1, 2], europa: [3], conference: [4, 5], relegation: [17, 18],
+  },
+  // Primeira Liga (18): 1-2 CL, 3 EL, 4 CnL, 17-18 retrocesse
+  primeira_liga: {
+    match: (code, entity) => code === 'por.1' || entity.includes('portuguese_primeira'),
+    champions: [1, 2], europa: [3], conference: [4], relegation: [17, 18],
+  },
+  // UEFA Champions League — fase a 36: top 8 diretti agli ottavi,
+  // 9-24 KO playoff, 25-36 eliminate
+  ucl_league_phase: {
+    match: (code, entity) => code === 'uefa.champions' || entity.includes('uefa_champions_league'),
+    champions: range(1, 8), europa: range(9, 24), conference: [], relegation: 'bottom12',
+  },
+  // UEFA Europa League — stessa logica della UCL
+  uel_league_phase: {
+    match: (code, entity) => code === 'uefa.europa' || entity.includes('uefa_europa_league'),
+    champions: range(1, 8), europa: range(9, 24), conference: [], relegation: 'bottom12',
+  },
+  // UEFA Conference League — fase a 36: top 8 ottavi, 9-24 playoff, 25-36 eliminate
+  uecl_league_phase: {
+    match: (code, entity) => code === 'uefa.europa.conf' || entity.includes('uefa_conference'),
+    champions: range(1, 8), europa: range(9, 24), conference: [], relegation: 'bottom12',
+  },
+};
+
 class CalcioLiveStandingsCard extends LitElement {
   static get properties() {
     return {
@@ -128,29 +189,41 @@ class CalcioLiveStandingsCard extends LitElement {
   }
 
   _getZoneConfig() {
-    return this._config.zone_config || {
-      champions: [1, 2, 3, 4],
-      europa: [5, 6],
-      conference: [],
-      relegation: 'bottom3',
-    };
+    // 1) Override esplicito nella config della card
+    if (this._config.zone_config) return this._config.zone_config;
+    // 2) Preset preimpostato per nome (es. zone_preset: 'serie_a')
+    if (this._config.zone_preset && ZONE_PRESETS[this._config.zone_preset]) {
+      return ZONE_PRESETS[this._config.zone_preset];
+    }
+    // 3) Auto-detect dal codice competizione / nome entity
+    const preset = this._inferPresetFromEntity();
+    if (preset) return preset;
+    // 4) Fallback: nessuna zona colorata
+    return { champions: [], europa: [], conference: [], relegation: null };
+  }
+
+  _inferPresetFromEntity() {
+    const entity = (this._config.entity || '').toLowerCase();
+    const stateObj = this.hass && this._config.entity ? this.hass.states[this._config.entity] : null;
+    const compCode = stateObj && stateObj.attributes ? String(stateObj.attributes.competition_code || '').toLowerCase() : '';
+    // Itera i preset: il primo con match vince
+    for (const [, def] of Object.entries(ZONE_PRESETS)) {
+      if (def.match && def.match(compCode, entity)) return def;
+    }
+    return null;
   }
 
   _positionInZone(rank, total, zonePositions) {
     if (!zonePositions) return false;
-
-    if (zonePositions === 'bottom3') {
-      return total && rank > total - 3;
+    // Stringhe tipo "bottom3", "bottom2", "bottom12"
+    const m = String(zonePositions).match(/^bottom(\d+)$/);
+    if (m) {
+      const n = parseInt(m[1], 10);
+      return total && rank > total - n;
     }
-
-    if (zonePositions === 'bottom2') {
-      return total && rank > total - 2;
-    }
-
     if (Array.isArray(zonePositions)) {
       return zonePositions.includes(Number(rank));
     }
-
     return false;
   }
 

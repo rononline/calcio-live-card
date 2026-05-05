@@ -115,6 +115,7 @@ class CalcioLiveLineupEditor extends LitElement {
             <option value="it" ?selected=${this._config.language === 'it'}>Italiano</option>
             <option value="fr" ?selected=${this._config.language === 'fr'}>Français</option>
             <option value="es" ?selected=${this._config.language === 'es'}>Español</option>
+            <option value="nl" ?selected=${this._config.language === 'nl'}>Nederlands</option>
           </select>
         </div>
       </div>
