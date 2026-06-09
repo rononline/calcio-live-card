@@ -739,5 +739,5 @@ window.customCards = window.customCards || [];
 window.customCards.push({
   type: 'calcio-live-matches',
   name: 'Calcio Live Matches Card',
-  description: 'Mostra le partite della settimana o del tuo Team',
+  description: 'Shows all matches for a competition or team',
 });

@@ -88,17 +88,17 @@ class CalcioLiveLineupEditor extends LitElement {
     const inList = cur && this.entities.includes(cur);
     return html`
       <div class="card-config">
-        <h3>Sensore</h3>
+        <h3>Sensor</h3>
         <div>
-          <label class="field-label">Entity (sensore team_match — calciolive_next_*)</label>
+          <label class="field-label">Entity (team_match sensor — calciolive_next_*)</label>
           <select @change=${this._entityChanged}>
-            ${!inList ? html`<option value="${cur}" selected>${cur || '— seleziona —'}</option>` : ''}
+            ${!inList ? html`<option value="${cur}" selected>${cur || '— select —'}</option>` : ''}
             ${this.entities.map(e => html`<option value="${e}" ?selected=${e === cur}>${e}</option>`)}
           </select>
-          <div class="hint" style="margin-top: 4px;">Le formazioni vengono pubblicate poco prima dell'inizio della partita.</div>
+          <div class="hint" style="margin-top: 4px;">Lineups are published shortly before kick-off.</div>
         </div>
 
-        <h3>Impostazioni</h3>
+        <h3>Settings</h3>
         <div class="option">
           <label>Hide Header</label>
           <ha-switch
@@ -115,7 +115,7 @@ class CalcioLiveLineupEditor extends LitElement {
           </select>
         </div>
         <div>
-          <label class="field-label">Language · Lingua</label>
+          <label class="field-label">Language</label>
           <select data-config-value="language" @change=${this._selectChanged}>
             <option value="" ?selected=${!this._config.language}>Auto (HA locale)</option>
             <option value="en" ?selected=${this._config.language === 'en'}>English</option>

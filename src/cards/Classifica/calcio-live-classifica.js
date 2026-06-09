@@ -964,5 +964,5 @@ window.customCards = window.customCards || [];
 window.customCards.push({
   type: 'calcio-live-classifica',
   name: 'Calcio Live Classifica Card',
-  description: 'Mostra la classifica del campionato o coppe',
+  description: 'Shows the standings for a league or cup competition',
 });

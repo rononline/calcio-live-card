@@ -101,16 +101,16 @@ class CalcioLiveNewsEditor extends LitElement {
     const inList = cur && this.entities.includes(cur);
     return html`
       <div class="card-config">
-        <h3>Sensore</h3>
+        <h3>Sensor</h3>
         <div>
-          <label class="field-label">Entity (sensore news)</label>
+          <label class="field-label">Entity (news sensor)</label>
           <select @change=${this._entityChanged}>
-            ${!inList ? html`<option value="${cur}" selected>${cur || '— seleziona —'}</option>` : ''}
+            ${!inList ? html`<option value="${cur}" selected>${cur || '— select —'}</option>` : ''}
             ${this.entities.map(e => html`<option value="${e}" ?selected=${e === cur}>${e}</option>`)}
           </select>
         </div>
 
-        <h3>Impostazioni</h3>
+        <h3>Settings</h3>
         <div class="option">
           <label>Hide Header</label>
           <ha-switch
@@ -142,7 +142,7 @@ class CalcioLiveNewsEditor extends LitElement {
           </select>
         </div>
         <div>
-          <label class="field-label">Language · Lingua</label>
+          <label class="field-label">Language</label>
           <select data-config-value="language" @change=${this._selectChanged}>
             <option value="" ?selected=${!this._config.language}>Auto (HA locale)</option>
             <option value="en" ?selected=${this._config.language === 'en'}>English</option>
