@@ -140,18 +140,18 @@ class CalcioLiveTodayMatchesEditor extends LitElement {
 
     return html`
       <div class="card-config">
-        <h3>Sensore</h3>
+        <h3>Sensor</h3>
         <div>
           <label class="field-label">Entity</label>
           <select @change=${this._entityChanged}>
-            ${!entityInList ? html`<option value="${currentEntity}" selected>${currentEntity || '— seleziona —'}</option>` : ''}
+            ${!entityInList ? html`<option value="${currentEntity}" selected>${currentEntity || '— select —'}</option>` : ''}
             ${this.entities.map(e => html`
               <option value="${e}" ?selected=${e === currentEntity}>${e}</option>
             `)}
           </select>
         </div>
 
-        <h3>Impostazioni</h3>
+        <h3>Settings</h3>
 
         <div class="option">
           <label>Show Finished Matches</label>
@@ -223,7 +223,7 @@ class CalcioLiveTodayMatchesEditor extends LitElement {
             data-config-value="hide_past_days"
             @change=${this._numberChanged}
           />
-          <div class="hint">Per funzionare, "Show Finished Matches" deve essere attivo.</div>
+          <div class="hint">Only works when "Show Finished Matches" is enabled.</div>
         </div>
         <div>
           <label class="field-label">Skin</label>
@@ -233,7 +233,7 @@ class CalcioLiveTodayMatchesEditor extends LitElement {
           </select>
         </div>
         <div>
-          <label class="field-label">Language · Lingua</label>
+          <label class="field-label">Language</label>
           <select data-config-value="language" @change=${this._selectChanged}>
             <option value="" ?selected=${!this._config.language}>Auto (HA locale)</option>
             <option value="en" ?selected=${this._config.language === 'en'}>English</option>

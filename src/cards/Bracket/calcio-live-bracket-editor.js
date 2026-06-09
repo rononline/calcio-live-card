@@ -88,22 +88,22 @@ class CalcioLiveBracketEditor extends LitElement {
     const inList = cur && this.entities.includes(cur);
     return html`
       <div class="card-config">
-        <h3>Sensore</h3>
+        <h3>Sensor</h3>
         <div>
-          <label class="field-label">Entity (sensore bracket — calciolive_bracket_*)</label>
+          <label class="field-label">Entity (bracket sensor — calciolive_bracket_*)</label>
           <select @change=${this._entityChanged}>
-            ${!inList ? html`<option value="${cur}" selected>${cur || '— seleziona —'}</option>` : ''}
+            ${!inList ? html`<option value="${cur}" selected>${cur || '— select —'}</option>` : ''}
             ${this.entities.map(e => html`<option value="${e}" ?selected=${e === cur}>${e}</option>`)}
           </select>
-          <div class="hint" style="margin-top: 4px;">Disponibile per Champions, Europa, Conference, FIFA World Cup e altre coppe.</div>
+          <div class="hint" style="margin-top: 4px;">Available for Champions League, Europa League, Conference League, FIFA World Cup and other cup competitions.</div>
         </div>
 
-        <h3>Impostazioni</h3>
+        <h3>Settings</h3>
         <div>
-          <label class="field-label">Style · Stile</label>
+          <label class="field-label">Style</label>
           <select data-config-value="style" @change=${this._selectChanged}>
-            <option value="list" ?selected=${this._config.style !== 'tree'}>List · Lista (default)</option>
-            <option value="tree" ?selected=${this._config.style === 'tree'}>Tree · Tabellone con coppa centrale</option>
+            <option value="list" ?selected=${this._config.style !== 'tree'}>List (default)</option>
+            <option value="tree" ?selected=${this._config.style === 'tree'}>Tree (bracket with central trophy)</option>
           </select>
         </div>
         <div class="option">
@@ -115,7 +115,7 @@ class CalcioLiveBracketEditor extends LitElement {
           ></ha-switch>
         </div>
         <div class="option">
-          <label>Compact (list mode: round in colonna)</label>
+          <label>Compact (list mode: rounds stacked)</label>
           <ha-switch
             .checked=${this._config.compact === true}
             data-config-value="compact"
@@ -123,7 +123,7 @@ class CalcioLiveBracketEditor extends LitElement {
           ></ha-switch>
         </div>
         <div class="option">
-          <label>Tree: include Playoffs · Includi spareggi</label>
+          <label>Tree: include Playoffs</label>
           <ha-switch
             .checked=${this._config.tree_show_playoffs === true}
             data-config-value="tree_show_playoffs"
@@ -138,7 +138,7 @@ class CalcioLiveBracketEditor extends LitElement {
           </select>
         </div>
         <div>
-          <label class="field-label">Language · Lingua</label>
+          <label class="field-label">Language</label>
           <select data-config-value="language" @change=${this._selectChanged}>
             <option value="" ?selected=${!this._config.language}>Auto (HA locale)</option>
             <option value="en" ?selected=${this._config.language === 'en'}>English</option>

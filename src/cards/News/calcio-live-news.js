@@ -242,5 +242,5 @@ window.customCards = window.customCards || [];
 window.customCards.push({
   type: 'calcio-live-news',
   name: 'Calcio Live News Card',
-  description: 'Mostra le ultime notizie di calcio (per competizione)',
+  description: 'Shows the latest football news for a competition',
 });
