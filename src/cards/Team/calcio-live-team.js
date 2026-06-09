@@ -41,6 +41,8 @@ class CalcioLiveTeamNextCard extends LitElement {
     if (!phase) return '';
     const map = {
       'regular-season': this._t('phase.regular_season'),
+      'regular season': this._t('phase.regular_season'),
+      'group-stage': this._t('phase.group_stage'),
       'group stage': this._t('phase.group_stage'),
       'playoffs': this._t('phase.playoffs'),
     };
