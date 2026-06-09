@@ -59,10 +59,14 @@ class CalcioLiveTeamNextCard extends LitElement {
   connectedCallback() {
     super.connectedCallback();
     this._subscribeToEvents();
+    // Refresh countdown every 30s without waiting for sensor polls
+    this._countdownInterval = setInterval(() => this.requestUpdate(), 30000);
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
+    clearInterval(this._countdownInterval);
+    this._countdownInterval = null;
 
     if (this._eventSubscriptions && Array.isArray(this._eventSubscriptions)) {
       this._eventSubscriptions.forEach(unsub => {
@@ -206,6 +210,29 @@ class CalcioLiveTeamNextCard extends LitElement {
     }
   }
 
+  _parseMatchDate(dateStr) {
+    if (!dateStr || dateStr === 'N/A') return null;
+    try {
+      const [datePart, timePart] = dateStr.split(' ');
+      const [day, month, year] = datePart.split('/').map(Number);
+      const [hours, minutes] = (timePart || '00:00').split(':').map(Number);
+      return new Date(year, month - 1, day, hours, minutes);
+    } catch (e) { return null; }
+  }
+
+  _liveCountdown(match) {
+    if (!match || match.state !== 'pre') return null;
+    const d = this._parseMatchDate(match.date);
+    if (!d) return null;
+    const diffMs = d - new Date();
+    if (diffMs <= 0 || diffMs > 48 * 3600 * 1000) return null;
+    const totalMin = Math.floor(diffMs / 60000);
+    if (totalMin < 1) return this._t('time.now');
+    if (totalMin < 60) return this._t('time.in_n_min', { n: totalMin });
+    const h = Math.floor(totalMin / 60);
+    return this._t('time.in_n_h', { n: h });
+  }
+
   getCardSize() { return 4; }
   static getConfigElement() { return document.createElement("calcio-live-team-editor"); }
   static getStubConfig() { return { entity: "sensor.calcio_live", show_event_toasts: false }; }
@@ -289,7 +316,8 @@ class CalcioLiveTeamNextCard extends LitElement {
     if (state === 'post') {
       return html`<div class="clock finished">${this._t('status.full_time')}</div>`;
     }
-    return html`<div class="clock upcoming">${match.date || ''}</div>`;
+    const countdown = this._liveCountdown(match);
+    return html`<div class="clock upcoming">${countdown || match.date || ''}</div>`;
   }
 
   _renderRecord(record) {
@@ -382,7 +410,12 @@ class CalcioLiveTeamNextCard extends LitElement {
     const stateObj = this.hass.states[entityId];
     if (!stateObj) return html`<ha-card class="empty">${this._t('generic.unknown_entity')}: ${entityId}</ha-card>`;
     if (!stateObj.attributes.matches || stateObj.attributes.matches.length === 0) {
-      return html`<ha-card class="empty">${this._t('generic.no_match')}</ha-card>`;
+      return html`
+        <ha-card class="empty">
+          <div style="font-size:40px; opacity:0.25; margin-bottom:10px;">⚽</div>
+          <div style="font-weight:700; margin-bottom:4px;">${this._t('team.no_match')}</div>
+          <div style="font-size:12px; opacity:0.6;">${this._t('team.off_season')}</div>
+        </ha-card>`;
     }
 
     const match = stateObj.attributes.matches[0];

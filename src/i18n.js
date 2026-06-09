@@ -70,6 +70,7 @@ const TRANSLATIONS = {
     'team.next_match': 'Next match',
     'team.in': 'In',
     'team.no_match': 'No match available',
+    'team.off_season': 'New season starts soon',
     'team.unknown_entity': 'Unknown entity',
 
     // Time relative
@@ -204,6 +205,7 @@ const TRANSLATIONS = {
     'team.next_match': 'Volgende wedstrijd',
     'team.in': 'Over',
     'team.no_match': 'Geen wedstrijd beschikbaar',
+    'team.off_season': 'Nieuw seizoen begint binnenkort',
     'team.unknown_entity': 'Onbekende entiteit',
 
     'time.today': 'Vandaag',
@@ -324,6 +326,7 @@ const TRANSLATIONS = {
     'team.next_match': 'Prossima partita',
     'team.in': 'A',
     'team.no_match': 'Nessuna partita disponibile',
+    'team.off_season': 'Nuova stagione in arrivo',
     'team.unknown_entity': 'Entità sconosciuta',
 
     'time.today': 'Oggi',
@@ -442,6 +445,7 @@ const TRANSLATIONS = {
     'team.next_match': 'Prochain match',
     'team.in': 'À',
     'team.no_match': 'Aucun match disponible',
+    'team.off_season': 'Nouvelle saison bientôt',
     'team.unknown_entity': 'Entité inconnue',
 
     'time.today': 'Aujourd\'hui',
@@ -560,6 +564,7 @@ const TRANSLATIONS = {
     'team.next_match': 'Próximo partido',
     'team.in': 'En',
     'team.no_match': 'Ningún partido disponible',
+    'team.off_season': 'Nueva temporada próximamente',
     'team.unknown_entity': 'Entidad desconocida',
 
     'time.today': 'Hoy',

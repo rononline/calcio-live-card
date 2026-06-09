@@ -104,8 +104,37 @@ class CalcioLiveTodayMatchesCard extends LitElement {
       this.requestUpdate();
     }, 5000);
 
+    if (eventType === 'calcio_live_goal') {
+      requestAnimationFrame(() => this._triggerGoalCelebration());
+    }
+
     if (this.showEventToasts) {
       this._showEventToast(eventType, eventData);
+    }
+  }
+
+  _triggerGoalCelebration() {
+    const card = this.shadowRoot && this.shadowRoot.querySelector('ha-card');
+    if (!card) return;
+    card.querySelectorAll('.confetti').forEach(e => e.remove());
+    const colors = ['#ec4899', '#6366f1', '#06b6d4', '#fbbf24', '#10b981', '#ef4444'];
+    const emojis = ['⚽', '🎉', '✨', '🔥', '⭐'];
+    for (let i = 0; i < 28; i++) {
+      const c = document.createElement('div');
+      c.className = 'confetti';
+      if (Math.random() > 0.55) {
+        c.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+        c.style.fontSize = (12 + Math.random() * 10) + 'px';
+        c.style.background = 'transparent';
+      } else {
+        c.style.background = colors[Math.floor(Math.random() * colors.length)];
+        c.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+      }
+      c.style.setProperty('--dx', (Math.random() - 0.5) * 380 + 'px');
+      c.style.setProperty('--dy', (Math.random() * 200 + 80) + 'px');
+      c.style.animationDelay = (Math.random() * 0.4) + 's';
+      card.appendChild(c);
+      setTimeout(() => c.remove(), 2200);
     }
   }
 
@@ -296,7 +325,14 @@ class CalcioLiveTodayMatchesCard extends LitElement {
       const key = this._dayKey(m);
       if (key !== currentKey) {
         currentKey = key;
-        grouped.push({ key, matches: [m] });
+        const d = this._parseMatchDate(m.date);
+        let dayDiff = null;
+        if (d) {
+          const today = new Date(); today.setHours(0, 0, 0, 0);
+          const md = new Date(d); md.setHours(0, 0, 0, 0);
+          dayDiff = Math.round((md - today) / 86400000);
+        }
+        grouped.push({ key, dayDiff, matches: [m] });
       } else {
         grouped[grouped.length - 1].matches.push(m);
       }
@@ -329,7 +365,7 @@ class CalcioLiveTodayMatchesCard extends LitElement {
 
         <div class="scroll-content" style="max-height: ${scrollHeight}px;">
           ${grouped.map(group => html`
-            <div class="day-divider ${group.key.startsWith('⚡') ? 'today' : ''}">${group.key}</div>
+            <div class="day-divider ${group.dayDiff === 0 ? 'today' : group.dayDiff === -1 ? 'yesterday' : group.dayDiff === 1 ? 'tomorrow' : ''}">${group.key}</div>
             ${group.matches.map(match => {
               const matchKey = `${match.home_team}_${match.away_team}`;
               const isLive = match.state === 'in';
@@ -550,6 +586,25 @@ class CalcioLiveTodayMatchesCard extends LitElement {
       .day-divider.today::after {
         background: linear-gradient(90deg, var(--cl-accent), transparent);
         opacity: 0.4;
+      }
+      .day-divider.tomorrow { color: var(--cl-accent-2); opacity: 0.9; }
+      .day-divider.tomorrow::after {
+        background: linear-gradient(90deg, var(--cl-accent-2), transparent);
+        opacity: 0.3;
+      }
+      .day-divider.yesterday { opacity: 0.55; }
+
+      .confetti {
+        position: absolute;
+        top: 20px; left: 50%;
+        width: 8px; height: 8px;
+        pointer-events: none;
+        z-index: 99;
+        animation: confetti-fly 2s ease-out forwards;
+      }
+      @keyframes confetti-fly {
+        0%   { transform: translate(-50%, 0) rotate(0deg); opacity: 1; }
+        100% { transform: translate(calc(-50% + var(--dx)), var(--dy)) rotate(720deg); opacity: 0; }
       }
 
       .match-row {
