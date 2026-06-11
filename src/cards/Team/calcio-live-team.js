@@ -424,11 +424,13 @@ class CalcioLiveTeamNextCard extends LitElement {
     const isLive = match.state === 'in';
     const isFinished = match.state === 'post';
     const showScore = isLive || isFinished;
-    const competitionLabel = match.league_name && match.league_name !== 'N/A'
-      ? match.league_name
-      : (match.season_info && match.season_info !== 'N/A' && this._shouldShowPhase(match.season_info)
-          ? this._translatePhase(match.season_info)
-          : '');
+    const competitionLabel = (leagueInfo && leagueInfo.abbreviation && leagueInfo.abbreviation !== 'N/A')
+      ? leagueInfo.abbreviation
+      : (match.league_name && match.league_name !== 'N/A'
+          ? match.league_name
+          : (match.season_info && match.season_info !== 'N/A' && this._shouldShowPhase(match.season_info)
+              ? this._translatePhase(match.season_info)
+              : ''));
     const venue = match.venue && match.venue !== 'N/A' ? match.venue : '';
     const venueCity = match.venue_city && match.venue_city !== 'N/A' ? match.venue_city : '';
     const venueLabel = venue ? (venueCity ? `${venue}, ${venueCity}` : venue) : '—';

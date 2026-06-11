@@ -384,7 +384,13 @@ class CalcioLiveStandingsCard extends LitElement {
     const stateObj = this.hass.states[entityId];
     if (!stateObj) return html`<ha-card class="empty">${this._t('generic.unknown_entity')}: ${entityId}</ha-card>`;
 
-    const seasonName = stateObj.attributes.season || '';
+    const rawSeasonName = stateObj.attributes.season || '';
+    const leagueAbbr = stateObj.attributes.league_abbreviation && stateObj.attributes.league_abbreviation !== 'N/A'
+      ? stateObj.attributes.league_abbreviation : null;
+    // Vervang de volledige competitienaam in het seizoen door de afkorting ("2026-27 Dutch Eredivisie" → "2026-27 Eredivisie")
+    const seasonName = leagueAbbr && stateObj.attributes.league_name
+      ? rawSeasonName.replace(stateObj.attributes.league_name, leagueAbbr).trim()
+      : rawSeasonName;
     const standingsGroups = stateObj.attributes.standings_groups || [];
     const showAllGroups = !this.selectedGroup && standingsGroups.length > 1;
     const standingsGroup = this._currentGroup(standingsGroups);
