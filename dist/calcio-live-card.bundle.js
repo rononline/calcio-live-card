@@ -4,6 +4,9 @@
     /* Accent palette — standaard (dark/light) */
     --cl-accent: #6366f1;
     --cl-accent-2: #ec4899;
+    /* RGB-waarden voor gebruik in rgba() */
+    --cl-accent-rgb: 99,102,241;
+    --cl-accent-2-rgb: 236,72,153;
     --cl-live: #ef4444;
     --cl-live-glow: rgba(239,68,68,0.5);
     --cl-green: #10b981;
@@ -59,6 +62,8 @@
   :host([data-skin="feyenoord"]) {
     --cl-accent: #cc0000;
     --cl-accent-2: #ff2200;
+    --cl-accent-rgb: 204,0,0;
+    --cl-accent-2-rgb: 255,34,0;
     --cl-live: #ff4444;
     --cl-live-glow: rgba(204,0,0,0.6);
     --cl-cl: #cc0000;
@@ -89,6 +94,8 @@
   :host([data-skin="classic"]) {
     --cl-accent: #16a34a;
     --cl-accent-2: #22c55e;
+    --cl-accent-rgb: 22,163,74;
+    --cl-accent-2-rgb: 34,197,94;
     --cl-live: #ef4444;
     --cl-live-glow: rgba(239,68,68,0.5);
     --cl-cl: #16a34a;
@@ -116,6 +123,8 @@
   :host([data-skin="neon"]) {
     --cl-accent: #00e5ff;
     --cl-accent-2: #ff00aa;
+    --cl-accent-rgb: 0,229,255;
+    --cl-accent-2-rgb: 255,0,170;
     --cl-live: #ff2d55;
     --cl-live-glow: rgba(255,45,85,0.6);
     --cl-cl: #00e5ff;
@@ -146,6 +155,8 @@
   :host([data-skin="gold"]) {
     --cl-accent: #f59e0b;
     --cl-accent-2: #fcd34d;
+    --cl-accent-rgb: 245,158,11;
+    --cl-accent-2-rgb: 252,211,77;
     --cl-live: #ef4444;
     --cl-live-glow: rgba(239,68,68,0.5);
     --cl-cl: #f59e0b;
@@ -304,7 +315,7 @@
         position: relative;
         padding: 20px 18px;
         background:
-          linear-gradient(135deg, rgba(99,102,241,0.15), rgba(236,72,153,0.10) 60%, transparent);
+          linear-gradient(135deg, rgba(var(--cl-accent-rgb),0.15), rgba(var(--cl-accent-2-rgb),0.10) 60%, transparent);
         border-bottom: 1px solid var(--cl-divider);
         overflow: hidden;
       }
@@ -320,7 +331,7 @@
         padding: 28px 22px 22px;
         background:
           radial-gradient(circle at 20% 20%, rgba(99,102,241,0.30), transparent 55%),
-          radial-gradient(circle at 80% 60%, rgba(236,72,153,0.20), transparent 50%),
+          radial-gradient(circle at 80% 60%, rgba(var(--cl-accent-2-rgb),0.20), transparent 50%),
           linear-gradient(135deg, rgba(255,255,255,0.04), rgba(255,255,255,0));
       }
       .top-bar-cup::before { display: none; }
@@ -441,7 +452,7 @@
         display: flex; align-items: center; gap: 10px;
         margin: 0 14px 4px;
         padding: 10px 14px;
-        background: rgba(99,102,241,0.08);
+        background: rgba(var(--cl-accent-rgb),0.08);
         border: 1px solid rgba(99,102,241,0.18);
         border-radius: 10px;
         font-size: 12px;
@@ -474,7 +485,7 @@
       .zone-cl .rank-num {
         background: linear-gradient(135deg, var(--cl-cl), #4f46e5);
         color: white;
-        box-shadow: 0 2px 12px rgba(99,102,241,0.4);
+        box-shadow: 0 2px 12px rgba(var(--cl-accent-rgb),0.4);
       }
       .zone-cl.rank-first .rank-num {
         background: linear-gradient(135deg, var(--cl-gold), #d97706);
@@ -551,7 +562,7 @@
         letter-spacing: 0.12em;
         text-transform: uppercase;
         color: var(--cl-text);
-        background: linear-gradient(135deg, rgba(99,102,241,0.12), rgba(236,72,153,0.06));
+        background: linear-gradient(135deg, rgba(var(--cl-accent-rgb),0.12), rgba(236,72,153,0.06));
         border-bottom: 1px solid var(--cl-divider);
         display: flex;
         align-items: center;
@@ -883,8 +894,8 @@
         position: absolute;
         inset: 0;
         background:
-          radial-gradient(ellipse at 0% 0%, rgba(99,102,241,0.10), transparent 50%),
-          radial-gradient(ellipse at 100% 100%, rgba(236,72,153,0.10), transparent 50%);
+          radial-gradient(ellipse at 0% 0%, rgba(var(--cl-accent-rgb),0.10), transparent 50%),
+          radial-gradient(ellipse at 100% 100%, rgba(var(--cl-accent-2-rgb),0.10), transparent 50%);
         pointer-events: none;
         z-index: 0;
       }
@@ -906,7 +917,7 @@
       .league-logo {
         width: 42px; height: 42px;
         object-fit: contain;
-        filter: drop-shadow(0 2px 8px rgba(99,102,241,0.3));
+        filter: drop-shadow(0 2px 8px rgba(var(--cl-accent-rgb),0.3));
       }
       .league-info {
         flex: 1;
@@ -1096,8 +1107,8 @@
         align-items: center;
         gap: 4px;
         padding: 2px 7px;
-        background: rgba(99,102,241,0.12);
-        border: 1px solid rgba(99,102,241,0.25);
+        background: rgba(var(--cl-accent-rgb),0.12);
+        border: 1px solid rgba(var(--cl-accent-rgb),0.25);
         border-radius: 999px;
         font-size: 9px;
         font-weight: 700;
@@ -1110,8 +1121,8 @@
         display: inline-flex;
         align-items: center;
         padding: 2px 7px;
-        background: rgba(236,72,153,0.10);
-        border: 1px solid rgba(236,72,153,0.22);
+        background: rgba(var(--cl-accent-2-rgb),0.10);
+        border: 1px solid rgba(var(--cl-accent-2-rgb),0.22);
         border-radius: 999px;
         font-size: 9px;
         font-weight: 700;
@@ -1457,7 +1468,7 @@
         ${this._renderH2H(a.head_to_head)}
         ${this._renderUpcomingList(t.attributes.upcoming_matches,t.attributes.matches,this.myTeam||t.attributes.team_name)}
       </ha-card>
-    `}_relativeDate(e){if(!e)return"";const t=e.split(" "),[a,i,n]=(t[0]||"").split(/[-\/]/).map(Number);if(!a||!i||!n)return t[0]||"";const s=new Date(n,i-1,a),o=new Date;o.setHours(0,0,0,0);const r=Math.round((s-o)/864e5);if(1===r)return this._t("time.tomorrow");if(r<=6&&r>1)return this._t("time.in_n_d",{n:r});de(this.hass,this._config);const l=`month.${i}`;return`${a} ${this._t(l)}`}_teamBadge(e,t){const a=t&&"N/A"!==t?`#${t.replace("#","")}`:"rgba(99,102,241,0.25)";return I`<span class="abbrev-badge" style="background:${a}">${e}</span>`}_renderUpcomingList(e,t,a){const i=e&&e.length>0?e:t&&t.length>1?t.slice(1).filter((e=>"pre"===e.state||"in"===e.state)).slice(0,4):[];if(0===i.length)return"";const n=(a||"").toLowerCase();return I`
+    `}_relativeDate(e){if(!e)return"";const t=e.split(" "),[a,i,n]=(t[0]||"").split(/[-\/]/).map(Number);if(!a||!i||!n)return t[0]||"";const s=new Date(n,i-1,a),o=new Date;o.setHours(0,0,0,0);const r=Math.round((s-o)/864e5);if(1===r)return this._t("time.tomorrow");if(r<=6&&r>1)return this._t("time.in_n_d",{n:r});de(this.hass,this._config);const l=`month.${i}`;return`${a} ${this._t(l)}`}_teamBadge(e,t){const a=t&&"N/A"!==t?`#${t.replace("#","")}`:"rgba(var(--cl-accent-rgb),0.25)";return I`<span class="abbrev-badge" style="background:${a}">${e}</span>`}_renderUpcomingList(e,t,a){const i=e&&e.length>0?e:t&&t.length>1?t.slice(1).filter((e=>"pre"===e.state||"in"===e.state)).slice(0,4):[];if(0===i.length)return"";const n=(a||"").toLowerCase();return I`
       <div class="upcoming-list">
         <div class="upcoming-list-title">${this._t("team.upcoming_matches")}</div>
         ${i.map((e=>{const t=n&&e.home_team&&e.home_team.toLowerCase().includes(n),a=n&&e.away_team&&e.away_team.toLowerCase().includes(n),i="in"===e.state,s=e.head_to_head&&e.head_to_head.length>0;return I`
@@ -1491,7 +1502,7 @@
             </div>
           `}))}
       </div>
-    `}updated(e){(e.has("showPopup")||e.has("activeMatch"))&&this.renderPopupToBody()}renderPopupToBody(){if(!this.showPopup||!this.activeMatch){const e=document.getElementById("calcio-live-team-popup");return void(e&&e.remove())}let e=document.getElementById("calcio-live-team-popup");e||(e=document.createElement("div"),e.id="calcio-live-team-popup",e.style.cssText="\n        position: fixed; inset: 0;\n        display: flex; justify-content: center; align-items: center;\n        z-index: 999999;\n        background: rgba(0,0,0,0.7);\n        backdrop-filter: blur(8px);\n        overflow: auto;\n      ",e.addEventListener("click",(t=>{t.target===e&&(this.showPopup=!1)})),document.body.appendChild(e));const t=this.activeMatch,a=e=>this._t(e);e.innerHTML=`\n      <div style="background: #1a1f2e; padding: 24px; border-radius: 20px; width: 90%; max-width: 560px; max-height: 85vh; overflow-y: auto; border: 1px solid rgba(255,255,255,0.08); box-shadow: 0 24px 64px rgba(0,0,0,0.6); margin: auto; color: #f8fafc; font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;">\n        <h3 style="margin:0 0 20px; font-size: 22px; font-weight: 800; letter-spacing:-0.02em; background: linear-gradient(135deg,#6366f1,#ec4899); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color: transparent;">${a("popup.match_details")}</h3>\n        <div style="display:flex; justify-content:center; align-items:center; gap:18px; margin-bottom:24px;">\n          <img style="width:72px; height:72px; object-fit:contain; filter: drop-shadow(0 4px 12px rgba(0,0,0,0.4));" src="${t.home_logo}" alt="${t.home_team}" />\n          <div style="text-align:center;">\n            <div style="font-size:42px; font-weight:900; letter-spacing:-0.04em; line-height:1;">${t.home_score??"-"} <span style="opacity:0.4;">-</span> ${t.away_score??"-"}</div>\n            <div style="font-size:12px; color:#94a3b8; margin-top:8px; font-weight:600;">${t.clock??t.status??""}</div>\n          </div>\n          <img style="width:72px; height:72px; object-fit:contain; filter: drop-shadow(0 4px 12px rgba(0,0,0,0.4));" src="${t.away_logo}" alt="${t.away_team}" />\n        </div>\n        <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:18px;">\n          <div style="background:rgba(255,255,255,0.04); padding:14px; border-radius:14px;">\n            <div style="font-size:10px; text-transform:uppercase; letter-spacing:0.1em; color:#94a3b8; font-weight:700; margin-bottom:6px;">${t.home_team}</div>\n            <div style="font-size:13px;"><span style="color:#94a3b8;">${a("team.possession")}:</span> <strong>${t.home_statistics?.possessionPct??"—"}%</strong></div>\n            <div style="font-size:13px;"><span style="color:#94a3b8;">${a("team.shots")}:</span> <strong>${t.home_statistics?.totalShots??"—"}</strong></div>\n            <div style="font-size:13px;"><span style="color:#94a3b8;">${a("team.on_target")}:</span> <strong>${t.home_statistics?.shotsOnTarget??"—"}</strong></div>\n            <div style="font-size:13px;"><span style="color:#94a3b8;">${a("team.fouls")}:</span> <strong>${t.home_statistics?.foulsCommitted??"—"}</strong></div>\n          </div>\n          <div style="background:rgba(255,255,255,0.04); padding:14px; border-radius:14px;">\n            <div style="font-size:10px; text-transform:uppercase; letter-spacing:0.1em; color:#94a3b8; font-weight:700; margin-bottom:6px;">${t.away_team}</div>\n            <div style="font-size:13px;"><span style="color:#94a3b8;">${a("team.possession")}:</span> <strong>${t.away_statistics?.possessionPct??"—"}%</strong></div>\n            <div style="font-size:13px;"><span style="color:#94a3b8;">${a("team.shots")}:</span> <strong>${t.away_statistics?.totalShots??"—"}</strong></div>\n            <div style="font-size:13px;"><span style="color:#94a3b8;">${a("team.on_target")}:</span> <strong>${t.away_statistics?.shotsOnTarget??"—"}</strong></div>\n            <div style="font-size:13px;"><span style="color:#94a3b8;">${a("team.fouls")}:</span> <strong>${t.away_statistics?.foulsCommitted??"—"}</strong></div>\n          </div>\n        </div>\n        <div id="team-events-container"></div>\n        <button id="popup-close-btn" style="background:linear-gradient(135deg,#6366f1,#ec4899); color:white; padding:12px 20px; border:none; border-radius:12px; cursor:pointer; margin-top:20px; font-weight:800; width:100%; font-size:14px;">${a("generic.close")}</button>\n      </div>\n    `;const i=e.querySelector("#popup-close-btn");i&&i.addEventListener("click",(()=>{this.showPopup=!1}));const n=e.querySelector("#team-events-container"),{goals:s,yellowCards:o,redCards:r}=this.separateEvents(t.match_details||[]),l=(e,t,a)=>t.length?`<div style="margin-bottom:14px; padding:14px; background:${a.bg}; border-left:3px solid ${a.border}; border-radius:10px;">\n        <h5 style="margin:0 0 8px; font-size:12px; text-transform:uppercase; letter-spacing:0.08em; color:${a.border}; font-weight:800;">${e}</h5>\n        <ul style="margin:0; padding-left:18px; font-size:13px; color:#cbd5e1;">${t.map((e=>`<li style="margin:4px 0;">${e}</li>`)).join("")}</ul>\n      </div>`:"";let c="";c+=l(a("event.goal"),s,{bg:"rgba(99,102,241,0.1)",border:"#6366f1"}),c+=l(a("event.yellow_card"),o,{bg:"rgba(245,158,11,0.1)",border:"#f59e0b"}),c+=l(a("event.red_card"),r,{bg:"rgba(239,68,68,0.1)",border:"#ef4444"});const d=t.lineup_home||[],p=t.lineup_away||[];if(d.length||p.length){const e=t.formation_home||"",i=t.formation_away||"",n=(e,t,a)=>{const i=(e||[]).filter((e=>e.starter));return i.length?`<div style="margin-bottom:8px;">\n          <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:6px;">\n            <span style="font-size:12px; font-weight:800; color:#fff;">${a}</span>\n            ${t?`<span style="font-size:10px; font-weight:700; color:#6366f1; letter-spacing:0.1em;">${t}</span>`:""}\n          </div>\n          <div style="font-size:12px; color:#cbd5e1; line-height:1.7;">\n            ${i.map((e=>`<span style="display:inline-block; padding:2px 8px; background:rgba(255,255,255,0.05); border-radius:6px; margin:2px;">${e.jersey?`<strong style="color:#fbbf24;">${e.jersey}</strong> `:""}${e.short_name||e.name}</span>`)).join("")}\n          </div>\n        </div>`:""};c+=`<div style="margin-bottom:14px; padding:14px; background:rgba(16,185,129,0.08); border-left:3px solid #10b981; border-radius:10px;">\n        <h5 style="margin:0 0 10px; font-size:12px; text-transform:uppercase; letter-spacing:0.08em; color:#10b981; font-weight:800;">${a("popup.lineups")}</h5>\n        ${n(d,e,t.home_team)}\n        ${n(p,i,t.away_team)}\n      </div>`}const h=t.key_events||[];if(h.length){const e=e=>{const t=(e.type||"").toLowerCase(),a=(e.type_text||"").toLowerCase();return"goal"===t||e.scoring_play?"⚽":a.includes("yellow")?"🟨":a.includes("red")?"🟥":"substitution"===t?"🔄":a.includes("halftime")?"⏸":a.includes("kickoff")?"▶":a.includes("end")?"🏁":"·"};c+=`<div style="margin-bottom:14px; padding:14px; background:rgba(251,191,36,0.08); border-left:3px solid #fbbf24; border-radius:10px;">\n        <h5 style="margin:0 0 10px; font-size:12px; text-transform:uppercase; letter-spacing:0.08em; color:#fbbf24; font-weight:800;">${a("popup.timeline")}</h5>\n        <ul style="margin:0; padding:0; list-style:none;">\n          ${h.map((t=>`<li style="display:grid; grid-template-columns:36px 24px 1fr; gap:8px; align-items:start; padding:5px 0; border-bottom:1px solid rgba(255,255,255,0.04); font-size:12px; color:#cbd5e1;">\n            <span style="text-align:right; font-weight:700; color:#94a3b8; font-variant-numeric:tabular-nums;">${t.clock||""}</span>\n            <span style="text-align:center;">${e(t)}</span>\n            <span><strong style="color:#fff;">${(t.athletes||[]).filter(Boolean).join(", ")||t.type_text||""}</strong>${t.team?`<br><span style="color:#94a3b8; font-size:11px;">${t.team}</span>`:""}</span>\n          </li>`)).join("")}\n        </ul>\n      </div>`}const g=t.head_to_head||[];g.length&&(c+=`<div style="margin-bottom:14px; padding:14px; background:rgba(99,102,241,0.08); border-left:3px solid #6366f1; border-radius:10px;">\n        <h5 style="margin:0 0 10px; font-size:12px; text-transform:uppercase; letter-spacing:0.08em; color:#6366f1; font-weight:800;">${a("popup.h2h")} (${g.length})</h5>\n        <ul style="margin:0; padding:0; list-style:none;">\n          ${g.slice(0,8).map((e=>{const t=e.date?new Date(e.date).toLocaleDateString(de(this.hass,this._config)):"";return`<li style="display:flex; justify-content:space-between; padding:5px 0; border-bottom:1px solid rgba(255,255,255,0.04); font-size:12px; color:#cbd5e1;">\n              <span>${e.home_team} <strong>${e.home_score??"-"}</strong> - <strong>${e.away_score??"-"}</strong> ${e.away_team}</span>\n              <span style="color:#94a3b8;">${t}</span>\n            </li>`})).join("")}\n        </ul>\n      </div>`),n.innerHTML=c||`<p style="text-align:center; color:#94a3b8; font-size:13px;">${a("popup.no_events")}</p>`}static get styles(){return[he,s`
+    `}updated(e){(e.has("showPopup")||e.has("activeMatch"))&&this.renderPopupToBody()}renderPopupToBody(){if(!this.showPopup||!this.activeMatch){const e=document.getElementById("calcio-live-team-popup");return void(e&&e.remove())}let e=document.getElementById("calcio-live-team-popup");e||(e=document.createElement("div"),e.id="calcio-live-team-popup",e.style.cssText="\n        position: fixed; inset: 0;\n        display: flex; justify-content: center; align-items: center;\n        z-index: 999999;\n        background: rgba(0,0,0,0.7);\n        backdrop-filter: blur(8px);\n        overflow: auto;\n      ",e.addEventListener("click",(t=>{t.target===e&&(this.showPopup=!1)})),document.body.appendChild(e));const t=this.activeMatch,a=e=>this._t(e);e.innerHTML=`\n      <div style="background: #1a1f2e; padding: 24px; border-radius: 20px; width: 90%; max-width: 560px; max-height: 85vh; overflow-y: auto; border: 1px solid rgba(255,255,255,0.08); box-shadow: 0 24px 64px rgba(0,0,0,0.6); margin: auto; color: #f8fafc; font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;">\n        <h3 style="margin:0 0 20px; font-size: 22px; font-weight: 800; letter-spacing:-0.02em; background: linear-gradient(135deg,#6366f1,#ec4899); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color: transparent;">${a("popup.match_details")}</h3>\n        <div style="display:flex; justify-content:center; align-items:center; gap:18px; margin-bottom:24px;">\n          <img style="width:72px; height:72px; object-fit:contain; filter: drop-shadow(0 4px 12px rgba(0,0,0,0.4));" src="${t.home_logo}" alt="${t.home_team}" />\n          <div style="text-align:center;">\n            <div style="font-size:42px; font-weight:900; letter-spacing:-0.04em; line-height:1;">${t.home_score??"-"} <span style="opacity:0.4;">-</span> ${t.away_score??"-"}</div>\n            <div style="font-size:12px; color:#94a3b8; margin-top:8px; font-weight:600;">${t.clock??t.status??""}</div>\n          </div>\n          <img style="width:72px; height:72px; object-fit:contain; filter: drop-shadow(0 4px 12px rgba(0,0,0,0.4));" src="${t.away_logo}" alt="${t.away_team}" />\n        </div>\n        <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:18px;">\n          <div style="background:rgba(255,255,255,0.04); padding:14px; border-radius:14px;">\n            <div style="font-size:10px; text-transform:uppercase; letter-spacing:0.1em; color:#94a3b8; font-weight:700; margin-bottom:6px;">${t.home_team}</div>\n            <div style="font-size:13px;"><span style="color:#94a3b8;">${a("team.possession")}:</span> <strong>${t.home_statistics?.possessionPct??"—"}%</strong></div>\n            <div style="font-size:13px;"><span style="color:#94a3b8;">${a("team.shots")}:</span> <strong>${t.home_statistics?.totalShots??"—"}</strong></div>\n            <div style="font-size:13px;"><span style="color:#94a3b8;">${a("team.on_target")}:</span> <strong>${t.home_statistics?.shotsOnTarget??"—"}</strong></div>\n            <div style="font-size:13px;"><span style="color:#94a3b8;">${a("team.fouls")}:</span> <strong>${t.home_statistics?.foulsCommitted??"—"}</strong></div>\n          </div>\n          <div style="background:rgba(255,255,255,0.04); padding:14px; border-radius:14px;">\n            <div style="font-size:10px; text-transform:uppercase; letter-spacing:0.1em; color:#94a3b8; font-weight:700; margin-bottom:6px;">${t.away_team}</div>\n            <div style="font-size:13px;"><span style="color:#94a3b8;">${a("team.possession")}:</span> <strong>${t.away_statistics?.possessionPct??"—"}%</strong></div>\n            <div style="font-size:13px;"><span style="color:#94a3b8;">${a("team.shots")}:</span> <strong>${t.away_statistics?.totalShots??"—"}</strong></div>\n            <div style="font-size:13px;"><span style="color:#94a3b8;">${a("team.on_target")}:</span> <strong>${t.away_statistics?.shotsOnTarget??"—"}</strong></div>\n            <div style="font-size:13px;"><span style="color:#94a3b8;">${a("team.fouls")}:</span> <strong>${t.away_statistics?.foulsCommitted??"—"}</strong></div>\n          </div>\n        </div>\n        <div id="team-events-container"></div>\n        <button id="popup-close-btn" style="background:linear-gradient(135deg,#6366f1,#ec4899); color:white; padding:12px 20px; border:none; border-radius:12px; cursor:pointer; margin-top:20px; font-weight:800; width:100%; font-size:14px;">${a("generic.close")}</button>\n      </div>\n    `;const i=e.querySelector("#popup-close-btn");i&&i.addEventListener("click",(()=>{this.showPopup=!1}));const n=e.querySelector("#team-events-container"),{goals:s,yellowCards:o,redCards:r}=this.separateEvents(t.match_details||[]),l=(e,t,a)=>t.length?`<div style="margin-bottom:14px; padding:14px; background:${a.bg}; border-left:3px solid ${a.border}; border-radius:10px;">\n        <h5 style="margin:0 0 8px; font-size:12px; text-transform:uppercase; letter-spacing:0.08em; color:${a.border}; font-weight:800;">${e}</h5>\n        <ul style="margin:0; padding-left:18px; font-size:13px; color:#cbd5e1;">${t.map((e=>`<li style="margin:4px 0;">${e}</li>`)).join("")}</ul>\n      </div>`:"";let c="";c+=l(a("event.goal"),s,{bg:"rgba(99,102,241,0.1)",border:"#6366f1"}),c+=l(a("event.yellow_card"),o,{bg:"rgba(245,158,11,0.1)",border:"#f59e0b"}),c+=l(a("event.red_card"),r,{bg:"rgba(239,68,68,0.1)",border:"#ef4444"});const d=t.lineup_home||[],p=t.lineup_away||[];if(d.length||p.length){const e=t.formation_home||"",i=t.formation_away||"",n=(e,t,a)=>{const i=(e||[]).filter((e=>e.starter));return i.length?`<div style="margin-bottom:8px;">\n          <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:6px;">\n            <span style="font-size:12px; font-weight:800; color:#fff;">${a}</span>\n            ${t?`<span style="font-size:10px; font-weight:700; color:#6366f1; letter-spacing:0.1em;">${t}</span>`:""}\n          </div>\n          <div style="font-size:12px; color:#cbd5e1; line-height:1.7;">\n            ${i.map((e=>`<span style="display:inline-block; padding:2px 8px; background:rgba(255,255,255,0.05); border-radius:6px; margin:2px;">${e.jersey?`<strong style="color:#fbbf24;">${e.jersey}</strong> `:""}${e.short_name||e.name}</span>`)).join("")}\n          </div>\n        </div>`:""};c+=`<div style="margin-bottom:14px; padding:14px; background:rgba(16,185,129,0.08); border-left:3px solid #10b981; border-radius:10px;">\n        <h5 style="margin:0 0 10px; font-size:12px; text-transform:uppercase; letter-spacing:0.08em; color:#10b981; font-weight:800;">${a("popup.lineups")}</h5>\n        ${n(d,e,t.home_team)}\n        ${n(p,i,t.away_team)}\n      </div>`}const h=t.key_events||[];if(h.length){const e=e=>{const t=(e.type||"").toLowerCase(),a=(e.type_text||"").toLowerCase();return"goal"===t||e.scoring_play?"⚽":a.includes("yellow")?"🟨":a.includes("red")?"🟥":"substitution"===t?"🔄":a.includes("halftime")?"⏸":a.includes("kickoff")?"▶":a.includes("end")?"🏁":"·"};c+=`<div style="margin-bottom:14px; padding:14px; background:rgba(251,191,36,0.08); border-left:3px solid #fbbf24; border-radius:10px;">\n        <h5 style="margin:0 0 10px; font-size:12px; text-transform:uppercase; letter-spacing:0.08em; color:#fbbf24; font-weight:800;">${a("popup.timeline")}</h5>\n        <ul style="margin:0; padding:0; list-style:none;">\n          ${h.map((t=>`<li style="display:grid; grid-template-columns:36px 24px 1fr; gap:8px; align-items:start; padding:5px 0; border-bottom:1px solid rgba(255,255,255,0.04); font-size:12px; color:#cbd5e1;">\n            <span style="text-align:right; font-weight:700; color:#94a3b8; font-variant-numeric:tabular-nums;">${t.clock||""}</span>\n            <span style="text-align:center;">${e(t)}</span>\n            <span><strong style="color:#fff;">${(t.athletes||[]).filter(Boolean).join(", ")||t.type_text||""}</strong>${t.team?`<br><span style="color:#94a3b8; font-size:11px;">${t.team}</span>`:""}</span>\n          </li>`)).join("")}\n        </ul>\n      </div>`}const g=t.head_to_head||[];g.length&&(c+=`<div style="margin-bottom:14px; padding:14px; background:rgba(var(--cl-accent-rgb),0.08); border-left:3px solid var(--cl-accent); border-radius:10px;">\n        <h5 style="margin:0 0 10px; font-size:12px; text-transform:uppercase; letter-spacing:0.08em; color:#6366f1; font-weight:800;">${a("popup.h2h")} (${g.length})</h5>\n        <ul style="margin:0; padding:0; list-style:none;">\n          ${g.slice(0,8).map((e=>{const t=e.date?new Date(e.date).toLocaleDateString(de(this.hass,this._config)):"";return`<li style="display:flex; justify-content:space-between; padding:5px 0; border-bottom:1px solid rgba(255,255,255,0.04); font-size:12px; color:#cbd5e1;">\n              <span>${e.home_team} <strong>${e.home_score??"-"}</strong> - <strong>${e.away_score??"-"}</strong> ${e.away_team}</span>\n              <span style="color:#94a3b8;">${t}</span>\n            </li>`})).join("")}\n        </ul>\n      </div>`),n.innerHTML=c||`<p style="text-align:center; color:#94a3b8; font-size:13px;">${a("popup.no_events")}</p>`}static get styles(){return[he,s`
       :host {
         --cl-accent: #6366f1;
         --cl-accent-2: #ec4899;
@@ -1554,8 +1565,8 @@
         position: absolute;
         inset: 0;
         background:
-          radial-gradient(ellipse at 0% 0%, rgba(99,102,241,0.20), transparent 50%),
-          radial-gradient(ellipse at 100% 100%, rgba(236,72,153,0.20), transparent 50%);
+          radial-gradient(ellipse at 0% 0%, rgba(var(--cl-accent-rgb),0.20), transparent 50%),
+          radial-gradient(ellipse at 100% 100%, rgba(var(--cl-accent-2-rgb),0.20), transparent 50%);
         pointer-events: none;
         z-index: 1;
       }
@@ -1599,7 +1610,7 @@
         background: linear-gradient(135deg, var(--cl-accent), var(--cl-accent-2));
         display: flex; align-items: center; justify-content: center;
         font-size: 12px;
-        box-shadow: 0 2px 8px rgba(99,102,241,0.4);
+        box-shadow: 0 2px 8px rgba(var(--cl-accent-rgb),0.4);
         overflow: hidden;
       }
       .comp-icon img {
@@ -1676,7 +1687,7 @@
         content: '';
         position: absolute;
         inset: -8px;
-        background: radial-gradient(circle, rgba(99,102,241,0.22), transparent 70%);
+        background: radial-gradient(circle, rgba(var(--cl-accent-rgb),0.22), transparent 70%);
         border-radius: 50%;
         animation: logo-glow 4s ease-in-out infinite;
       }
@@ -1841,7 +1852,7 @@
       }
       .clock.upcoming {
         color: var(--cl-accent);
-        background: rgba(99,102,241,0.12);
+        background: rgba(var(--cl-accent-rgb),0.12);
       }
       .clock.upcoming .dot, .clock.finished .dot { animation: none; }
       .clock.finished {
@@ -1915,8 +1926,8 @@
         align-items: center;
         gap: 5px;
         padding: 4px 10px;
-        background: rgba(99,102,241,0.12);
-        border: 1px solid rgba(99,102,241,0.25);
+        background: rgba(var(--cl-accent-rgb),0.12);
+        border: 1px solid rgba(var(--cl-accent-rgb),0.25);
         border-radius: 999px;
         font-size: 11px;
         font-weight: 700;
@@ -1924,8 +1935,8 @@
       }
       .extra-chip svg { width: 12px; height: 12px; }
       .extra-chip.broadcast {
-        background: rgba(99,102,241,0.12);
-        border-color: rgba(99,102,241,0.3);
+        background: rgba(var(--cl-accent-rgb),0.12);
+        border-color: rgba(var(--cl-accent-rgb),0.3);
         color: var(--cl-accent);
       }
       .extra-chip.attendance {
@@ -1951,7 +1962,7 @@
         letter-spacing: 0.04em;
         cursor: pointer;
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        box-shadow: 0 4px 12px rgba(99,102,241,0.4);
+        box-shadow: 0 4px 12px rgba(var(--cl-accent-rgb),0.4);
       }
       .info-btn:hover {
         transform: translateY(-1px) scale(1.04);

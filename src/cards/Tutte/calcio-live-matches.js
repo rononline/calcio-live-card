@@ -529,8 +529,8 @@ class CalcioLiveTodayMatchesCard extends LitElement {
         position: absolute;
         inset: 0;
         background:
-          radial-gradient(ellipse at 0% 0%, rgba(99,102,241,0.10), transparent 50%),
-          radial-gradient(ellipse at 100% 100%, rgba(236,72,153,0.10), transparent 50%);
+          radial-gradient(ellipse at 0% 0%, rgba(var(--cl-accent-rgb),0.10), transparent 50%),
+          radial-gradient(ellipse at 100% 100%, rgba(var(--cl-accent-2-rgb),0.10), transparent 50%);
         pointer-events: none;
         z-index: 0;
       }
@@ -552,7 +552,7 @@ class CalcioLiveTodayMatchesCard extends LitElement {
       .league-logo {
         width: 42px; height: 42px;
         object-fit: contain;
-        filter: drop-shadow(0 2px 8px rgba(99,102,241,0.3));
+        filter: drop-shadow(0 2px 8px rgba(var(--cl-accent-rgb),0.3));
       }
       .league-info {
         flex: 1;
@@ -742,8 +742,8 @@ class CalcioLiveTodayMatchesCard extends LitElement {
         align-items: center;
         gap: 4px;
         padding: 2px 7px;
-        background: rgba(99,102,241,0.12);
-        border: 1px solid rgba(99,102,241,0.25);
+        background: rgba(var(--cl-accent-rgb),0.12);
+        border: 1px solid rgba(var(--cl-accent-rgb),0.25);
         border-radius: 999px;
         font-size: 9px;
         font-weight: 700;
@@ -756,8 +756,8 @@ class CalcioLiveTodayMatchesCard extends LitElement {
         display: inline-flex;
         align-items: center;
         padding: 2px 7px;
-        background: rgba(236,72,153,0.10);
-        border: 1px solid rgba(236,72,153,0.22);
+        background: rgba(var(--cl-accent-2-rgb),0.10);
+        border: 1px solid rgba(var(--cl-accent-2-rgb),0.22);
         border-radius: 999px;
         font-size: 9px;
         font-weight: 700;

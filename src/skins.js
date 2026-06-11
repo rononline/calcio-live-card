@@ -8,6 +8,9 @@ export const skinStyles = css`
     /* Accent palette — standaard (dark/light) */
     --cl-accent: #6366f1;
     --cl-accent-2: #ec4899;
+    /* RGB-waarden voor gebruik in rgba() */
+    --cl-accent-rgb: 99,102,241;
+    --cl-accent-2-rgb: 236,72,153;
     --cl-live: #ef4444;
     --cl-live-glow: rgba(239,68,68,0.5);
     --cl-green: #10b981;
@@ -63,6 +66,8 @@ export const skinStyles = css`
   :host([data-skin="feyenoord"]) {
     --cl-accent: #cc0000;
     --cl-accent-2: #ff2200;
+    --cl-accent-rgb: 204,0,0;
+    --cl-accent-2-rgb: 255,34,0;
     --cl-live: #ff4444;
     --cl-live-glow: rgba(204,0,0,0.6);
     --cl-cl: #cc0000;
@@ -93,6 +98,8 @@ export const skinStyles = css`
   :host([data-skin="classic"]) {
     --cl-accent: #16a34a;
     --cl-accent-2: #22c55e;
+    --cl-accent-rgb: 22,163,74;
+    --cl-accent-2-rgb: 34,197,94;
     --cl-live: #ef4444;
     --cl-live-glow: rgba(239,68,68,0.5);
     --cl-cl: #16a34a;
@@ -120,6 +127,8 @@ export const skinStyles = css`
   :host([data-skin="neon"]) {
     --cl-accent: #00e5ff;
     --cl-accent-2: #ff00aa;
+    --cl-accent-rgb: 0,229,255;
+    --cl-accent-2-rgb: 255,0,170;
     --cl-live: #ff2d55;
     --cl-live-glow: rgba(255,45,85,0.6);
     --cl-cl: #00e5ff;
@@ -150,6 +159,8 @@ export const skinStyles = css`
   :host([data-skin="gold"]) {
     --cl-accent: #f59e0b;
     --cl-accent-2: #fcd34d;
+    --cl-accent-rgb: 245,158,11;
+    --cl-accent-2-rgb: 252,211,77;
     --cl-live: #ef4444;
     --cl-live-glow: rgba(239,68,68,0.5);
     --cl-cl: #f59e0b;

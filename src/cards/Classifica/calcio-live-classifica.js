@@ -640,7 +640,7 @@ class CalcioLiveStandingsCard extends LitElement {
         position: relative;
         padding: 20px 18px;
         background:
-          linear-gradient(135deg, rgba(99,102,241,0.15), rgba(236,72,153,0.10) 60%, transparent);
+          linear-gradient(135deg, rgba(var(--cl-accent-rgb),0.15), rgba(var(--cl-accent-2-rgb),0.10) 60%, transparent);
         border-bottom: 1px solid var(--cl-divider);
         overflow: hidden;
       }
@@ -656,7 +656,7 @@ class CalcioLiveStandingsCard extends LitElement {
         padding: 28px 22px 22px;
         background:
           radial-gradient(circle at 20% 20%, rgba(99,102,241,0.30), transparent 55%),
-          radial-gradient(circle at 80% 60%, rgba(236,72,153,0.20), transparent 50%),
+          radial-gradient(circle at 80% 60%, rgba(var(--cl-accent-2-rgb),0.20), transparent 50%),
           linear-gradient(135deg, rgba(255,255,255,0.04), rgba(255,255,255,0));
       }
       .top-bar-cup::before { display: none; }
@@ -777,7 +777,7 @@ class CalcioLiveStandingsCard extends LitElement {
         display: flex; align-items: center; gap: 10px;
         margin: 0 14px 4px;
         padding: 10px 14px;
-        background: rgba(99,102,241,0.08);
+        background: rgba(var(--cl-accent-rgb),0.08);
         border: 1px solid rgba(99,102,241,0.18);
         border-radius: 10px;
         font-size: 12px;
@@ -810,7 +810,7 @@ class CalcioLiveStandingsCard extends LitElement {
       .zone-cl .rank-num {
         background: linear-gradient(135deg, var(--cl-cl), #4f46e5);
         color: white;
-        box-shadow: 0 2px 12px rgba(99,102,241,0.4);
+        box-shadow: 0 2px 12px rgba(var(--cl-accent-rgb),0.4);
       }
       .zone-cl.rank-first .rank-num {
         background: linear-gradient(135deg, var(--cl-gold), #d97706);
@@ -887,7 +887,7 @@ class CalcioLiveStandingsCard extends LitElement {
         letter-spacing: 0.12em;
         text-transform: uppercase;
         color: var(--cl-text);
-        background: linear-gradient(135deg, rgba(99,102,241,0.12), rgba(236,72,153,0.06));
+        background: linear-gradient(135deg, rgba(var(--cl-accent-rgb),0.12), rgba(236,72,153,0.06));
         border-bottom: 1px solid var(--cl-divider);
         display: flex;
         align-items: center;

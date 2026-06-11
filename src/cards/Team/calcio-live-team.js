@@ -565,7 +565,7 @@ class CalcioLiveTeamNextCard extends LitElement {
   }
 
   _teamBadge(abbrev, color) {
-    const bg = color && color !== 'N/A' ? `#${color.replace('#', '')}` : 'rgba(99,102,241,0.25)';
+    const bg = color && color !== 'N/A' ? `#${color.replace('#', '')}` : 'rgba(var(--cl-accent-rgb),0.25)';
     return html`<span class="abbrev-badge" style="background:${bg}">${abbrev}</span>`;
   }
 
@@ -774,7 +774,7 @@ class CalcioLiveTeamNextCard extends LitElement {
     // Head to head
     const h2h = m.head_to_head || [];
     if (h2h.length) {
-      eventsHTML += `<div style="margin-bottom:14px; padding:14px; background:rgba(99,102,241,0.08); border-left:3px solid #6366f1; border-radius:10px;">
+      eventsHTML += `<div style="margin-bottom:14px; padding:14px; background:rgba(var(--cl-accent-rgb),0.08); border-left:3px solid var(--cl-accent); border-radius:10px;">
         <h5 style="margin:0 0 10px; font-size:12px; text-transform:uppercase; letter-spacing:0.08em; color:#6366f1; font-weight:800;">${tx('popup.h2h')} (${h2h.length})</h5>
         <ul style="margin:0; padding:0; list-style:none;">
           ${h2h.slice(0, 8).map(g => {
@@ -855,8 +855,8 @@ class CalcioLiveTeamNextCard extends LitElement {
         position: absolute;
         inset: 0;
         background:
-          radial-gradient(ellipse at 0% 0%, rgba(99,102,241,0.20), transparent 50%),
-          radial-gradient(ellipse at 100% 100%, rgba(236,72,153,0.20), transparent 50%);
+          radial-gradient(ellipse at 0% 0%, rgba(var(--cl-accent-rgb),0.20), transparent 50%),
+          radial-gradient(ellipse at 100% 100%, rgba(var(--cl-accent-2-rgb),0.20), transparent 50%);
         pointer-events: none;
         z-index: 1;
       }
@@ -900,7 +900,7 @@ class CalcioLiveTeamNextCard extends LitElement {
         background: linear-gradient(135deg, var(--cl-accent), var(--cl-accent-2));
         display: flex; align-items: center; justify-content: center;
         font-size: 12px;
-        box-shadow: 0 2px 8px rgba(99,102,241,0.4);
+        box-shadow: 0 2px 8px rgba(var(--cl-accent-rgb),0.4);
         overflow: hidden;
       }
       .comp-icon img {
@@ -977,7 +977,7 @@ class CalcioLiveTeamNextCard extends LitElement {
         content: '';
         position: absolute;
         inset: -8px;
-        background: radial-gradient(circle, rgba(99,102,241,0.22), transparent 70%);
+        background: radial-gradient(circle, rgba(var(--cl-accent-rgb),0.22), transparent 70%);
         border-radius: 50%;
         animation: logo-glow 4s ease-in-out infinite;
       }
@@ -1142,7 +1142,7 @@ class CalcioLiveTeamNextCard extends LitElement {
       }
       .clock.upcoming {
         color: var(--cl-accent);
-        background: rgba(99,102,241,0.12);
+        background: rgba(var(--cl-accent-rgb),0.12);
       }
       .clock.upcoming .dot, .clock.finished .dot { animation: none; }
       .clock.finished {
@@ -1216,8 +1216,8 @@ class CalcioLiveTeamNextCard extends LitElement {
         align-items: center;
         gap: 5px;
         padding: 4px 10px;
-        background: rgba(99,102,241,0.12);
-        border: 1px solid rgba(99,102,241,0.25);
+        background: rgba(var(--cl-accent-rgb),0.12);
+        border: 1px solid rgba(var(--cl-accent-rgb),0.25);
         border-radius: 999px;
         font-size: 11px;
         font-weight: 700;
@@ -1225,8 +1225,8 @@ class CalcioLiveTeamNextCard extends LitElement {
       }
       .extra-chip svg { width: 12px; height: 12px; }
       .extra-chip.broadcast {
-        background: rgba(99,102,241,0.12);
-        border-color: rgba(99,102,241,0.3);
+        background: rgba(var(--cl-accent-rgb),0.12);
+        border-color: rgba(var(--cl-accent-rgb),0.3);
         color: var(--cl-accent);
       }
       .extra-chip.attendance {
@@ -1252,7 +1252,7 @@ class CalcioLiveTeamNextCard extends LitElement {
         letter-spacing: 0.04em;
         cursor: pointer;
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        box-shadow: 0 4px 12px rgba(99,102,241,0.4);
+        box-shadow: 0 4px 12px rgba(var(--cl-accent-rgb),0.4);
       }
       .info-btn:hover {
         transform: translateY(-1px) scale(1.04);
