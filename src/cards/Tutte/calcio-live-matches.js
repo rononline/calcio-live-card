@@ -40,6 +40,7 @@ class CalcioLiveTodayMatchesCard extends LitElement {
     this.hidePastDays = config.hide_past_days !== undefined ? config.hide_past_days : 0;
     this.reverseOrder = config.reverse_order === true;
     this.showEventToasts = config.show_event_toasts === true;
+    this.myTeam = (config.my_team || '').toLowerCase();
     this.activeMatch = null;
     this.showPopup = false;
   }
@@ -358,7 +359,17 @@ class CalcioLiveTodayMatchesCard extends LitElement {
             <div class="league-info">
               <div class="league-name">${(leagueInfo && leagueInfo.abbreviation) || stateObj.state || 'Voetbal Live'}</div>
               <div class="league-dates">
-                ${leagueInfo && leagueInfo.startDate ? `${leagueInfo.startDate} → ${leagueInfo.endDate}` : this._t('generic.matches_count', { n: limited.length })}
+                ${(() => {
+                  const total = stateObj.attributes.total_matches || stateObj.attributes.matches?.length || 0;
+                  const finished = stateObj.attributes.finished_matches_count
+                    ?? (stateObj.attributes.matches || []).filter(m => m.state === 'post').length;
+                  if (total > 0 && finished >= 0) {
+                    return `${finished} / ${total} gespeeld`;
+                  }
+                  return leagueInfo && leagueInfo.startDate
+                    ? `${leagueInfo.startDate} → ${leagueInfo.endDate}`
+                    : this._t('generic.matches_count', { n: limited.length });
+                })()}
               </div>
             </div>
             ${liveCount > 0 ? html`<span class="live-counter">${liveCount} LIVE</span>` : ''}
@@ -376,6 +387,8 @@ class CalcioLiveTodayMatchesCard extends LitElement {
               const awayWinner = this._isWinner(match, 'away');
               const broadcast = match.broadcast && match.broadcast !== '' && match.broadcast !== 'N/A' ? match.broadcast : '';
               const isUpcoming = match.state === 'pre';
+              const homeMyTeam = this.myTeam && match.home_team && match.home_team.toLowerCase().includes(this.myTeam);
+              const awayMyTeam = this.myTeam && match.away_team && match.away_team.toLowerCase().includes(this.myTeam);
               return html`
                 <div class="match-row ${isLive ? 'live' : ''} ${recent === 'goal' ? 'goal-pulse' : ''} ${recent === 'card' ? 'card-pulse' : ''}"
                      @click="${() => this.showDetails(match)}">
@@ -385,12 +398,12 @@ class CalcioLiveTodayMatchesCard extends LitElement {
                   <div class="match-teams">
                     <div class="match-team">
                       <img src="${match.home_logo}" alt="${match.home_team}" />
-                      <span class="name ${homeWinner === true ? 'winner' : (homeWinner === false ? 'loser' : '')}">${match.home_team}</span>
+                      <span class="name ${homeWinner === true ? 'winner' : (homeWinner === false ? 'loser' : '')} ${homeMyTeam ? 'my-team-name' : ''}">${match.home_team}</span>
                       <span class="score ${homeWinner === true ? 'winner' : (homeWinner === false ? 'loser' : '')}">${this._matchScore(match, 'home')}</span>
                     </div>
                     <div class="match-team">
                       <img src="${match.away_logo}" alt="${match.away_team}" />
-                      <span class="name ${awayWinner === true ? 'winner' : (awayWinner === false ? 'loser' : '')}">${match.away_team}</span>
+                      <span class="name ${awayWinner === true ? 'winner' : (awayWinner === false ? 'loser' : '')} ${awayMyTeam ? 'my-team-name' : ''}">${match.away_team}</span>
                       <span class="score ${awayWinner === true ? 'winner' : (awayWinner === false ? 'loser' : '')}">${this._matchScore(match, 'away')}</span>
                     </div>
                     ${(broadcast && isUpcoming) || (isMultiLeague && match.league_name && match.league_name !== 'N/A') ? html`
@@ -706,6 +719,7 @@ class CalcioLiveTodayMatchesCard extends LitElement {
       }
       .match-team .name.winner { font-weight: 800; }
       .match-team .name.loser { color: var(--cl-text-2); }
+      .match-team .name.my-team-name { font-weight: 800; color: var(--cl-accent); }
       .match-team .score {
         font-size: 14px;
         font-weight: 800;

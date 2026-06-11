@@ -138,7 +138,7 @@ class CalcioLiveStandingsCard extends LitElement {
     this.hideHeader = config.hide_header || false;
     this.selectedGroup = config.selected_group || '';
     this.showEventToasts = config.show_event_toasts === true;
-    this.highlightTeam = (config.highlight_team || '').toLowerCase();
+    this.highlightTeam = (config.highlight_team || config.my_team || '').toLowerCase();
     this._toastMessage = '';
     this._toastVisible = false;
     this._toastVariant = 'goal';

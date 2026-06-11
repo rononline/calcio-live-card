@@ -27,6 +27,7 @@ class CalcioLiveTeamNextCard extends LitElement {
     this.showPopup = false;
     this.activeMatch = null;
     this.showEventToasts = config.show_event_toasts === true;
+    this.myTeam = (config.my_team || '').toLowerCase();
     this._toastMessage = '';
     this._toastVisible = false;
     this._toastVariant = 'goal';
@@ -324,6 +325,8 @@ class CalcioLiveTeamNextCard extends LitElement {
     if (!record || record === 'N/A') return '';
     const parts = String(record).split('-');
     if (parts.length === 3) {
+      // Verberg pre-seizoen 0-0-0 records
+      if (parts.every(p => parseInt(p) === 0)) return '';
       return html`<div class="record">
         <span class="rec rec-w">${parts[0]}${this._t('form.W')}</span>
         <span class="rec rec-d">${parts[1]}${this._t('form.D')}</span>
@@ -331,6 +334,13 @@ class CalcioLiveTeamNextCard extends LitElement {
       </div>`;
     }
     return html`<div class="record"><span class="rec">${record}</span></div>`;
+  }
+
+  _hexToRgb(hex) {
+    if (!hex || hex === 'N/A') return null;
+    const h = String(hex).replace('#', '');
+    if (h.length !== 6) return null;
+    return `${parseInt(h.slice(0,2),16)},${parseInt(h.slice(2,4),16)},${parseInt(h.slice(4,6),16)}`;
   }
 
   _renderTopScorer(scorer) {
@@ -437,6 +447,14 @@ class CalcioLiveTeamNextCard extends LitElement {
     const broadcast = match.broadcast && match.broadcast !== '' && match.broadcast !== 'N/A' ? match.broadcast : '';
     const attendance = parseInt(match.attendance, 10);
     const hasAttendance = !isNaN(attendance) && attendance > 0;
+    const homeRgb = this._hexToRgb(match.home_color);
+    const awayRgb = this._hexToRgb(match.away_color);
+    const heroBgStyle = (homeRgb || awayRgb) ? `background:
+      radial-gradient(ellipse at 0% 0%, rgba(${homeRgb || '99,102,241'},0.18), transparent 55%),
+      radial-gradient(ellipse at 100% 100%, rgba(${awayRgb || '236,72,153'},0.18), transparent 55%)` : '';
+    const myTeam = this.myTeam || (stateObj.attributes.team_name || '').toLowerCase();
+    const homeIsMyTeam = myTeam && match.home_team && match.home_team.toLowerCase().includes(myTeam);
+    const awayIsMyTeam = myTeam && match.away_team && match.away_team.toLowerCase().includes(myTeam);
 
     return html`
       <ha-card class="${isLive ? 'live' : ''}">
@@ -444,7 +462,7 @@ class CalcioLiveTeamNextCard extends LitElement {
           <div class="bg-logo home"><img src="${match.home_logo}" alt="" loading="lazy"></div>
           <div class="bg-logo away"><img src="${match.away_logo}" alt="" loading="lazy"></div>
         </div>
-        <div class="hero-bg"></div>
+        <div class="hero-bg" style="${heroBgStyle}"></div>
 
         ${this.showEventToasts && this._toastVisible ? html`
           <div class="event-toast variant-${this._toastVariant}" .innerHTML=${this._toastMessage}></div>
@@ -465,7 +483,7 @@ class CalcioLiveTeamNextCard extends LitElement {
             <div class="team-logo-wrap">
               <img class="team-logo-big" src="${match.home_logo}" alt="${match.home_team}" />
             </div>
-            <div class="team-name-big">${match.home_team}</div>
+            <div class="team-name-big ${homeIsMyTeam ? 'my-team' : ''}">${match.home_team}</div>
             ${this._renderRecord(match.home_record)}
             ${this._renderForm(match.home_form)}
             ${!isLive ? this._renderTopScorer(match.home_top_scorer) : ''}
@@ -483,7 +501,7 @@ class CalcioLiveTeamNextCard extends LitElement {
             <div class="team-logo-wrap">
               <img class="team-logo-big" src="${match.away_logo}" alt="${match.away_team}" />
             </div>
-            <div class="team-name-big">${match.away_team}</div>
+            <div class="team-name-big ${awayIsMyTeam ? 'my-team' : ''}">${match.away_team}</div>
             ${this._renderRecord(match.away_record)}
             ${this._renderForm(match.away_form)}
             ${!isLive ? this._renderTopScorer(match.away_top_scorer) : ''}
@@ -526,7 +544,7 @@ class CalcioLiveTeamNextCard extends LitElement {
         ` : ''}
 
         ${this._renderH2H(match.head_to_head)}
-        ${this._renderUpcomingList(stateObj.attributes.upcoming_matches, stateObj.attributes.matches, stateObj.attributes.team_name)}
+        ${this._renderUpcomingList(stateObj.attributes.upcoming_matches, stateObj.attributes.matches, this.myTeam || stateObj.attributes.team_name)}
       </ha-card>
     `;
   }
@@ -555,7 +573,7 @@ class CalcioLiveTeamNextCard extends LitElement {
     const upcoming = upcomingMatches && upcomingMatches.length > 0
       ? upcomingMatches
       : (fallbackMatches && fallbackMatches.length > 1
-          ? fallbackMatches.slice(1).filter(m => m.state === 'pre').slice(0, 4)
+          ? fallbackMatches.slice(1).filter(m => m.state === 'pre' || m.state === 'in').slice(0, 4)
           : []);
     if (upcoming.length === 0) return '';
     const tracked = (trackedTeam || '').toLowerCase();
@@ -565,8 +583,12 @@ class CalcioLiveTeamNextCard extends LitElement {
         ${upcoming.map(m => {
           const homeTracked = tracked && m.home_team && m.home_team.toLowerCase().includes(tracked);
           const awayTracked = tracked && m.away_team && m.away_team.toLowerCase().includes(tracked);
+          const isLiveRow = m.state === 'in';
+          const hasH2H = m.head_to_head && m.head_to_head.length > 0;
+          const clickable = hasH2H;
           return html`
-            <div class="upcoming-row">
+            <div class="upcoming-row ${clickable ? 'clickable' : ''}"
+                 @click="${clickable ? () => this.showDetails(m) : null}">
               <span class="upcoming-date">
                 ${m.date ? m.date.split(' ')[1] || '' : ''}
                 <span class="upcoming-date-day">${this._relativeDate(m.date)}</span>
@@ -575,12 +597,14 @@ class CalcioLiveTeamNextCard extends LitElement {
                 <img src="${m.home_logo}" alt="" />
                 ${this._teamBadge(m.home_abbrev || '?', m.home_color)}
               </span>
-              <span class="upcoming-vs">-</span>
+              ${isLiveRow
+                ? html`<span class="upcoming-live-score">${m.home_score}<span class="live-dot">●</span>${m.away_score}</span>`
+                : html`<span class="upcoming-vs">-</span>`
+              }
               <span class="upcoming-team away-side ${awayTracked ? 'tracked' : ''}">
                 ${this._teamBadge(m.away_abbrev || '?', m.away_color)}
                 <img src="${m.away_logo}" alt="" />
               </span>
-
             </div>
           `;
         })}
@@ -1335,6 +1359,22 @@ class CalcioLiveTeamNextCard extends LitElement {
       .upcoming-team.away-side { justify-content: flex-start; }
       .upcoming-team img { width: 18px; height: 18px; object-fit: contain; flex-shrink: 0; }
       .upcoming-team.tracked .abbrev-badge { outline: 2px solid rgba(255,255,255,0.5); }
+      .upcoming-row.clickable { cursor: pointer; }
+      .upcoming-row.clickable:hover { background: var(--cl-card-2); border-radius: 8px; }
+      .upcoming-live-score {
+        font-size: 12px; font-weight: 900;
+        color: var(--cl-live);
+        text-align: center; min-width: 16px;
+        font-variant-numeric: tabular-nums;
+        display: flex; align-items: center; gap: 2px;
+      }
+      .live-dot { font-size: 7px; animation: live-blink 1s ease-in-out infinite; }
+      @keyframes live-blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
+      .team-name-big.my-team {
+        background: linear-gradient(135deg, var(--cl-text), var(--cl-accent));
+        -webkit-background-clip: text; background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
       .upcoming-vs {
         font-size: 11px;
         font-weight: 700;
