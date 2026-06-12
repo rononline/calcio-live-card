@@ -417,7 +417,10 @@ class CalcioLiveStandingsCard extends LitElement {
     );
     const totalGoals = filteredStandings.reduce((s, t) => s + (parseInt(t.goals_for) || 0), 0);
 
-    const isPreSeason = total > 0 && filteredStandings.every(
+    // Controleer of ergens in het toernooi al gespeeld is (WK: andere groepen kunnen al lopen)
+    const anyGroupHasGames = (stateObj.attributes.standings_groups || [])
+      .some(g => (g.standings || []).some(t => (parseInt(t.games_played) || 0) > 0));
+    const isPreSeason = !anyGroupHasGames && total > 0 && filteredStandings.every(
       t => parseInt(t.wins ?? '0') === 0 &&
            parseInt(t.draws ?? '0') === 0 &&
            parseInt(t.losses ?? '0') === 0
