@@ -11,6 +11,7 @@ const TRANSLATIONS = {
     'card.timeline': 'Timeline',
     'card.news': 'News',
     'card.standings': 'Standings',
+    'card.scorers': 'Top Scorers',
 
     // Bracket rounds
     'round.final': 'Final',
@@ -152,6 +153,12 @@ const TRANSLATIONS = {
     'month.1': 'Jan', 'month.2': 'Feb', 'month.3': 'Mar', 'month.4': 'Apr',
     'month.5': 'May', 'month.6': 'Jun', 'month.7': 'Jul', 'month.8': 'Aug',
     'month.9': 'Sep', 'month.10': 'Oct', 'month.11': 'Nov', 'month.12': 'Dec',
+
+    // Top scorers card
+    'scorers.goals': 'Goals',
+    'scorers.matches': 'Matches',
+    'scorers.empty': 'No top scorers available',
+    'scorers.rank': '#',
   },
   nl: {
     'card.bracket': 'Schema',
@@ -159,6 +166,7 @@ const TRANSLATIONS = {
     'card.timeline': 'Tijdlijn',
     'card.news': 'Nieuws',
     'card.standings': 'Stand',
+    'card.scorers': 'Topschutters',
 
     'round.final': 'Finale',
     'round.semifinals': 'Halve finales',
@@ -285,6 +293,11 @@ const TRANSLATIONS = {
     'month.1': 'Jan', 'month.2': 'Feb', 'month.3': 'Mrt', 'month.4': 'Apr',
     'month.5': 'Mei', 'month.6': 'Jun', 'month.7': 'Jul', 'month.8': 'Aug',
     'month.9': 'Sep', 'month.10': 'Okt', 'month.11': 'Nov', 'month.12': 'Dec',
+
+    'scorers.goals': 'Doelpunten',
+    'scorers.matches': 'Wedstrijden',
+    'scorers.empty': 'Geen topschutters beschikbaar',
+    'scorers.rank': '#',
   },
   it: {
     'card.bracket': 'Tabellone',
@@ -292,6 +305,7 @@ const TRANSLATIONS = {
     'card.timeline': 'Cronologia',
     'card.news': 'Notizie',
     'card.standings': 'Classifica',
+    'card.scorers': 'Capocannonieri',
 
     'round.final': 'Finale',
     'round.semifinals': 'Semifinali',
@@ -418,6 +432,11 @@ const TRANSLATIONS = {
     'month.1': 'Gen', 'month.2': 'Feb', 'month.3': 'Mar', 'month.4': 'Apr',
     'month.5': 'Mag', 'month.6': 'Giu', 'month.7': 'Lug', 'month.8': 'Ago',
     'month.9': 'Set', 'month.10': 'Ott', 'month.11': 'Nov', 'month.12': 'Dic',
+
+    'scorers.goals': 'Gol',
+    'scorers.matches': 'Partite',
+    'scorers.empty': 'Nessun capocannoniere disponibile',
+    'scorers.rank': '#',
   },
   fr: {
     'card.bracket': 'Tableau',
@@ -425,6 +444,7 @@ const TRANSLATIONS = {
     'card.timeline': 'Chronologie',
     'card.news': 'Actualités',
     'card.standings': 'Classement',
+    'card.scorers': 'Buteurs',
 
     'round.final': 'Finale',
     'round.semifinals': 'Demi-finales',
@@ -551,6 +571,11 @@ const TRANSLATIONS = {
     'month.1': 'Janv', 'month.2': 'Févr', 'month.3': 'Mars', 'month.4': 'Avr',
     'month.5': 'Mai', 'month.6': 'Juin', 'month.7': 'Juil', 'month.8': 'Août',
     'month.9': 'Sept', 'month.10': 'Oct', 'month.11': 'Nov', 'month.12': 'Déc',
+
+    'scorers.goals': 'Buts',
+    'scorers.matches': 'Matchs',
+    'scorers.empty': 'Aucun buteur disponible',
+    'scorers.rank': '#',
   },
   es: {
     'card.bracket': 'Cuadro',
@@ -558,6 +583,7 @@ const TRANSLATIONS = {
     'card.timeline': 'Cronología',
     'card.news': 'Noticias',
     'card.standings': 'Clasificación',
+    'card.scorers': 'Goleadores',
 
     'round.final': 'Final',
     'round.semifinals': 'Semifinales',
@@ -684,10 +710,154 @@ const TRANSLATIONS = {
     'month.1': 'Ene', 'month.2': 'Feb', 'month.3': 'Mar', 'month.4': 'Abr',
     'month.5': 'May', 'month.6': 'Jun', 'month.7': 'Jul', 'month.8': 'Ago',
     'month.9': 'Sep', 'month.10': 'Oct', 'month.11': 'Nov', 'month.12': 'Dic',
+
+    'scorers.goals': 'Goles',
+    'scorers.matches': 'Partidos',
+    'scorers.empty': 'No hay goleadores disponibles',
+    'scorers.rank': '#',
+  },
+  de: {
+    'card.bracket': 'K.o.-Runde',
+    'card.lineup': 'Aufstellungen',
+    'card.timeline': 'Spielverlauf',
+    'card.news': 'Nachrichten',
+    'card.standings': 'Tabelle',
+    'card.scorers': 'Torschützen',
+
+    'round.final': 'Finale',
+    'round.semifinals': 'Halbfinale',
+    'round.quarterfinals': 'Viertelfinale',
+    'round.r16': 'Achtelfinale',
+    'round.r32': 'Sechzehntelfinale',
+    'round.knockout_playoffs': 'K.o.-Playoffs',
+    'round.preliminary': 'Vorrunde',
+    'round.short.semifinals': 'HF',
+    'round.short.quarterfinals': 'VF',
+    'round.short.r16': 'AF',
+
+    'bracket.empty.title': 'K.o.-Runde nicht verfügbar',
+    'bracket.empty.sub': 'Die K.o.-Phase beginnt bald',
+    'bracket.tbd': 'N.N.',
+    'bracket.tied_agg': 'Gleichstand gesamt',
+    'bracket.agg': 'Gesamt',
+
+    'status.live': 'Live',
+    'status.finished': 'Beendet',
+    'status.scheduled': 'Geplant',
+    'status.full_time': 'Endstand',
+    'status.halftime': 'Halbzeit',
+    'status.first_half': '1. Halbzeit',
+    'status.second_half': '2. Halbzeit',
+    'status.kickoff': 'Anstoß',
+    'status.end': 'Ende',
+
+    'event.goal': 'Tor',
+    'event.yellow_card': 'Gelbe Karte',
+    'event.red_card': 'Rote Karte',
+    'event.substitution': 'Auswechslung',
+    'event.var': 'VAR',
+
+    'event.header': 'Kopfball',
+    'event.shot': 'Schuss',
+    'event.penalty': 'Elfmeter',
+    'event.free_kick': 'Freistoß',
+
+    'form.W': 'S',
+    'form.D': 'U',
+    'form.L': 'N',
+
+    'team.details': 'Details',
+    'team.possession': 'Ballbesitz',
+    'team.shots': 'Schüsse',
+    'team.on_target': 'Aufs Tor',
+    'team.fouls': 'Fouls',
+    'team.spectators': 'Zuschauer',
+    'team.top_scorer': 'Torschützenkönig',
+    'team.next_match': 'Nächstes Spiel',
+    'team.upcoming_matches': 'Nächste Spiele',
+    'team.previous_matches': 'Vorherige Spiele',
+    'team.form_trend': 'Saisonform',
+    'team.h2h': 'Direktvergleich',
+    'team.in': 'in',
+    'team.no_match': 'Kein Spiel verfügbar',
+    'team.off_season': 'Neue Saison beginnt bald',
+    'team.unknown_entity': 'Unbekannte Entität',
+    'standings.stats': 'Spiele · Tore',
+    'standings.pos_label': 'Position',
+    'standings.compact_hidden': 'Teams ausgeblendet',
+
+    'time.today': 'Heute',
+    'time.yesterday': 'Gestern',
+    'time.tomorrow': 'Morgen',
+    'time.now': 'jetzt',
+    'time.in_n_min': 'in {n} Min.',
+    'time.in_n_h': 'in {n} Std.',
+    'time.in_n_d': 'in {n} T.',
+    'time.n_min_ago': 'vor {n} Min.',
+    'time.n_h_ago': 'vor {n} Std.',
+    'time.n_d_ago': 'vor {n} T.',
+
+    'lineup.bench': 'Bank',
+    'lineup.empty.title': 'Aufstellungen nicht verfügbar',
+    'lineup.empty.sub': 'Aufstellungen werden kurz vor Anstoß veröffentlicht',
+
+    'timeline.empty.title': 'Noch keine Ereignisse',
+    'timeline.empty.sub': 'Ereignisse erscheinen während des Spiels',
+    'timeline.event': 'Ereignis',
+    'timeline.penalty': 'Elfmeter',
+
+    'news.empty': 'Keine Nachrichten verfügbar',
+    'news.articles': '{n} Artikel',
+
+    'zone.champions': 'Champions League',
+    'zone.europa': 'Europa League',
+    'zone.conference': 'Conference League',
+    'zone.relegation': 'Abstieg',
+    'zone.qualified': 'Qualifiziert',
+    'zone.third_place_playoff': 'Bester 3.',
+    'zone.eliminated': 'Ausgeschieden',
+    'hero.groups': 'Gruppen',
+    'hero.teams': 'Teams',
+    'hero.not_started': 'Nicht gestartet',
+
+    'phase.regular_season': 'Reguläre Saison',
+    'phase.group_stage': 'Gruppenphase',
+    'phase.playoffs': 'Playoffs',
+
+    'col.pos': '#',
+    'col.team': 'Verein',
+    'col.played': 'Sp',
+    'col.wins': 'S',
+    'col.draws': 'U',
+    'col.losses': 'N',
+    'col.gd': '+/-',
+    'col.points': 'Pkt',
+
+    'generic.no_match': 'Kein Spiel verfügbar',
+    'generic.matches_count': '{n} Spiele',
+    'generic.unknown_entity': 'Unbekannte Entität',
+    'generic.close': 'Schließen',
+
+    'generic.unknown': 'Unbekannt',
+
+    'popup.match_details': 'Spieldetails',
+    'popup.lineups': 'Aufstellungen',
+    'popup.timeline': 'Spielverlauf',
+    'popup.h2h': 'Direktvergleich',
+    'popup.no_events': 'Keine Ereignisse verfügbar',
+
+    'month.1': 'Jan', 'month.2': 'Feb', 'month.3': 'Mär', 'month.4': 'Apr',
+    'month.5': 'Mai', 'month.6': 'Jun', 'month.7': 'Jul', 'month.8': 'Aug',
+    'month.9': 'Sep', 'month.10': 'Okt', 'month.11': 'Nov', 'month.12': 'Dez',
+
+    'scorers.goals': 'Tore',
+    'scorers.matches': 'Spiele',
+    'scorers.empty': 'Keine Torschützen verfügbar',
+    'scorers.rank': '#',
   },
 };
 
-const SUPPORTED_LANGS = ['en', 'it', 'fr', 'es', 'nl'];
+const SUPPORTED_LANGS = ['en', 'it', 'fr', 'es', 'nl', 'de'];
 
 /**
  * Risolve la lingua da usare per la card.
