@@ -264,7 +264,7 @@ const TRANSLATIONS = {
     'col.team': 'Team',
     'col.played': 'G',
     'col.wins': 'W',
-    'col.draws': 'G',
+    'col.draws': 'GL',
     'col.losses': 'V',
     'col.gd': '+/-',
     'col.points': 'Pnt',
@@ -326,6 +326,11 @@ const TRANSLATIONS = {
     'event.substitution': 'Sostituzione',
     'event.var': 'VAR',
 
+    'event.header': 'Colpo di testa',
+    'event.shot': 'Tiro',
+    'event.penalty': 'Rigore',
+    'event.free_kick': 'Calcio di punizione',
+
     'form.W': 'V',
     'form.D': 'N',
     'form.L': 'P',
@@ -342,6 +347,13 @@ const TRANSLATIONS = {
     'team.no_match': 'Nessuna partita disponibile',
     'team.off_season': 'Nuova stagione in arrivo',
     'team.unknown_entity': 'Entità sconosciuta',
+    'team.upcoming_matches': 'Prossime partite',
+    'team.previous_matches': 'Partite precedenti',
+    'team.form_trend': 'Forma stagionale',
+    'team.h2h': 'Testa a testa',
+    'standings.stats': 'partite giocate · gol',
+    'standings.pos_label': 'Posizione',
+    'standings.compact_hidden': 'squadre nascoste',
 
     'time.today': 'Oggi',
     'time.yesterday': 'Ieri',
@@ -395,6 +407,8 @@ const TRANSLATIONS = {
     'generic.unknown_entity': 'Entità sconosciuta',
     'generic.close': 'Chiudi',
 
+    'generic.unknown': 'Sconosciuto',
+
     'popup.match_details': 'Dettagli partita',
     'popup.lineups': 'Formazioni',
     'popup.timeline': 'Cronologia',
@@ -445,6 +459,11 @@ const TRANSLATIONS = {
     'event.substitution': 'Remplacement',
     'event.var': 'VAR',
 
+    'event.header': 'Coup de tête',
+    'event.shot': 'Tir',
+    'event.penalty': 'Penalty',
+    'event.free_kick': 'Coup franc',
+
     'form.W': 'V',
     'form.D': 'N',
     'form.L': 'D',
@@ -461,6 +480,13 @@ const TRANSLATIONS = {
     'team.no_match': 'Aucun match disponible',
     'team.off_season': 'Nouvelle saison bientôt',
     'team.unknown_entity': 'Entité inconnue',
+    'team.upcoming_matches': 'Prochains matchs',
+    'team.previous_matches': 'Matchs précédents',
+    'team.form_trend': 'Forme de la saison',
+    'team.h2h': 'Face à face',
+    'standings.stats': 'matchs joués · buts',
+    'standings.pos_label': 'Position',
+    'standings.compact_hidden': 'équipes masquées',
 
     'time.today': 'Aujourd\'hui',
     'time.yesterday': 'Hier',
@@ -514,6 +540,8 @@ const TRANSLATIONS = {
     'generic.unknown_entity': 'Entité inconnue',
     'generic.close': 'Fermer',
 
+    'generic.unknown': 'Inconnu',
+
     'popup.match_details': 'Détails du match',
     'popup.lineups': 'Compositions',
     'popup.timeline': 'Chronologie',
@@ -564,6 +592,11 @@ const TRANSLATIONS = {
     'event.substitution': 'Sustitución',
     'event.var': 'VAR',
 
+    'event.header': 'Cabezazo',
+    'event.shot': 'Disparo',
+    'event.penalty': 'Penalti',
+    'event.free_kick': 'Falta directa',
+
     'form.W': 'V',
     'form.D': 'E',
     'form.L': 'D',
@@ -580,6 +613,13 @@ const TRANSLATIONS = {
     'team.no_match': 'Ningún partido disponible',
     'team.off_season': 'Nueva temporada próximamente',
     'team.unknown_entity': 'Entidad desconocida',
+    'team.upcoming_matches': 'Próximos partidos',
+    'team.previous_matches': 'Partidos anteriores',
+    'team.form_trend': 'Forma de la temporada',
+    'team.h2h': 'Cara a cara',
+    'standings.stats': 'partidos jugados · goles',
+    'standings.pos_label': 'Posición',
+    'standings.compact_hidden': 'equipos ocultos',
 
     'time.today': 'Hoy',
     'time.yesterday': 'Ayer',
@@ -632,6 +672,8 @@ const TRANSLATIONS = {
     'generic.matches_count': '{n} partidos',
     'generic.unknown_entity': 'Entidad desconocida',
     'generic.close': 'Cerrar',
+
+    'generic.unknown': 'Desconocido',
 
     'popup.match_details': 'Detalles del partido',
     'popup.lineups': 'Alineaciones',
