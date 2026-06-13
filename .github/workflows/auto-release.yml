@@ -77,6 +77,6 @@ jobs:
           tag_name: ${{ steps.version.outputs.tag }}
           name: ${{ steps.version.outputs.tag }}
           body: ${{ steps.notes.outputs.notes }}
-          files: dist/calcio-live-card.bundle.js
+          files: dist/soccer-live-card.bundle.js
           draft: false
           prerelease: false
